@@ -1,0 +1,4 @@
+baseURL = 'https://mica-92.github.io/arcana/'
+languageCode = 'en-us'
+title = 'Arcana Lumina'
+theme='contrast'
