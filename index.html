@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arcana</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="icon" type="image/png" href="blue.png">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Tus estilos -->
+    <link rel="stylesheet" href="charts.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="astrology_section.css">
+    <link rel="stylesheet" href="historial.css">
+    <link rel="stylesheet" href="stats.css">
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="animation.css">
+
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Inconsolata&family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&family=Special+Elite&display=swap" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Playfair+Display:400,700,900,400italic,700italic,900italic|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+</head>
+<body>
+
+
+
+    
+    <div class="outer-border">
+
+<div id="loading-screen" style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--primary-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    flex-direction: column;
+    border: 5px solid #fff;
+">
+    <img src="cat.png" alt="Logo" style="
+        width: 80px;
+        height: 80px;
+        margin-bottom: 20px;
+        transition: transform 0.5s ease;
+    " id="loading-logo">
+    <h1 style="color: var(--background-color); margin: 5px 0; font-family: 'Roboto Serif';">CARGANDO</h1>
+    <h1 style="color: var(--background-color); margin: 5px 0; font-family: 'Roboto Serif';">ARCANA</h1>
+</div>
+
+<header style="background-color: var(--primary-color);">
+    <div class="logo" style="
+        background-color: var(--primary-color);
+        padding-top: 10px;
+        display: inline-block;
+        border-radius: 8px;
+    ">
+        <img src="cat.png" alt="Logo ARCANA" style="
+            width: 50px;
+            height: 50px;
+            display: block;
+        ">
+    </div>
+    <h1>ARCANA</h1>
+</header>
+    
+    <div class="welcome">
+        <!-- Sección de Carta del Día -->
+        <div class="daily-card-section">
+            <div id="daily-card-status">
+                <!-- La información de la carta del día se cargará aquí -->
+            </div>
+        </div>
+        
+        <!-- Sección de Información Astrológica -->
+        <div class="astrology-section">
+            <div id="astrology-info">
+                <!-- La información astrológica se cargará aquí -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Botones de períodos predefinidos -->
+    <div class="statistics-section">
+        <div class="history-title">Arcane Analysis</div>
+        <div class="history-headline">estadísticas de las cartas del día</div>
+
+
+        <!-- Botones de períodos predefinidos -->
+        <div class="stats-periods" >
+            <button class="period-btn active" data-period="all"><i class="fa-solid fa-infinity"></i> Siempre</button>
+            <button class="period-btn" data-period="month"><i class="fa-solid fa-fish"></i> Este Mes</button>
+            <button class="period-btn" data-period="week"><i class="fa-solid fa-fish-fins"></i> Esta Semana</button>
+            <button class="period-btn" id="custom-period-btn" data-period="custom">
+                <i class="fa-solid fa-frog"></i> Otro Período
+            </button>
+        </div>
+
+
+        <!-- Reemplazar la sección de gráficos en el HTML -->
+        <div class="charts-section">
+
+                        <!-- Controles del carrusel -->
+        <div class="carousel-controls">
+            <button class="carousel-btn prev-btn" aria-label="Gráfico anterior">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            
+            <div class="carousel-indicators">
+                <div class="carousel-indicator active" data-index="0"></div>
+                <div class="carousel-indicator" data-index="1"></div>
+                <div class="carousel-indicator" data-index="2"></div>
+                <div class="carousel-indicator" data-index="3"></div>
+                <div class="carousel-indicator" data-index="4"></div>
+            </div>
+            
+            <button class="carousel-btn next-btn" aria-label="Siguiente gráfico">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>    
+    <div class="charts-carousel">
+            <div class="charts-track">
+                <!-- Gráficos de Orientación -->
+                <div class="chart-category">
+                    <div class="chart-title">por Orientación</div>
+                    <div class="charts-row">
+                        <div class="chart-container">
+                            <canvas id="orientation-chart" width="200" height="200"></canvas>
+                        </div>
+                        <div class="chart-legend" id="orientation-legend"></div>
+                    </div>
+                </div>
+
+                <!-- Gráficos de Palos -->
+                <div class="chart-category">
+                    <div class="chart-title">por Palos</div>
+                    <div class="charts-row">
+                        <div class="chart-container">
+                            <canvas id="suits-chart" width="200" height="200"></canvas>
+                        </div>
+                        <div class="chart-legend" id="suits-legend"></div>
+                    </div>
+                </div>
+
+                <!-- Gráficos de Elementos -->
+                <div class="chart-category">
+                    <div class="chart-title">por Elementos</div>
+                    <div class="charts-row">
+                        <div class="chart-container">
+                            <canvas id="elements-chart" width="200" height="200"></canvas>
+                        </div>
+                        <div class="chart-legend" id="elements-legend"></div>
+                    </div>
+                </div>
+
+                <!-- Gráficos de Planetas -->
+                <div class="chart-category">
+                    <div class="chart-title">por Planetas</div>
+                    <div class="charts-row">
+                        <div class="chart-container">
+                            <canvas id="planets-chart" width="200" height="200"></canvas>
+                        </div>
+                        <div class="chart-legend" id="planets-legend"></div>
+                    </div>
+                </div>
+
+                <!-- Gráficos de Signos Zodiacales -->
+                <div class="chart-category">
+                    <div class="chart-title">por Signos</div>
+                    <div class="charts-row">
+                        <div class="chart-container">
+                            <canvas id="signs-chart" width="200" height="200"></canvas>
+                        </div>
+                        <div class="chart-legend" id="signs-legend"></div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+            <div class="history-title" style="margin-bottom: 20px">HISTORIAL</div>
+<div class="unique-card">
+    <div class="stat-card">
+        <div class="stat-value" id="total-entries">0</div>
+        <div class="stat-label">
+            <div class="stat-icon"><i class="fa-solid fa-sun"></i></div><br> 
+            Registros Diarios
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value" id="unique-cards">0</div>
+        <div class="stat-label">
+            <div class="stat-icon"><i class="fa-solid fa-hand-spock"></i></div><br> 
+            Cartas Únicas
+        </div>
+    </div>
+    <div class="stat-card"> <!-- ← CAMBIAR A stat-card PARA CONSISTENCIA -->
+        <div class="stat-value" id="most-frequent-name">-</div>
+        <div class="stat-label">
+            <div class="stat-icon"><i class="fa-solid fa-crown"></i></div><br>
+            <span id="most-frequent-count">Apareció 0 veces</span>
+        </div>
+    </div>
+</div>
+        
+
+</div>
+    
+        <div class="stats-borde" style="display: none; margin: auto; margin-top:20px;">
+            <!-- Tarjetas de estadísticas -->
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-value" id="total-entries">0</div>
+                    <div class="stat-label"><div class="stat-icon"><i class="fa-solid fa-sun"></i></div><br> Registros Diarios</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="unique-cards">0</div>
+                    <div class="stat-label"><div class="stat-icon"><i class="fa-solid fa-hand-spock"></i></div><br> Cartas Únicas</div>
+                </div>
+                <div class="stat-card" style="display:none">
+                    <div class="stat-value" id="upright-percent">0%</div>
+                    <div class="stat-label">En Derecha</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="reversed-percent">0%</div>
+                    <div class="stat-label"><div class="stat-icon"><i class="fa-solid fa-arrow-rotate-left"></i></div><br> Reversas</div>
+                </div>
+            </div>
+
+            <!-- Estadísticas de Palos -->
+            <div class="stats-cards" style="border-top: 2px solid var(--primary80)" >
+                <div class="stat-card">
+                    <div class="stat-value" id="major-arcana-percent">0%</div>
+                    <div class="stat-label"><div class="stat-icon"><i class="fa-solid fa-infinity"></i></div><br> Arcanos Mayores</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="court-cards-percent">0%</div>
+                    <div class="stat-label"><div class="stat-icon"><i class="fa-solid fa-crown"></i></div><br>Corte</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-value" id="wands-percent">0%</div>
+                    <div class="stat-label"><div class="stat-icon"><i class="fa-solid fa-wand-sparkles"></i></div><br>Bastos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="cups-percent">0%</div>
+                    <div class="stat-label"><div class="stat-icon"><i class="fa-solid fa-wine-glass"></i></div><br>Copas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="swords-percent">0%</div>
+                    <div class="stat-label"><div class="stat-icon"><i class="fa-solid fa-bolt-lightning"></i></div><br>Espadas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="pentacles-percent">0%</div>
+                    <div class="stat-label"><div class="stat-icon"><i class="fa-solid fa-coins"></i></div><br>Pentáculos</div>
+                </div>
+            </div>
+
+            <!-- Estadísticas de Elementos -->
+            <div class="stats-cards" style="border-top: 2px solid var(--primary80)">
+                <div class="stat-card">
+                    <div class="stat-value" id="fire-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">±</div><br>Fuego</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="water-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">³</div><br>Agua</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="air-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">²</div><br>Aire</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="earth-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">´</div><br>Tierra</div>
+                </div>
+            </div>
+
+            <!-- Estadísticas de Planetas -->
+            <div class="stats-cards" style="border-top: 2px solid var(--primary80)">
+                <div class="stat-card">
+                    <div class="stat-value" id="sun-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">Q</div><br>Sol</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="moon-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">R</div><br>Luna</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="mercury-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">S</div><br>Mercurio</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="venus-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">T</div><br>Venus</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="mars-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">U</div><br>Marte</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="jupiter-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">V</div><br>Júpiter</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="saturn-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">W</div><br>Saturno</div>
+                </div>
+            </div>
+
+            <!-- Estadísticas de Signos Zodiacales -->
+            <div class="stats-cards" style="border-top: 2px solid var(--primary80)">
+                <div class="stat-card">
+                    <div class="stat-value" id="aries-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">A</div><br>Aries</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="taurus-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">B</div><br>Tauro</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="gemini-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">C</div><br>Géminis</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="cancer-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">D</div><br>Cáncer</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="leo-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">E</div><br>Leo</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="virgo-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">F</div><br>Virgo</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="libra-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">G</div><br>Libra</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="scorpio-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">H</div><br>Escorpio</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="sagittarius-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">I</div><br>Sagitario</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="capricorn-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">J</div><br>Capricornio</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="aquarius-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">K</div><br>Acuario</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="pisces-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">L</div><br>Piscis</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal para seleccionar período personalizado -->
+        <div class="period-selector-modal" id="period-selector-modal">
+            <div class="period-selector-content">
+                <div class="period-selector-header">
+                    <div class="period-selector-title"><i class="fa-solid fa-frog"></i> Otro Periodo</div>
+                    <button class="period-selector-close" id="period-selector-close">&times;</button>
+                </div>
+                <div class="period-selector-options">
+                    <div class="period-selector-option">
+                        <label>Periodo:</label>
+                        <select id="custom-period-type">
+                            <option value="year">Anual</option>
+                            <option value="month">Mensual</option>
+                            <option value="week">Semanal</option>
+                        </select>
+                    </div>
+                    <div class="period-selector-option">
+                        <label>Año:</label>
+                        <select id="custom-year">
+                            <!-- Los años se cargarán dinámicamente -->
+                        </select>
+                    </div>
+                    <div class="period-selector-option" id="custom-month-container" style="display: none;">
+                        <label>Mes:</label>
+                        <select id="custom-month">
+                            <option value="1">Enero</option>
+                            <option value="2">Febrero</option>
+                            <option value="3">Marzo</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Mayo</option>
+                            <option value="6">Junio</option>
+                            <option value="7">Julio</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
+                        </select>
+                    </div>
+                    <div class="period-selector-option" id="custom-week-container" style="display: none;">
+                        <label>Semana:</label>
+                        <select id="custom-week">
+                            <!-- Las semanas se cargarán dinámicamente -->
+                        </select>
+                    </div>
+                </div>
+                <div class="period-selector-actions">
+                    <button class="btn-secondary" id="period-selector-cancel">Cancelar</button>
+                    <button class="btn-primary" id="period-selector-apply">Aplicar</button>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <div class="history-section" style="max-width:400px;  margin: auto">
+    <div class="log-history">
+
+        
+        <div class="history-tabs">
+            <button class="history-tab active" data-tab="daily"><i class="fa-solid fa-seedling"></i> Cartas del Día</button>
+            <button class="history-tab" data-tab="spread"><i class="fa-solid fa-leaf"></i> Tiradas</button>
+            <button class="history-tab " data-tab="all"><i class="fa-solid fa-tree"></i> Todos</button>
+        </div>
+        <div class="history-borde">
+            <div class="history-content">
+                <div id="log-history">
+                    <!-- Las entradas anteriores se mostrarán aquí -->
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Footer fijo con formularios separados -->
+    <footer class="app-footer">
+        <div class="footer-credit">
+            Creado por Mica - desde buenos aires
+        </div>
+        <div class="footer-menu">
+            <button class="burger-btn" id="burger-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="footer-menu-options" id="footer-menu-options">
+                <!-- 4 BOTONES SEPARADOS COMO SOLICITADO -->
+                <div class="footer-menu-option" id="new-daily-card">
+                    <i class="fas fa-dog"></i>
+                    <span>Carta del Día</span>
+                </div>
+                <div class="footer-menu-option" id="new-spread">
+                    <i class="fas fa-cat"></i>
+                    <span>Otras Tiradas</span>
+                </div>
+                <div class="footer-menu-option" id="manage-decks">
+                    <i class="fas fa-cog"></i>
+                    <span>Administrar: Mazos</span>
+                </div>
+                <div class="footer-menu-option" id="manage-spreads">
+                    <i class="fas fa-cog"></i>
+                    <span>Administar: Tiradas</span>
+                </div>
+            </div>
+            
+            <!-- FORMULARIO SEPARADO PARA CARTA DEL DÍA -->
+            <div class="log-container-footer" id="daily-card-form">
+                <div class="log-header">
+                    <div class="log-title" style="margin-right: 20px;">Bienvenido a tu carta del día</div>
+                    <div class="header-actions">
+                        <button class="header-btn" id="save-daily-btn" title="Guardar">
+                            <i class="fa-solid fa-floppy-disk"></i>
+                        </button>
+                        <button class="header-btn" id="clear-daily-btn" title="Limpiar">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
+                        <button class="header-btn" id="close-daily-btn" title="Cerrar">
+                            <i class="fa-solid fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="date-section">
+                    <div class="date-input-container">
+                        <label class="date-input-label" for="daily-date">FECHA:</label>
+                        <input type="date" class="date-input" id="daily-date">
+                    </div>
+                </div>
+
+                <div class="deck-section">
+                    <div class="section-title">MAZO</div>
+                    <div class="deck-input">
+                        <select class="deck-select" id="daily-deck-select">
+                            <option value="">Cargando mazos...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="tarot-section">
+                    <div class="section-title">CARTA DE TAROT DEL DÍA</div>
+                    
+                    <div class="tarot-input">
+                        <select class="tarot-select" id="daily-tarot-card-select">
+                            <option value="">Seleccionar carta...</option>
+                        </select>
+                        
+                        <select class="orientation-select" id="daily-tarot-orientation">
+                            <option value="upright">Derecha</option>
+                            <option value="reversed">Reversa</option>
+                        </select>
+                    </div>
+                    
+                    <div id="selected-daily-tarot-card">
+                        <!-- La carta seleccionada se mostrará aquí -->
+                    </div>
+                </div>
+
+                <div class="notes-section">
+                    <div class="section-title">NOTAS</div>
+                    <textarea class="notes-textarea" id="daily-notes" placeholder="Escribe tus notas, interpretaciones o reflexiones sobre la carta..."></textarea>
+                </div>
+            </div>
+
+            <!-- FORMULARIO SEPARADO PARA TIRADA -->
+            <div class="log-container-footer" id="spread-form">
+                <div class="log-header">
+                    <div class="log-title">registra tu tirada</div>
+                    <div class="header-actions">
+                        <button class="header-btn" id="save-spread-btn" title="Guardar">
+                            <i class="fa-solid fa-floppy-disk"></i>
+                        </button>
+                        <button class="header-btn" id="clear-spread-btn" title="Limpiar">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
+                        <button class="header-btn" id="close-spread-btn" title="Cerrar">
+                            <i class="fa-solid fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="date-section">
+                    <div class="date-input-container">
+                        <label class="date-input-label" for="spread-date">FECHA:</label>
+                        <input type="date" class="date-input" id="spread-date">
+                    </div>
+                </div>
+
+                <div class="deck-section">
+                    <div class="section-title">MAZO (DECK)</div>
+                    <div class="deck-input">
+                        <select class="deck-select" id="spread-deck-select">
+                            <option value="">Cargando mazos...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="spread-types-section">
+                    <div class="spread-types-header">
+                        <div class="section-title">TIPO DE TIRADA</div>
+                    </div>
+                    
+                    <div class="spread-types-list" id="spread-types-list">
+                        <!-- Los tipos de tiradas se cargarán aquí -->
+                    </div>
+                    
+                    <div id="selected-spread-positions">
+                        <!-- Las posiciones de la tirada seleccionada se mostrarán aquí -->
+                    </div>
+                </div>
+
+                <div class="notes-section">
+                    <div class="section-title">NOTAS</div>
+                    <textarea class="notes-textarea" id="spread-notes" placeholder="Escribe tus notas, interpretaciones o reflexiones sobre la tirada..."></textarea>
+                </div>
+            </div>
+        </div>
+    </footer>
+    </div>
+
+
+<script src="initialization.js"></script>
+<script src="data.js"></script>
+<script src="astrology_section.js"></script>
+
+<script src="main.js"></script>
+<script src="stats.js"></script>
+<script src="historylog.js"></script>
+<script src="charts.js"></script>
+<script src="dailycard.js"></script>
+<script src="deck.js"></script>
+<script src="footer.js"></script>
+<script src="spread.js"></script>
+<script src="spreadinfomodal.js"></script>
+<script src="spreadmodal.js"></script>
+<script src="utility.js"></script>
+<script src="eventlisteners.js"></script>
+
+</body>
+</html>

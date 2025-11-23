@@ -1,0 +1,2550 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arcana</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path fill='%236d597a' d='M64 400l85.7-208.2c17-41.3 47.8-75.3 87.2-96.3L383.8 17.2c12.3-6.6 26.5 4.7 23 18.2L369.6 177.8c-1.1 4.1-1.6 8.3-1.6 12.6 0 6.3 1.2 12.6 3.6 18.5l76.4 191.1-207.1 0 11.8-35.4 40.4-13.5c6.5-2.2 10.9-8.3 10.9-15.2s-4.4-13-10.9-15.2l-40.4-13.5-13.5-40.4C237 260.4 230.9 256 224 256s-13 4.4-15.2 10.9l-13.5 40.4-40.4 13.5C148.4 323 144 329.1 144 336s4.4 13 10.9 15.2l40.4 13.5 11.8 35.4-143.1 0zM279.6 141.5c-1.1-3.3-4.1-5.5-7.6-5.5s-6.5 2.2-7.6 5.5l-6.7 20.2-20.2 6.7c-3.3 1.1-5.5 4.1-5.5 7.6s2.2 6.5 5.5 7.6l20.2 6.7 6.7 20.2c1.1 3.3 4.1 5.5 7.6 5.5s6.5-2.2 7.6-5.5l6.7-20.2 20.2-6.7c3.3-1.1 5.5-4.1 5.5-7.6s-2.2-6.5-5.5-7.6l-20.2-6.7-6.7-20.2zM32 448l448 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 512c-17.7 0-32-14.3-32-32s14.3-32 32-32z'/></svg>">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Tus estilos -->
+    <link rel="stylesheet" href="charts.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="astrology_section.css">
+    <link rel="stylesheet" href="historial.css">
+    <link rel="stylesheet" href="stats.css">
+    <link rel="stylesheet" href="main.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Inconsolata&family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&family=Special+Elite&display=swap" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Playfair+Display:400,700,900,400italic,700italic,900italic|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+</head>
+<body>
+    <div class="outer-border">
+    <header>
+        <h1>ARCANA</h1>
+    </header>
+    
+    <div class="welcome">
+        <!-- Sección de Carta del Día -->
+        <div class="daily-card-section">
+            <div id="daily-card-status">
+                <!-- La información de la carta del día se cargará aquí -->
+            </div>
+        </div>
+        
+        <!-- Sección de Información Astrológica -->
+        <div class="astrology-section">
+            <div id="astrology-info">
+                <!-- La información astrológica se cargará aquí -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Botones de períodos predefinidos -->
+    <div class="statistics-section">
+        <div class="history-title">Arcane Analysis</div>
+        <div class="history-headline">estadísticas de las cartas del día</div>
+
+        <!-- Botones de períodos predefinidos -->
+        <div class="stats-periods" >
+            <button class="period-btn active" data-period="all"><i class="fa-solid fa-infinity"></i> Siempre</button>
+            <button class="period-btn" data-period="month"><i class="fa-solid fa-fish"></i> Este Mes</button>
+            <button class="period-btn" data-period="week"><i class="fa-solid fa-fish-fins"></i> Esta Semana</button>
+            <button class="period-btn" id="custom-period-btn" data-period="custom">
+                <i class="fa-solid fa-frog"></i> Otro Período
+            </button>
+        </div>
+
+
+        <!-- Reemplazar la sección de gráficos en el HTML -->
+        <div class="charts-section">
+
+                        <!-- Controles del carrusel -->
+        <div class="carousel-controls">
+            <button class="carousel-btn prev-btn" aria-label="Gráfico anterior">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            
+            <div class="carousel-indicators">
+                <div class="carousel-indicator active" data-index="0"></div>
+                <div class="carousel-indicator" data-index="1"></div>
+                <div class="carousel-indicator" data-index="2"></div>
+                <div class="carousel-indicator" data-index="3"></div>
+                <div class="carousel-indicator" data-index="4"></div>
+            </div>
+            
+            <button class="carousel-btn next-btn" aria-label="Siguiente gráfico">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>    
+    <div class="charts-carousel">
+            <div class="charts-track">
+                <!-- Gráficos de Orientación -->
+                <div class="chart-category">
+                    <div class="chart-title">Orientación de Cartas</div>
+                    <div class="charts-row">
+                        <div class="chart-container">
+                            <canvas id="orientation-chart" width="200" height="200"></canvas>
+                        </div>
+                        <div class="chart-legend" id="orientation-legend"></div>
+                    </div>
+                </div>
+
+                <!-- Gráficos de Palos -->
+                <div class="chart-category">
+                    <div class="chart-title">Distribución por Palos</div>
+                    <div class="charts-row">
+                        <div class="chart-container">
+                            <canvas id="suits-chart" width="200" height="200"></canvas>
+                        </div>
+                        <div class="chart-legend" id="suits-legend"></div>
+                    </div>
+                </div>
+
+                <!-- Gráficos de Elementos -->
+                <div class="chart-category">
+                    <div class="chart-title">Distribución por Elementos</div>
+                    <div class="charts-row">
+                        <div class="chart-container">
+                            <canvas id="elements-chart" width="200" height="200"></canvas>
+                        </div>
+                        <div class="chart-legend" id="elements-legend"></div>
+                    </div>
+                </div>
+
+                <!-- Gráficos de Planetas -->
+                <div class="chart-category">
+                    <div class="chart-title">Distribución por Planetas</div>
+                    <div class="charts-row">
+                        <div class="chart-container">
+                            <canvas id="planets-chart" width="200" height="200"></canvas>
+                        </div>
+                        <div class="chart-legend" id="planets-legend"></div>
+                    </div>
+                </div>
+
+                <!-- Gráficos de Signos Zodiacales -->
+                <div class="chart-category">
+                    <div class="chart-title">Distribución por Signos</div>
+                    <div class="charts-row">
+                        <div class="chart-container">
+                            <canvas id="signs-chart" width="200" height="200"></canvas>
+                        </div>
+                        <div class="chart-legend" id="signs-legend"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+</div>
+    
+        <div class="stats-borde" style="display: none; margin: auto; margin-top:20px;">
+            <!-- Tarjetas de estadísticas -->
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-value" id="total-entries">0</div>
+                    <div class="stat-label"><div class="stat-icon"><i class="fa-solid fa-sun"></i></div><br> Registros Diarios</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="unique-cards">0</div>
+                    <div class="stat-label"><div class="stat-icon"><i class="fa-solid fa-hand-spock"></i></div><br> Cartas Únicas</div>
+                </div>
+                <div class="stat-card" style="display:none">
+                    <div class="stat-value" id="upright-percent">0%</div>
+                    <div class="stat-label">En Derecha</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="reversed-percent">0%</div>
+                    <div class="stat-label"><div class="stat-icon"><i class="fa-solid fa-arrow-rotate-left"></i></div><br> Reversas</div>
+                </div>
+            </div>
+
+            <!-- Estadísticas de Palos -->
+            <div class="stats-cards" style="border-top: 2px solid var(--primary80)" >
+                <div class="stat-card">
+                    <div class="stat-value" id="major-arcana-percent">0%</div>
+                    <div class="stat-label"><div class="stat-icon"><i class="fa-solid fa-infinity"></i></div><br> Arcanos Mayores</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="court-cards-percent">0%</div>
+                    <div class="stat-label"><div class="stat-icon"><i class="fa-solid fa-crown"></i></div><br>Corte</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-value" id="wands-percent">0%</div>
+                    <div class="stat-label"><div class="stat-icon"><i class="fa-solid fa-wand-sparkles"></i></div><br>Bastos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="cups-percent">0%</div>
+                    <div class="stat-label"><div class="stat-icon"><i class="fa-solid fa-wine-glass"></i></div><br>Copas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="swords-percent">0%</div>
+                    <div class="stat-label"><div class="stat-icon"><i class="fa-solid fa-bolt-lightning"></i></div><br>Espadas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="pentacles-percent">0%</div>
+                    <div class="stat-label"><div class="stat-icon"><i class="fa-solid fa-coins"></i></div><br>Pentáculos</div>
+                </div>
+            </div>
+
+            <!-- Estadísticas de Elementos -->
+            <div class="stats-cards" style="border-top: 2px solid var(--primary80)">
+                <div class="stat-card">
+                    <div class="stat-value" id="fire-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">±</div><br>Fuego</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="water-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">³</div><br>Agua</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="air-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">²</div><br>Aire</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="earth-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">´</div><br>Tierra</div>
+                </div>
+            </div>
+
+            <!-- Estadísticas de Planetas -->
+            <div class="stats-cards" style="border-top: 2px solid var(--primary80)">
+                <div class="stat-card">
+                    <div class="stat-value" id="sun-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">Q</div><br>Sol</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="moon-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">R</div><br>Luna</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="mercury-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">S</div><br>Mercurio</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="venus-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">T</div><br>Venus</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="mars-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">U</div><br>Marte</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="jupiter-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">V</div><br>Júpiter</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="saturn-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">W</div><br>Saturno</div>
+                </div>
+            </div>
+
+            <!-- Estadísticas de Signos Zodiacales -->
+            <div class="stats-cards" style="border-top: 2px solid var(--primary80)">
+                <div class="stat-card">
+                    <div class="stat-value" id="aries-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">A</div><br>Aries</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="taurus-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">B</div><br>Tauro</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="gemini-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">C</div><br>Géminis</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="cancer-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">D</div><br>Cáncer</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="leo-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">E</div><br>Leo</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="virgo-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">F</div><br>Virgo</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="libra-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">G</div><br>Libra</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="scorpio-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">H</div><br>Escorpio</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="sagittarius-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">I</div><br>Sagitario</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="capricorn-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">J</div><br>Capricornio</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="aquarius-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">K</div><br>Acuario</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="pisces-percent">0%</div>
+                    <div class="stat-label"><div class="stat-astro">L</div><br>Piscis</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal para seleccionar período personalizado -->
+        <div class="period-selector-modal" id="period-selector-modal">
+            <div class="period-selector-content">
+                <div class="period-selector-header">
+                    <div class="period-selector-title"><i class="fa-solid fa-frog"></i> Otro Periodo</div>
+                    <button class="period-selector-close" id="period-selector-close">&times;</button>
+                </div>
+                <div class="period-selector-options">
+                    <div class="period-selector-option">
+                        <label>Periodo:</label>
+                        <select id="custom-period-type">
+                            <option value="year">Anual</option>
+                            <option value="month">Mensual</option>
+                            <option value="week">Semanal</option>
+                        </select>
+                    </div>
+                    <div class="period-selector-option">
+                        <label>Año:</label>
+                        <select id="custom-year">
+                            <!-- Los años se cargarán dinámicamente -->
+                        </select>
+                    </div>
+                    <div class="period-selector-option" id="custom-month-container" style="display: none;">
+                        <label>Mes:</label>
+                        <select id="custom-month">
+                            <option value="1">Enero</option>
+                            <option value="2">Febrero</option>
+                            <option value="3">Marzo</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Mayo</option>
+                            <option value="6">Junio</option>
+                            <option value="7">Julio</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
+                        </select>
+                    </div>
+                    <div class="period-selector-option" id="custom-week-container" style="display: none;">
+                        <label>Semana:</label>
+                        <select id="custom-week">
+                            <!-- Las semanas se cargarán dinámicamente -->
+                        </select>
+                    </div>
+                </div>
+                <div class="period-selector-actions">
+                    <button class="btn-secondary" id="period-selector-cancel">Cancelar</button>
+                    <button class="btn-primary" id="period-selector-apply">Aplicar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="history-section" style="max-width:400px;  margin: auto">
+    <div class="log-history">
+        <div class="history-title">HISTORIAL</div>
+        
+        <div class="history-tabs">
+            <button class="history-tab active" data-tab="daily"><i class="fa-solid fa-seedling"></i> Cartas del Día</button>
+            <button class="history-tab" data-tab="spread"><i class="fa-solid fa-leaf"></i> Tiradas</button>
+            <button class="history-tab " data-tab="all"><i class="fa-solid fa-tree"></i> Todos</button>
+        </div>
+        <div class="history-borde">
+            <div class="history-content">
+                <div id="log-history">
+                    <!-- Las entradas anteriores se mostrarán aquí -->
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Footer fijo con formularios separados -->
+    <footer class="app-footer">
+        <div class="footer-credit">
+            Creado por Mica - desde buenos aires
+        </div>
+        <div class="footer-menu">
+            <button class="burger-btn" id="burger-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="footer-menu-options" id="footer-menu-options">
+                <!-- 4 BOTONES SEPARADOS COMO SOLICITADO -->
+                <div class="footer-menu-option" id="new-daily-card">
+                    <i class="fas fa-dog"></i>
+                    <span>Carta del Día</span>
+                </div>
+                <div class="footer-menu-option" id="new-spread">
+                    <i class="fas fa-cat"></i>
+                    <span>Otras Tiradas</span>
+                </div>
+                <div class="footer-menu-option" id="manage-decks">
+                    <i class="fas fa-cog"></i>
+                    <span>Administrar: Mazos</span>
+                </div>
+                <div class="footer-menu-option" id="manage-spreads">
+                    <i class="fas fa-cog"></i>
+                    <span>Administar: Tiradas</span>
+                </div>
+            </div>
+            
+            <!-- FORMULARIO SEPARADO PARA CARTA DEL DÍA -->
+            <div class="log-container-footer" id="daily-card-form">
+                <div class="log-header">
+                    <div class="log-title" style="margin-right: 20px;">Bienvenido a tu carta del día</div>
+                    <div class="header-actions">
+                        <button class="header-btn" id="save-daily-btn" title="Guardar">
+                            <i class="fa-solid fa-floppy-disk"></i>
+                        </button>
+                        <button class="header-btn" id="clear-daily-btn" title="Limpiar">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
+                        <button class="header-btn" id="close-daily-btn" title="Cerrar">
+                            <i class="fa-solid fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="date-section">
+                    <div class="date-input-container">
+                        <label class="date-input-label" for="daily-date">FECHA:</label>
+                        <input type="date" class="date-input" id="daily-date">
+                    </div>
+                </div>
+
+                <div class="deck-section">
+                    <div class="section-title">MAZO</div>
+                    <div class="deck-input">
+                        <select class="deck-select" id="daily-deck-select">
+                            <option value="">Cargando mazos...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="tarot-section">
+                    <div class="section-title">CARTA DE TAROT DEL DÍA</div>
+                    
+                    <div class="tarot-input">
+                        <select class="tarot-select" id="daily-tarot-card-select">
+                            <option value="">Seleccionar carta...</option>
+                        </select>
+                        
+                        <select class="orientation-select" id="daily-tarot-orientation">
+                            <option value="upright">Derecha</option>
+                            <option value="reversed">Reversa</option>
+                        </select>
+                    </div>
+                    
+                    <div id="selected-daily-tarot-card">
+                        <!-- La carta seleccionada se mostrará aquí -->
+                    </div>
+                </div>
+
+                <div class="notes-section">
+                    <div class="section-title">NOTAS</div>
+                    <textarea class="notes-textarea" id="daily-notes" placeholder="Escribe tus notas, interpretaciones o reflexiones sobre la carta..."></textarea>
+                </div>
+            </div>
+
+            <!-- FORMULARIO SEPARADO PARA TIRADA -->
+            <div class="log-container-footer" id="spread-form">
+                <div class="log-header">
+                    <div class="log-title">registra tu tirada</div>
+                    <div class="header-actions">
+                        <button class="header-btn" id="save-spread-btn" title="Guardar">
+                            <i class="fa-solid fa-floppy-disk"></i>
+                        </button>
+                        <button class="header-btn" id="clear-spread-btn" title="Limpiar">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
+                        <button class="header-btn" id="close-spread-btn" title="Cerrar">
+                            <i class="fa-solid fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="date-section">
+                    <div class="date-input-container">
+                        <label class="date-input-label" for="spread-date">FECHA:</label>
+                        <input type="date" class="date-input" id="spread-date">
+                    </div>
+                </div>
+
+                <div class="deck-section">
+                    <div class="section-title">MAZO (DECK)</div>
+                    <div class="deck-input">
+                        <select class="deck-select" id="spread-deck-select">
+                            <option value="">Cargando mazos...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="spread-types-section">
+                    <div class="spread-types-header">
+                        <div class="section-title">TIPO DE TIRADA</div>
+                    </div>
+                    
+                    <div class="spread-types-list" id="spread-types-list">
+                        <!-- Los tipos de tiradas se cargarán aquí -->
+                    </div>
+                    
+                    <div id="selected-spread-positions">
+                        <!-- Las posiciones de la tirada seleccionada se mostrarán aquí -->
+                    </div>
+                </div>
+
+                <div class="notes-section">
+                    <div class="section-title">NOTAS</div>
+                    <textarea class="notes-textarea" id="spread-notes" placeholder="Escribe tus notas, interpretaciones o reflexiones sobre la tirada..."></textarea>
+                </div>
+            </div>
+        </div>
+    </footer>
+    </div>
+
+
+
+<script>
+
+// Configuración de Supabase
+const SUPABASE_URL = 'https://mtzdqlhketqsoqiepule.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10emRxbGhrZXRxc29xaWVwdWxlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI5MjM5ODEsImV4cCI6MjA3ODQ5OTk4MX0.oGzOakzoTndR9IQK3dhPnYLpUsy19asrojB8yTpJCZc';
+
+// Inicializar cliente de Supabase
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let currentSpreadType = null; // Añadir esta variable global
+let currentDeckId = 'default'; // Añadir esta variable global
+
+// Variables globales
+let logHistory = [];
+let decks = [];
+let spreadTypes = [];
+let todayCard = null;
+let astrologyData = null;
+
+// Variables separadas para cada formulario
+let currentDailyEntry = {
+    date: new Date(),
+    notes: "",
+    tarotCard: null,
+    tarotOrientation: 'upright',
+    deckId: 'default'
+};
+
+let currentSpreadEntry = {
+            date: new Date(),
+            notes: "",
+            spreadType: null,
+            spreadCards: [],
+            deckId: 'default'
+        };
+
+// ===== DATOS FUNDACIONALES ACTUALIZADOS (19 Nov 2025, 23:51 UT) =====
+const FOUNDATION_DATE = new Date('2025-11-19T23:51:00Z');
+const FOUNDATION_SUN_LONGITUDE = 237.9067; // 27°54'24" Scorpio = 237°54'24"
+const FOUNDATION_MOON_LONGITUDE = 234.7703; // 24°46'13" Scorpio = 234°46'13"
+const SUN_DAILY_MOTION = 0.985647;
+const MOON_DAILY_MOTION = 13.176;
+
+        // ===== CONFIGURACIÓN DEL FOOTER MENU ACTUALIZADO =====
+        function setupFooterMenu() {
+            const burgerBtn = document.getElementById('burger-menu-btn');
+            const menuOptions = document.getElementById('footer-menu-options');
+            const newDailyCard = document.getElementById('new-daily-card');
+            const newSpread = document.getElementById('new-spread');
+            const manageDecks = document.getElementById('manage-decks');
+            const manageSpreads = document.getElementById('manage-spreads');
+            
+            const dailyForm = document.getElementById('daily-card-form');
+            const spreadForm = document.getElementById('spread-form');
+            
+            // Alternar menú al hacer clic en el botón hamburguesa
+            if (burgerBtn) {
+                burgerBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    menuOptions.classList.toggle('show');
+                    // Cerrar formularios si están abiertos
+                    dailyForm.classList.remove('show');
+                    spreadForm.classList.remove('show');
+                });
+            }
+            
+            // Cerrar menú al hacer clic fuera
+            document.addEventListener('click', function() {
+                menuOptions.classList.remove('show');
+            });
+            
+            // Prevenir que el menú se cierre al hacer clic en él
+            if (menuOptions) {
+                menuOptions.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            }
+            
+            // Funcionalidad para las opciones del menú
+            if (newDailyCard) {
+                newDailyCard.addEventListener('click', function() {
+                    // Mostrar formulario para carta del día
+                    dailyForm.classList.add('show');
+                    spreadForm.classList.remove('show');
+                    menuOptions.classList.remove('show');
+                    initializeDailyForm();
+                });
+            }
+
+            // ===== FUNCIONES FALTANTES PARA EL MODAL DE TIRADAS =====
+
+function showSpreadInfoModal(entry) {
+    const spreadCards = entry.spread_cards || [];
+    const totalCards = spreadCards.length;
+    const filledCards = spreadCards.filter(card => card && card.card).length;
+    const uprightCards = spreadCards.filter(card => card && card.card && card.orientation === 'upright').length;
+    const reversedCards = spreadCards.filter(card => card && card.card && card.orientation === 'reversed').length;
+    const spreadStats = calculateSpreadStatistics(spreadCards);
+    
+    const modalHTML = `
+        <div class="spread-modal-overlay" id="spread-info-modal">
+            <div class="spread-modal-content">
+                <div class="modal-header">
+                    <div class="spread-modal-title">
+                        Tirada: ${entry.spread_name || 'Personalizada'}
+                    </div>
+                    <button class="spread-modal-close" id="spread-modal-close">&times;</button>
+                </div>
+                
+                <div class="spread-date">
+                    ${formatDateForDisplay(entry.date)}
+                </div>
+                
+                <div class="spread-stats">
+                    <div class="spread-stat">
+                        <div class="spread-stat-value">${totalCards}</div>
+                        <div class="spread-stat-label">Total Cartas</div>
+                    </div>
+                    <div class="spread-stat">
+                        <div class="spread-stat-value">${filledCards}</div>
+                        <div class="spread-stat-label">Seleccionadas</div>
+                    </div>
+                    <div class="spread-stat">
+                        <div class="spread-stat-value">${uprightCards}</div>
+                        <div class="spread-stat-label">En Derecha</div>
+                    </div>
+                    <div class="spread-stat">
+                        <div class="spread-stat-value">${reversedCards}</div>
+                        <div class="spread-stat-label">En Reversa</div>
+                    </div>
+                </div>
+                
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <div class="stat-value">${spreadStats.majorArcana}</div>
+                        <div class="stat-label">Arcanos Mayores</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${spreadStats.minorArcana}</div>
+                        <div class="stat-label">Arcanos Menores</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${spreadStats.courtCards}</div>
+                        <div class="stat-label">Cartas de Corte</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${Math.round(spreadStats.reversalPercentage)}%</div>
+                        <div class="stat-label">En Reversa</div>
+                    </div>
+                </div>
+                
+                <div class="section-title">CARTAS DE LA TIRADA</div>
+                <div class="spread-cards-grid">
+                    ${createSpreadCardsHTML(spreadCards, entry.spread_type_id)}
+                </div>
+                
+                <div class="modal-actions" style="margin-top: 25px; display: flex; gap: 10px; justify-content: flex-end;">
+                    <button class="btn-primary" id="close-spread-modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    setupSpreadModalEvents();
+}
+
+function calculateSpreadStatistics(spreadCards) {
+    const stats = {
+        majorArcana: 0,
+        minorArcana: 0,
+        courtCards: 0,
+        reversalPercentage: 0
+    };
+    
+    const validCards = spreadCards.filter(card => card && card.card);
+    const totalValidCards = validCards.length;
+    
+    if (totalValidCards === 0) return stats;
+    
+    validCards.forEach(card => {
+        const cardData = card.card;
+        
+        // Determinar tipo de carta
+        if (cardData.Suit === 'Major Arcana') {
+            stats.majorArcana++;
+        } else if (['Page', 'Knight', 'Queen', 'King'].some(title => cardData.Name.includes(title))) {
+            stats.courtCards++;
+        } else {
+            stats.minorArcana++;
+        }
+    });
+    
+    // Calcular porcentaje de reversas
+    const reversedCards = validCards.filter(card => card.orientation === 'reversed').length;
+    stats.reversalPercentage = totalValidCards > 0 ? (reversedCards / totalValidCards) * 100 : 0;
+    
+    return stats;
+}
+
+function createSpreadCardsHTML(spreadCards, spreadTypeId) {
+    if (!spreadCards || spreadCards.length === 0) {
+        return '<div class="empty-position">No hay cartas registradas en esta tirada</div>';
+    }
+    
+    let html = '';
+    
+    spreadCards.forEach((cardData, index) => {
+        if (!cardData || !cardData.card) {
+            html += `
+                <div class="spread-card-position">
+                    <div class="position-header">
+                        <div class="position-name">Posición ${index + 1}</div>
+                    </div>
+                    <div class="empty-position">Sin carta seleccionada</div>
+                </div>
+            `;
+            return;
+        }
+        
+        const card = cardData.card;
+        const orientation = cardData.orientation === 'reversed' ? 'Reversa' : 'Derecha';
+        const orientationClass = cardData.orientation === 'reversed' ? 'reversed' : 'upright';
+        
+        html += `
+            <div class="spread-card-position">
+                <div class="position-header">
+                    <div class="position-name">${cardData.position || `Posición ${index + 1}`}</div>
+                </div>
+                <div class="spread-card-details">
+                    <div class="spread-card-name">${card.Name}</div>
+                    <div class="spread-card-orientation ${orientationClass}">${orientation}</div>
+                </div>
+                <div class="spread-card-info">
+                    <span>${card.Suit}</span>
+                    ${card.Element ? `<span>${card.Element}</span>` : ''}
+                    ${card.Planet ? `<span>${card.Planet}</span>` : ''}
+                    ${card.Sign ? `<span>${card.Sign}</span>` : ''}
+                </div>
+            </div>
+        `;
+    });
+    
+    return html;
+}
+
+function setupSpreadModalEvents() {
+    const closeBtn = document.getElementById('spread-modal-close');
+    const closeModalBtn = document.getElementById('close-spread-modal');
+    const modal = document.getElementById('spread-info-modal');
+    
+    const closeModal = () => {
+        if (modal) modal.remove();
+    };
+    
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+    
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+    }
+    
+    // Cerrar con tecla Escape
+    const escHandler = (e) => {
+        if (e.key === 'Escape') closeModal();
+    };
+    document.addEventListener('keydown', escHandler);
+    
+    // Limpiar event listener cuando se cierre el modal
+    if (modal) {
+        modal.addEventListener('click', function handler(e) {
+            if (e.target === modal) {
+                document.removeEventListener('keydown', escHandler);
+            }
+        });
+    }
+}
+            
+            if (newSpread) {
+                newSpread.addEventListener('click', function() {
+                    // Mostrar formulario para tirada
+                    spreadForm.classList.add('show');
+                    dailyForm.classList.remove('show');
+                    menuOptions.classList.remove('show');
+                    initializeSpreadForm();
+                });
+            }
+            
+            if (manageDecks) {
+                manageDecks.addEventListener('click', function() {
+                    // Mostrar modal de gestión de mazos
+                    showManageDecksModal();
+                    menuOptions.classList.remove('show');
+                });
+            }
+            
+            if (manageSpreads) {
+                manageSpreads.addEventListener('click', function() {
+                    // Mostrar modal de gestión de tiradas
+                    showManageSpreadsModal();
+                    menuOptions.classList.remove('show');
+                });
+            }
+            
+            // Cerrar formularios
+            document.getElementById('close-daily-btn').addEventListener('click', function() {
+                dailyForm.classList.remove('show');
+            });
+            
+            document.getElementById('close-spread-btn').addEventListener('click', function() {
+                spreadForm.classList.remove('show');
+            });
+            
+            // Cerrar formularios al hacer clic fuera
+            document.addEventListener('click', function(e) {
+                if (!dailyForm.contains(e.target) && !burgerBtn.contains(e.target)) {
+                    dailyForm.classList.remove('show');
+                }
+                if (!spreadForm.contains(e.target) && !burgerBtn.contains(e.target)) {
+                    spreadForm.classList.remove('show');
+                }
+            });
+        }
+
+        // ===== INICIALIZACIÓN DE FORMULARIOS SEPARADOS =====
+        function initializeDailyForm() {
+            const now = new Date();
+            document.getElementById('daily-date').valueAsDate = now;
+            
+            // Inicializar selector de cartas para formulario diario
+            const tarotSelect = document.getElementById('daily-tarot-card-select');
+            tarotSelect.innerHTML = '<option value="">Seleccionar carta...</option>';
+            
+            if (typeof tarotCards !== 'undefined') {
+                Object.values(tarotCards).forEach(card => {
+                    const option = document.createElement('option');
+                    option.value = card.ID;
+                    option.textContent = `${card.Name} (${card.Suit})`;
+                    tarotSelect.appendChild(option);
+                });
+            }
+            
+            // Event listeners para formulario diario
+            document.getElementById('daily-tarot-orientation').addEventListener('change', function() {
+                currentDailyEntry.tarotOrientation = this.value;
+                updateDailyTarotCardDisplay();
+            });
+            
+            tarotSelect.addEventListener('change', function() {
+                const cardId = this.value;
+                if (cardId && typeof tarotCards !== 'undefined') {
+                    currentDailyEntry.tarotCard = tarotCards[cardId];
+                    updateDailyTarotCardDisplay();
+                } else {
+                    currentDailyEntry.tarotCard = null;
+                    document.getElementById('selected-daily-tarot-card').innerHTML = '';
+                }
+            });
+            
+            // Botones del formulario diario
+            document.getElementById('save-daily-btn').addEventListener('click', saveDailyEntry);
+            document.getElementById('clear-daily-btn').addEventListener('click', clearDailyForm);
+        }
+
+
+        // ===== FUNCIONES PARA FORMULARIO DIARIO =====
+        function clearDailyForm() {
+            currentDailyEntry = {
+                date: new Date(),
+                notes: "",
+                tarotCard: null,
+                tarotOrientation: 'upright',
+                deckId: 'default'
+            };
+            
+            document.getElementById('daily-date').valueAsDate = new Date();
+            document.getElementById('daily-notes').value = '';
+            document.getElementById('daily-tarot-card-select').value = '';
+            document.getElementById('daily-tarot-orientation').value = 'upright';
+            document.getElementById('selected-daily-tarot-card').innerHTML = '';
+            document.getElementById('daily-deck-select').value = currentDailyEntry.deckId;
+        }
+
+        function updateDailyTarotCardDisplay() {
+            const displayElement = document.getElementById('selected-daily-tarot-card');
+            
+            if (currentDailyEntry.tarotCard) {
+                const card = currentDailyEntry.tarotCard;
+                const orientation = currentDailyEntry.tarotOrientation;
+                const orientationText = orientation === 'upright' ? 'Derecha' : 'Reversa';
+                
+                displayElement.innerHTML = `
+                    <div class="selected-tarot-card">
+                        <div class="tarot-card-display">
+                            <div class="tarot-card-name">${card.Name}</div>
+
+                            <div class="tarot-card-details">
+                                <div class="tarot-card-detail">${card.Suit}</div>
+                                <div class="tarot-card-detail">${orientationText}</div>
+                                ${card.Element ? `<div class="tarot-card-detail">${card.Element}</div>` : ''}
+                                ${card.Planet ? `<div class="tarot-card-detail">${card.Planet}</div>` : ''}
+                                ${card.Sign ? `<div class="tarot-card-detail">${card.Sign}</div>` : ''}
+                            </div>
+                            <button type="button" class="remove-tarot-card">×</button>
+                        </div>
+                    </div>
+                `;
+                
+                displayElement.querySelector('.remove-tarot-card').addEventListener('click', function() {
+                    currentDailyEntry.tarotCard = null;
+                    document.getElementById('daily-tarot-card-select').value = '';
+                    displayElement.innerHTML = '';
+                });
+            }
+        }
+
+        async function saveDailyEntry() {
+            const dateInput = document.getElementById('daily-date').value;
+            let entryDate;
+
+            if (dateInput) {
+                const [year, month, day] = dateInput.split('-');
+                entryDate = new Date(year, month - 1, day);
+            } else {
+                entryDate = new Date();
+            }
+
+            currentDailyEntry.date = entryDate;
+            currentDailyEntry.notes = document.getElementById('daily-notes').value;
+            currentDailyEntry.deckId = document.getElementById('daily-deck-select').value;
+
+            if (!currentDailyEntry.tarotCard) {
+                alert('Por favor, selecciona una carta de tarot');
+                return;
+            }
+
+            const entryData = {
+                date: currentDailyEntry.date.toISOString(),
+                notes: currentDailyEntry.notes,
+                deck_id: currentDailyEntry.deckId,
+                entry_type: 'daily',
+                tarot_card: currentDailyEntry.tarotCard,
+                tarot_orientation: currentDailyEntry.tarotOrientation
+            };
+
+            try {
+                const { data, error } = await supabase
+                    .from('log_entries')
+                    .upsert([entryData]);
+
+                if (error) throw error;
+
+                console.log('Entrada diaria guardada en Supabase:', data);
+
+                await loadLogHistory();
+                clearDailyForm();
+
+                alert('Carta del día guardada correctamente');
+                document.getElementById('daily-card-form').classList.remove('show');
+
+            } catch (error) {
+                console.error('Error al guardar carta del día:', error);
+                alert('Error al guardar: ' + error.message);
+            }
+        }
+
+// ===== FUNCIONES CORREGIDAS PARA TIRADAS =====
+function initializeSpreadForm() {
+    console.log('🚀 Inicializando formulario de tirada...');
+    
+    // ✅ ESTADO INICIAL ROBUSTO
+    const now = new Date();
+    const spreadDateInput = document.getElementById('spread-date');
+    
+    // Validar y establecer fecha
+    if (spreadDateInput) {
+        try {
+            spreadDateInput.valueAsDate = now;
+            console.log('✅ Fecha establecida:', now.toISOString().split('T')[0]);
+        } catch (error) {
+            console.warn('⚠️ No se pudo establecer la fecha automáticamente');
+            spreadDateInput.value = now.toISOString().split('T')[0];
+        }
+    }
+    
+    // ✅ REINICIO COMPLETO DEL ESTADO
+    currentSpreadEntry = {
+        date: new Date(),
+        notes: "",
+        spreadType: null,
+        spreadCards: [],
+        deckId: currentDeckId || 'default',
+        _initialized: true,
+        _timestamp: Date.now()
+    };
+    
+    currentSpreadType = null;
+    
+    console.log('🔄 Estado de tirada reiniciado:', currentSpreadEntry);
+    
+    // ✅ CONFIGURACIÓN DE EVENT LISTENERS CON VALIDACIÓN
+    setupSpreadFormEventListeners();
+    
+    // ✅ CARGA ASINCRÓNICA DE TIPOS DE TIRADA
+    loadSpreadTypes()
+        .then(() => {
+            console.log('✅ Tipos de tirada cargados:', spreadTypes.length);
+            updateSpreadTypesList();
+        })
+        .catch(error => {
+            console.error('❌ Error al cargar tipos de tirada:', error);
+            // Usar datos por defecto como fallback
+            spreadTypes = getDefaultSpreadTypes();
+            updateSpreadTypesList();
+        });
+    
+    // ✅ LIMPIAR INTERFAZ
+    const positionsDisplay = document.getElementById('selected-spread-positions');
+    const notesTextarea = document.getElementById('spread-notes');
+    const deckSelect = document.getElementById('spread-deck-select');
+    
+    if (positionsDisplay) {
+        positionsDisplay.innerHTML = '';
+        console.log('✅ Display de posiciones limpiado');
+    }
+    
+    if (notesTextarea) {
+        notesTextarea.value = '';
+        console.log('✅ Notas limpiadas');
+    }
+    
+    if (deckSelect && decks.length > 0) {
+        const defaultDeck = decks.find(d => d.is_default) || decks[0];
+        if (defaultDeck) {
+            deckSelect.value = defaultDeck.id;
+            currentSpreadEntry.deckId = defaultDeck.id;
+            currentDeckId = defaultDeck.id;
+            console.log('✅ Mazo por defecto establecido:', defaultDeck.name);
+        }
+    }
+    
+    console.log('✅ Formulario de tirada inicializado correctamente');
+}
+
+// ✅ FUNCIÓN AUXILIAR PARA CONFIGURAR EVENT LISTENERS
+function setupSpreadFormEventListeners() {
+    console.log('🔧 Configurando event listeners del formulario...');
+    
+    // ✅ BOTONES DE ACCIÓN PRINCIPAL
+    const saveSpreadBtn = document.getElementById('save-spread-btn');
+    const clearSpreadBtn = document.getElementById('clear-spread-btn');
+    const spreadDeckSelect = document.getElementById('spread-deck-select');
+    
+    // Remover event listeners existentes para evitar duplicados
+    if (saveSpreadBtn) {
+        saveSpreadBtn.replaceWith(saveSpreadBtn.cloneNode(true));
+    }
+    if (clearSpreadBtn) {
+        clearSpreadBtn.replaceWith(clearSpreadBtn.cloneNode(true));
+    }
+    if (spreadDeckSelect) {
+        spreadDeckSelect.replaceWith(spreadDeckSelect.cloneNode(true));
+    }
+    
+    // ✅ CONFIGURAR NUEVOS EVENT LISTENERS
+    const newSaveBtn = document.getElementById('save-spread-btn');
+    const newClearBtn = document.getElementById('clear-spread-btn');
+    const newDeckSelect = document.getElementById('spread-deck-select');
+    
+    if (newSaveBtn) {
+        newSaveBtn.addEventListener('click', function(e) {
+            console.log('💾 Guardando tirada...');
+            e.preventDefault();
+            saveSpreadEntry();
+        });
+        console.log('✅ Listener de guardado configurado');
+    }
+    
+    if (newClearBtn) {
+        newClearBtn.addEventListener('click', function(e) {
+            console.log('🗑️ Limpiando formulario...');
+            e.preventDefault();
+            clearSpreadForm();
+        });
+        console.log('✅ Listener de limpieza configurado');
+    }
+    
+    if (newDeckSelect) {
+        newDeckSelect.addEventListener('change', function() {
+            const newDeckId = this.value;
+            console.log('🔄 Cambiando mazo:', newDeckId);
+            
+            currentSpreadEntry.deckId = newDeckId;
+            currentDeckId = newDeckId;
+            
+            // Recargar tipos de tirada filtrados por el nuevo mazo
+            updateSpreadTypesList();
+            
+            // Si hay una tirada seleccionada, verificar compatibilidad
+            if (currentSpreadType && currentSpreadType.deck_id !== newDeckId) {
+                console.warn('⚠️ Tirada actual no compatible con el mazo seleccionado');
+                // Opcional: limpiar selección de tirada
+                // currentSpreadEntry.spreadType = null;
+                // currentSpreadType = null;
+                // updateSpreadTypesList();
+            }
+        });
+        console.log('✅ Listener de cambio de mazo configurado');
+    }
+    
+    // ✅ VALIDACIÓN EN TIEMPO REAL DE NOTAS
+    const notesTextarea = document.getElementById('spread-notes');
+    if (notesTextarea) {
+        notesTextarea.addEventListener('input', function() {
+            currentSpreadEntry.notes = this.value;
+            console.log(`📝 Notas actualizadas: ${this.value.length} caracteres`);
+        });
+    }
+    
+    console.log('✅ Todos los event listeners configurados correctamente');
+}
+
+function setupSpreadModalEvents() {
+    console.log('🔧 Configurando eventos del modal de tiradas...');
+    
+    // ✅ ELEMENTOS DEL MODAL
+    const modal = document.getElementById('spreads-modal');
+    const closeBtn = document.querySelector('#spreads-modal .close-modal');
+    const cancelBtn = document.getElementById('cancel-spread');
+    const cardCountInput = document.getElementById('spread-card-count');
+    const addPositionBtn = document.getElementById('add-position-btn');
+    const saveSpreadBtn = document.getElementById('save-spread');
+    
+    // ✅ CIERRE DEL MODAL
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeSpreadModal);
+    }
+    
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', closeSpreadModal);
+    }
+    
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) closeSpreadModal();
+        });
+    }
+    
+    // ✅ CAMBIO EN NÚMERO DE CARTAS
+    if (cardCountInput) {
+        cardCountInput.addEventListener('change', function() {
+            const newCount = parseInt(this.value);
+            console.log('🔄 Cambiando número de cartas a:', newCount);
+            
+            if (newCount >= 1 && newCount <= 20) {
+                generateSpreadPositions(newCount);
+            } else {
+                console.warn('❌ Número de cartas inválido, restableciendo a 3');
+                this.value = 3;
+                generateSpreadPositions(3);
+            }
+        });
+    }
+    
+    // ✅ AGREGAR POSICIÓN
+    if (addPositionBtn) {
+        addPositionBtn.addEventListener('click', function() {
+            const currentCount = parseInt(document.getElementById('spread-card-count').value);
+            const newCount = currentCount + 1;
+            
+            if (newCount <= 20) {
+                document.getElementById('spread-card-count').value = newCount;
+                console.log('➕ Agregando posición, total:', newCount);
+                generateSpreadPositions(newCount);
+            } else {
+                console.warn('❌ Límite máximo de 20 posiciones alcanzado');
+                alert('Máximo 20 posiciones permitidas');
+            }
+        });
+    }
+    
+    // ✅ GUARDAR TIRADA
+    if (saveSpreadBtn) {
+        saveSpreadBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('💾 Guardando tipo de tirada...');
+            saveSpread();
+        });
+    }
+    
+    // ✅ EVENT DELEGATION PARA BOTONES DINÁMICOS
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('btn-edit-spread')) {
+            const spreadId = e.target.getAttribute('data-id');
+            console.log('✏️ Editando tirada:', spreadId);
+            editSpread(spreadId);
+        }
+        
+        if (e.target.classList.contains('btn-delete-spread')) {
+            const spreadId = e.target.getAttribute('data-id');
+            console.log('🗑️ Solicitando eliminación de tirada:', spreadId);
+            deleteSpread(spreadId);
+        }
+    });
+    
+    console.log('✅ Eventos del modal de tiradas configurados');
+}
+
+// ✅ FUNCIÓN AUXILIAR PARA CONFIGURAR EVENT LISTENERS
+function setupPositionEventListeners() {
+    const removeButtons = document.querySelectorAll('.remove-position');
+    
+    removeButtons.forEach(btn => {
+        // Remover listeners existentes para evitar duplicados
+        btn.replaceWith(btn.cloneNode(true));
+    });
+    
+    // Agregar nuevos listeners
+    document.querySelectorAll('.remove-position').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const positionItem = this.closest('.position-item');
+            if (positionItem) {
+                positionItem.remove();
+                updatePositionNumbersAndCount();
+            }
+        });
+    });
+}
+
+// ✅ FUNCIÓN AUXILIAR ACTUALIZADA
+function updatePositionNumbersAndCount() {
+    const positions = document.querySelectorAll('.position-item');
+    let hasEmptyPositions = false;
+    
+    positions.forEach((item, index) => {
+        const numberElement = item.querySelector('.position-number');
+        const inputElement = item.querySelector('.position-input');
+        
+        if (numberElement) numberElement.textContent = index + 1;
+        if (inputElement) {
+            inputElement.setAttribute('data-position', index);
+            inputElement.setAttribute('placeholder', `Significado de la posición ${index + 1}`);
+            
+            // Verificar si hay posiciones vacías
+            if (!inputElement.value.trim()) {
+                hasEmptyPositions = true;
+            }
+        }
+        
+        item.setAttribute('data-index', index);
+    });
+    
+    // Actualizar contador de cartas
+    const cardCountInput = document.getElementById('spread-card-count');
+    if (cardCountInput) {
+        cardCountInput.value = positions.length;
+    }
+    
+    // Mostrar advertencia si hay posiciones vacías
+    if (hasEmptyPositions && positions.length > 0) {
+        console.warn('⚠️ Hay posiciones sin nombre completado');
+    }
+    
+    console.log(`🔄 Posiciones actualizadas: ${positions.length}`);
+}
+
+function showManageSpreadsModal() {
+    const modalHTML = `
+        <div class="modal-overlay" id="spreads-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">Gestionar Tipos de Tiradas</div>
+                    <button class="close-modal">&times;</button>
+                </div>
+                
+                <div class="spread-form">
+                    <input type="hidden" id="editing-spread-id" value="">
+                    <div class="form-group">
+                        <label class="form-label">Nombre de la Tirada</label>
+                        <input type="text" class="form-input" id="spread-name" placeholder="Ej: Luna Llena, Cruz Celta" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Número de Cartas</label>
+                            <input type="number" class="form-input" id="spread-card-count" min="1" max="20" value="3">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Mazo Asociado</label>
+                            <select class="form-select" id="spread-deck">
+                                ${decks.map(deck => 
+                                    `<option value="${deck.id}">${deck.name}</option>`
+                                ).join('')}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Descripción</label>
+                        <textarea class="form-textarea" id="spread-description" placeholder="Descripción de la tirada..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Etiquetas (separadas por comas)</label>
+                        <input type="text" class="form-input" id="spread-tags" placeholder="Ej: Astrología, Básica, Avanzada">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Posiciones de las Cartas</label>
+                        <div class="positions-list" id="spread-positions">
+                            <!-- Las posiciones se generarán aquí -->
+                        </div>
+                        <button type="button" class="add-position-btn" id="add-position-btn">+ Agregar Posición</button>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button class="btn-secondary" id="cancel-spread">Cancelar</button>
+                        <button class="btn-primary" id="save-spread">Guardar Tirada</button>
+                    </div>
+                </div>
+                
+                <div class="decks-list" id="spreads-list">
+                    <div class="deck-item-name" style="font-size: 1.3rem; margin-left: 5px; margin-bottom: 8px;">Tiradas Guardadas</div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    
+    // 🔄 INICIALIZACIÓN CORREGIDA - Esperar a que el DOM esté listo
+    setTimeout(() => {
+        const initialCount = parseInt(document.getElementById('spread-card-count').value) || 3;
+        generateSpreadPositions(initialCount);
+        
+        // Configurar event listeners después de generar posiciones
+        setupSpreadModalEvents();
+        loadSpreadsList();
+    }, 50);
+}
+
+
+function generateSpreadPositions(count) {
+    console.log('Generando posiciones:', count);
+    
+    const positionsContainer = document.getElementById('spread-positions');
+    
+    // ✅ VERIFICACIÓN ROBUSTA DEL ELEMENTO
+    if (!positionsContainer) {
+        console.error('❌ Elemento spread-positions no encontrado en el DOM');
+        console.warn('Posibles causas:');
+        console.warn('1. El modal no se ha cargado correctamente');
+        console.warn('2. El ID del elemento ha cambiado');
+        console.warn('3. Timing issue - el elemento aún no existe');
+        return;
+    }
+    
+    // ✅ VALIDACIÓN DEL PARÁMETRO COUNT
+    if (typeof count !== 'number' || count < 1 || count > 20) {
+        console.warn('⚠️ Número de posiciones inválido, usando valor por defecto (3)');
+        count = 3;
+    }
+    
+    try {
+        positionsContainer.innerHTML = '';
+        
+        for (let i = 0; i < count; i++) {
+            const positionHTML = `
+                <div class="position-item" data-index="${i}">
+                    <div class="position-number">${i + 1}</div>
+                    <input type="text" class="position-input" 
+                           placeholder="Significado de la posición ${i + 1}" 
+                           value="${getDefaultPositionName(i)}"
+                           data-position="${i}">
+                    ${i > 0 ? '<button type="button" class="remove-position" data-action="remove">&times;</button>' : ''}
+                </div>
+            `;
+            positionsContainer.insertAdjacentHTML('beforeend', positionHTML);
+        }
+        
+        console.log(`✅ ${count} posiciones generadas correctamente`);
+        
+        // ✅ CONFIGURACIÓN DE EVENT LISTENERS MEJORADA
+        setupPositionEventListeners();
+        
+    } catch (error) {
+        console.error('❌ Error crítico al generar posiciones:', error);
+        positionsContainer.innerHTML = `
+            <div class="error-message">
+                Error al generar las posiciones. Por favor, recarga la página.
+            </div>
+        `;
+    }
+}
+
+// Función para actualizar la lista de tipos de tiradas CORREGIDA
+function updateSpreadTypesList() {
+    const spreadList = document.getElementById('spread-types-list');
+    const positionsDisplay = document.getElementById('selected-spread-positions');
+    
+    if (!spreadList) {
+        console.error('Elemento spread-types-list no encontrado');
+        return;
+    }
+    
+    if (spreadTypes.length === 0) {
+        spreadList.innerHTML = '<div class="empty-history">No hay tipos de tiradas guardados</div>';
+        positionsDisplay.innerHTML = '';
+        return;
+    }
+    
+    let html = '';
+    
+    // Filtrar tiradas por el deck actual
+    const filteredSpreads = spreadTypes.filter(spread => 
+        spread.deck_id === currentDeckId || spread.deck_id === 'default'
+    );
+    
+    filteredSpreads.forEach(spread => {
+        const isActive = currentSpreadType && currentSpreadType.id === spread.id;
+        html += `
+            <div class="spread-type-item ${isActive ? 'active' : ''}" data-id="${spread.id}">
+                <div class="spread-type-details">
+                   > ${spread.name} • ${spread.card_count} cartas • ${spread.description || 'Sin descripción'}
+                </div>
+                ${spread.tags ? `
+                    <div class="spread-type-tags">
+                        ${spread.tags.split(',').map(tag => 
+                            `<span class="spread-tag">${tag.trim()}</span>`
+                        ).join('')}
+                    </div>
+                ` : ''}
+            </div>
+        `;
+    });
+    
+    spreadList.innerHTML = html;
+    
+    // Añadir event listeners a los items
+    document.querySelectorAll('.spread-type-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const spreadId = this.getAttribute('data-id');
+            selectSpreadType(spreadId);
+        });
+    });
+    
+    // Actualizar display de posiciones si hay una tirada seleccionada
+    if (currentSpreadType) {
+        showSpreadCardsInput();
+    }
+}
+
+// Función para seleccionar tipo de tirada CORREGIDA
+function selectSpreadType(spreadId) {
+    console.log('Seleccionando tirada:', spreadId);
+    currentSpreadType = spreadTypes.find(spread => spread.id === spreadId);
+    
+    if (!currentSpreadType) {
+        console.error('Tirada no encontrada:', spreadId);
+        return;
+    }
+    
+    // Actualizar la entrada actual de tirada
+    currentSpreadEntry.spreadType = currentSpreadType;
+    currentSpreadEntry.spreadCards = []; // Limpiar cartas anteriores
+    
+    console.log('Tirada seleccionada:', currentSpreadType);
+    
+    // Actualizar la lista para mostrar la selección activa
+    updateSpreadTypesList();
+    
+    // Mostrar interfaz para seleccionar cartas
+    showSpreadCardsInput();
+}
+
+// Función para mostrar la interfaz de selección de cartas CORREGIDA
+function showSpreadCardsInput() {
+    if (!currentSpreadEntry.spreadType) {
+        console.error('No hay tipo de tirada seleccionado');
+        return;
+    }
+    
+    const positionsDisplay = document.getElementById('selected-spread-positions');
+    if (!positionsDisplay) {
+        console.error('Elemento selected-spread-positions no encontrado');
+        return;
+    }
+    
+    let cardsHTML = `
+        <div class="selected-tarot-card">
+            <div class="tarot-card-display">
+                <div class="tarot-card-name">${currentSpreadEntry.spreadType.name}</div>
+                <div><strong>Cartas:</strong> ${currentSpreadEntry.spreadType.card_count}</div>
+                <div class="section-title" style="margin-top: 15px;">SELECCIONAR CARTAS:</div>
+                <div class="spread-cards-input">
+    `;
+    
+    currentSpreadEntry.spreadType.positions.forEach((position, index) => {
+        const existingCard = currentSpreadEntry.spreadCards.find(card => card.position === position);
+        
+        cardsHTML += `
+            <div class="spread-card-input-item">
+                <div class="position-number">${index + 1}</div>
+                <div class="position-name">${position}</div>
+                <select class="spread-card-select" data-position="${position}">
+                    <option value="">Seleccionar carta...</option>
+                    ${Object.values(tarotCards).map(card => 
+                        `<option value="${card.ID}" ${existingCard && existingCard.card && existingCard.card.ID === card.ID ? 'selected' : ''}>
+                            ${card.Name} (${card.Suit})
+                        </option>`
+                    ).join('')}
+                </select>
+                <select class="spread-orientation-select" data-position="${position}">
+                    <option value="upright" ${existingCard && existingCard.orientation === 'upright' ? 'selected' : ''}>Derecha</option>
+                    <option value="reversed" ${existingCard && existingCard.orientation === 'reversed' ? 'selected' : ''}>Reversa</option>
+                </select>
+            </div>
+        `;
+    });
+    
+    cardsHTML += `
+                </div>
+                <button type="button" class="remove-tarot-card" id="remove-spread-selection">
+                    x
+                </button>
+            </div>
+        </div>
+    `;
+    
+    positionsDisplay.innerHTML = cardsHTML;
+    
+    // Añadir event listeners a los selects de cartas
+    document.querySelectorAll('#selected-spread-positions .spread-card-select').forEach(select => {
+        select.addEventListener('change', function() {
+            updateSpreadCard(this);
+        });
+    });
+    
+    document.querySelectorAll('#selected-spread-positions .spread-orientation-select').forEach(select => {
+        select.addEventListener('change', function() {
+            updateSpreadCard(this);
+        });
+    });
+    
+    // Event listener para cambiar de tirada
+    document.getElementById('remove-spread-selection').addEventListener('click', function() {
+        currentSpreadEntry.spreadType = null;
+        currentSpreadEntry.spreadCards = [];
+        currentSpreadType = null;
+        document.getElementById('selected-spread-positions').innerHTML = '';
+        updateSpreadTypesList();
+    });
+}
+
+// Función para actualizar carta en la tirada CORREGIDA
+function updateSpreadCard(element) {
+    const position = element.getAttribute('data-position');
+    const cardSelect = document.querySelector(`#selected-spread-positions .spread-card-select[data-position="${position}"]`);
+    const orientationSelect = document.querySelector(`#selected-spread-positions .spread-orientation-select[data-position="${position}"]`);
+    
+    if (!cardSelect || !orientationSelect) {
+        console.error('Elementos de selección no encontrados para posición:', position);
+        return;
+    }
+    
+    const cardId = cardSelect.value;
+    const orientation = orientationSelect.value;
+    
+    // Remover la carta existente para esta posición
+    currentSpreadEntry.spreadCards = currentSpreadEntry.spreadCards.filter(card => card.position !== position);
+    
+    // Agregar la nueva carta si se seleccionó una
+    if (cardId && tarotCards[cardId]) {
+        const card = tarotCards[cardId];
+        currentSpreadEntry.spreadCards.push({
+            position: position,
+            card: card,
+            orientation: orientation
+        });
+        
+        console.log('Carta agregada:', { position, card: card.Name, orientation });
+    }
+}
+
+// Función para obtener tiradas por defecto
+function getDefaultSpreadTypes() {
+    return [
+        {
+            id: 'default-3card',
+            name: 'Pasado-Presente-Futuro',
+            card_count: 3,
+            positions: ['Pasado', 'Presente', 'Futuro'],
+            description: 'Tirada clásica de 3 cartas',
+            tags: 'Básica,Clásica',
+            deck_id: 'default'
+        },
+        {
+            id: 'default-luna',
+            name: 'Luna',
+            card_count: 3,
+            positions: ['Lo consciente', 'Lo subconsciente', 'La síntesis'],
+            description: 'Tirada de influencia lunar',
+            tags: 'Astrología,Lunar',
+            deck_id: 'default'
+        },
+        {
+            id: 'default-celtic',
+            name: 'Cruz Celta',
+            card_count: 10,
+            positions: [
+                '1: La situación actual',
+                '2: Los desafíos',
+                '3: La base',
+                '4: El pasado reciente',
+                '5: Metas y aspiraciones',
+                '6: El futuro próximo',
+                '7: Tu actitud',
+                '8: Influencias externas',
+                '9: Esperanzas y temores',
+                '10: Resultado final'
+            ],
+            description: 'Tirada tradicional de Cruz Celta',
+            tags: 'Avanzada,Tradicional',
+            deck_id: 'default'
+        }
+    ];
+}
+
+// ===== ACTUALIZAR SELECTORES DE MAZO CORREGIDO =====
+function updateDeckSelectors() {
+    // Actualizar selector en formulario diario
+    const dailyDeckSelect = document.getElementById('daily-deck-select');
+    const spreadDeckSelect = document.getElementById('spread-deck-select');
+    
+    if (dailyDeckSelect) {
+        dailyDeckSelect.innerHTML = '';
+    }
+    
+    if (spreadDeckSelect) {
+        spreadDeckSelect.innerHTML = '';
+    }
+    
+    decks.forEach(deck => {
+        // Para formulario diario
+        if (dailyDeckSelect) {
+            const dailyOption = document.createElement('option');
+            dailyOption.value = deck.id;
+            dailyOption.textContent = deck.name;
+            if (deck.is_default) {
+                dailyOption.textContent += ' (Por defecto)';
+            }
+            dailyDeckSelect.appendChild(dailyOption);
+        }
+        
+        // Para formulario de tirada
+        if (spreadDeckSelect) {
+            const spreadOption = document.createElement('option');
+            spreadOption.value = deck.id;
+            spreadOption.textContent = deck.name;
+            if (deck.is_default) {
+                spreadOption.textContent += ' (Por defecto)';
+            }
+            spreadDeckSelect.appendChild(spreadOption);
+        }
+    });
+    
+    // Establecer valores por defecto
+    const defaultDeck = decks.find(deck => deck.is_default);
+    if (defaultDeck) {
+        if (dailyDeckSelect) {
+            dailyDeckSelect.value = defaultDeck.id;
+            currentDailyEntry.deckId = defaultDeck.id;
+        }
+        
+        if (spreadDeckSelect) {
+            spreadDeckSelect.value = defaultDeck.id;
+            currentSpreadEntry.deckId = defaultDeck.id;
+            currentDeckId = defaultDeck.id; // ¡IMPORTANTE! Actualizar currentDeckId
+        }
+    }
+}
+// ===== MODIFICAR LA FUNCIÓN DE GUARDADO DE TIRADA =====
+async function saveSpreadEntry() {
+    const dateInput = document.getElementById('spread-date').value;
+    let entryDate;
+
+    if (dateInput) {
+        const [year, month, day] = dateInput.split('-');
+        entryDate = new Date(year, month - 1, day);
+    } else {
+        entryDate = new Date();
+    }
+
+    currentSpreadEntry.date = entryDate;
+    currentSpreadEntry.notes = document.getElementById('spread-notes').value;
+    currentSpreadEntry.deckId = document.getElementById('spread-deck-select').value;
+
+    // Validaciones
+    if (!currentSpreadEntry.spreadType) {
+        alert('Por favor, selecciona un tipo de tirada');
+        return;
+    }
+    
+    if (currentSpreadEntry.spreadCards.length < currentSpreadEntry.spreadType.card_count) {
+        const confirmSave = confirm(`Solo has seleccionado ${currentSpreadEntry.spreadCards.length} de ${currentSpreadEntry.spreadType.card_count} cartas. ¿Quieres guardar de todas formas?`);
+        if (!confirmSave) {
+            return;
+        }
+    }
+
+    const entryData = {
+        date: currentSpreadEntry.date.toISOString(),
+        notes: currentSpreadEntry.notes,
+        deck_id: currentSpreadEntry.deckId,
+        entry_type: 'spread',
+        spread_type_id: currentSpreadEntry.spreadType.id,
+        spread_name: currentSpreadEntry.spreadType.name,
+        spread_cards: currentSpreadEntry.spreadCards
+    };
+
+    try {
+        const { data, error } = await supabase
+            .from('log_entries')
+            .upsert([entryData]);
+
+        if (error) throw error;
+
+        console.log('Tirada guardada en Supabase:', data);
+
+        await loadLogHistory();
+        clearSpreadForm();
+
+        alert('Tirada guardada correctamente');
+        document.getElementById('spread-form').classList.remove('show');
+
+    } catch (error) {
+        console.error('Error al guardar tirada:', error);
+        alert('Error al guardar: ' + error.message);
+    }
+}
+
+function showSpreadCardsInput() {
+    if (!currentSpreadEntry.spreadType) {
+        return;
+    }
+    
+    const positionsDisplay = document.getElementById('selected-spread-positions');
+    
+    let cardsHTML = `
+        <div class="selected-tarot-card">
+            <div class="tarot-card-display">
+                <div class="spread-card-name">${currentSpreadEntry.spreadType.name}</div>
+                <div class="spread-cards-input">
+    `;
+    
+    currentSpreadEntry.spreadType.positions.forEach((position, index) => {
+        const existingCard = currentSpreadEntry.spreadCards.find(card => card.position === position);
+        
+        cardsHTML += `
+            <div class="spread-card-input-item">
+                <div class="position-name">${index + 1} ${position}</div>
+                <select class="spread-card-select" data-position="${position}">
+                    <option value="">Seleccionar carta...</option>
+                    ${Object.values(tarotCards).map(card => 
+                        `<option value="${card.ID}" ${existingCard && existingCard.card && existingCard.card.ID === card.ID ? 'selected' : ''}>
+                            ${card.Name} (${card.Suit})
+                        </option>`
+                    ).join('')}
+                </select>
+                <select class="spread-orientation-select" data-position="${position}">
+                    <option value="upright" ${existingCard && existingCard.orientation === 'upright' ? 'selected' : ''}>Derecha</option>
+                    <option value="reversed" ${existingCard && existingCard.orientation === 'reversed' ? 'selected' : ''}>Reversa</option>
+                </select>
+            </div>
+        `;
+    });
+    
+    cardsHTML += `
+                </div>
+                <button type="button" class="remove-tarot-card" id="remove-spread-selection">
+                    x
+                </button>
+            </div>
+        </div>
+    `;
+    
+    positionsDisplay.innerHTML = cardsHTML;
+    
+    // Event listeners para los selects de cartas
+    document.querySelectorAll('#selected-spread-positions .spread-card-select').forEach(select => {
+        select.addEventListener('change', function() {
+            updateSpreadCard(this);
+        });
+    });
+    
+    document.querySelectorAll('#selected-spread-positions .spread-orientation-select').forEach(select => {
+        select.addEventListener('change', function() {
+            updateSpreadCard(this);
+        });
+    });
+    
+    // Event listener para cambiar de tirada
+    document.getElementById('remove-spread-selection').addEventListener('click', function() {
+        currentSpreadEntry.spreadType = null;
+        currentSpreadEntry.spreadCards = [];
+        document.getElementById('selected-spread-positions').innerHTML = '';
+        updateSpreadTypesList();
+    });
+}
+
+function updateSpreadCard(element) {
+    const position = element.getAttribute('data-position');
+    const cardSelect = document.querySelector(`#selected-spread-positions .spread-card-select[data-position="${position}"]`);
+    const orientationSelect = document.querySelector(`#selected-spread-positions .spread-orientation-select[data-position="${position}"]`);
+    
+    const cardId = cardSelect.value;
+    const orientation = orientationSelect.value;
+    
+    // Remover la carta existente para esta posición
+    currentSpreadEntry.spreadCards = currentSpreadEntry.spreadCards.filter(card => card.position !== position);
+    
+    // Agregar la nueva carta si se seleccionó una
+    if (cardId) {
+        const card = tarotCards[cardId];
+        currentSpreadEntry.spreadCards.push({
+            position: position,
+            card: card,
+            orientation: orientation
+        });
+    }
+}
+
+// ===== MODIFICAR LA FUNCIÓN DE GUARDADO DE TIRADA =====
+async function saveSpreadEntry() {
+    const dateInput = document.getElementById('spread-date').value;
+    let entryDate;
+
+    if (dateInput) {
+        const [year, month, day] = dateInput.split('-');
+        entryDate = new Date(year, month - 1, day);
+    } else {
+        entryDate = new Date();
+    }
+
+    currentSpreadEntry.date = entryDate;
+    currentSpreadEntry.notes = document.getElementById('spread-notes').value;
+    currentSpreadEntry.deckId = document.getElementById('spread-deck-select').value;
+
+    // Validaciones
+    if (!currentSpreadEntry.spreadType) {
+        alert('Por favor, selecciona un tipo de tirada');
+        return;
+    }
+    
+    if (currentSpreadEntry.spreadCards.length < currentSpreadEntry.spreadType.card_count) {
+        const confirmSave = confirm(`Solo has seleccionado ${currentSpreadEntry.spreadCards.length} de ${currentSpreadEntry.spreadType.card_count} cartas. ¿Quieres guardar de todas formas?`);
+        if (!confirmSave) {
+            return;
+        }
+    }
+
+    const entryData = {
+        date: currentSpreadEntry.date.toISOString(),
+        notes: currentSpreadEntry.notes,
+        deck_id: currentSpreadEntry.deckId,
+        entry_type: 'spread',
+        spread_type_id: currentSpreadEntry.spreadType.id,
+        spread_name: currentSpreadEntry.spreadType.name,
+        spread_cards: currentSpreadEntry.spreadCards
+    };
+
+    try {
+        const { data, error } = await supabase
+            .from('log_entries')
+            .upsert([entryData]);
+
+        if (error) throw error;
+
+        console.log('Tirada guardada en Supabase:', data);
+
+        await loadLogHistory();
+        clearSpreadForm();
+
+        alert('Tirada guardada correctamente');
+        document.getElementById('spread-form').classList.remove('show');
+
+    } catch (error) {
+        console.error('Error al guardar tirada:', error);
+        alert('Error al guardar: ' + error.message);
+    }
+}
+
+
+        // ===== FUNCIONES DE BASE DE DATOS =====
+        async function loadDecks() {
+            try {
+                const { data, error } = await supabase
+                    .from('decks')
+                    .select('*')
+                    .order('name');
+
+                if (error) throw error;
+
+                if (data) {
+                    decks = data;
+                    updateDeckSelectors();
+                }
+            } catch (error) {
+                console.error('Error al cargar decks:', error);
+                decks = [{
+                    id: 'default',
+                    name: 'Rider Waite Smith Centennial',
+                    purchase_date: '11.2023',
+                    extra_cards: 'N/A',
+                    name_changes: 'N/A',
+                    card_types: 'All',
+                    is_default: true,
+                    card_mappings: {}
+                }];
+                updateDeckSelectors();
+            }
+        }
+
+        // ===== INICIALIZACIÓN =====
+        document.addEventListener('DOMContentLoaded', function() {
+            setupFooterMenu();
+
+            // === AGREGAR ESTOS EVENT LISTENERS EN EL SCRIPT PRINCIPAL ===
+            setTimeout(() => {
+                const periodSelectorClose = document.getElementById('period-selector-close');
+                if (periodSelectorClose) {
+                    periodSelectorClose.addEventListener('click', hidePeriodSelector);
+                }
+                
+                const periodSelectorCancel = document.getElementById('period-selector-cancel');
+                if (periodSelectorCancel) {
+                    periodSelectorCancel.addEventListener('click', hidePeriodSelector);
+                }
+                
+                const periodSelectorApply = document.getElementById('period-selector-apply');
+                if (periodSelectorApply) {
+                    periodSelectorApply.addEventListener('click', applyCustomPeriod);
+                }
+                
+                const customPeriodType = document.getElementById('custom-period-type');
+                if (customPeriodType) {
+                    customPeriodType.addEventListener('change', function() {
+                        updateCustomPeriodOptions();
+                    });
+                }
+                
+                const customYear = document.getElementById('custom-year');
+                if (customYear) {
+                    customYear.addEventListener('change', function() {
+                        if (document.getElementById('custom-period-type').value === 'week') {
+                            updateWeekOptions();
+                        }
+                    });
+                }
+            }, 100);
+
+            loadDecks().then(() => {
+                return loadSpreadTypes();
+            }).then(() => {
+                return loadLogHistory();
+            }).then(() => {
+                initializeStatistics();
+            });
+
+            checkTodayCard();
+            loadAstrologyData();
+        });
+
+        // ===== FUNCIONES DE MODALES =====
+        function showManageDecksModal() {
+            const modalHTML = `
+                <div class="modal-overlay" id="decks-modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div class="modal-title">Gestionar Mazos</div>
+                            <button class="close-modal">&times;</button>
+                        </div>
+                        
+                        <div class="deck-form">
+                            <input type="hidden" id="editing-deck-id" value="">
+                            <div class="form-group">
+                                <label class="form-label">Nombre del Mazo</label>
+                                <input type="text" class="form-input" id="deck-name" placeholder="Ej: Rider Waite Smith" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Fecha de Compra (MM.YYYY)</label>
+                                <input type="text" class="form-input" id="deck-purchase-date" placeholder="Ej: 11.2023">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Cartas Extra</label>
+                                <textarea class="form-textarea" id="deck-extra-cards" placeholder="Ej: The Fools Journey (Major), Cortesen (Court)"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Cambios de Nombre (JSON)</label>
+                                <textarea class="form-textarea" id="deck-name-changes" placeholder='Ej: {"Judgment": "Eon", "The Fool": "The Seeker"}'></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Tipos de Cartas</label>
+                                <select class="form-select" id="deck-card-types">
+                                    <option value="All">Todos (Major, Minor, Court)</option>
+                                    <option value="Majors">Solo Arcanos Mayores</option>
+                                    <option value="Minors">Solo Arcanos Menores</option>
+                                    <option value="Courts">Solo Cartas de Corte</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button class="btn-secondary" id="cancel-deck">Cancelar</button>
+                                <button class="btn-primary" id="save-deck">Guardar Mazo</button>
+                            </div>
+                        </div>
+                        
+                        <div class="decks-list" id="decks-list">
+                            <div style="margin-botton: 10px;" >Mazos Guardados</h3>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            loadDecksList();
+            setupDeckModalEvents();
+        }
+
+// ===== FUNCIONES PARA FORMULARIO DE TIRADA =====
+function clearSpreadForm() {
+    currentSpreadEntry = {
+        date: new Date(),
+        notes: "",
+        spreadType: null,
+        spreadCards: [],
+        deckId: 'default'
+    };
+    
+    document.getElementById('spread-date').valueAsDate = new Date();
+    document.getElementById('spread-notes').value = '';
+    document.getElementById('selected-spread-positions').innerHTML = '';
+    document.getElementById('spread-deck-select').value = currentSpreadEntry.deckId;
+    
+    // Resetear selección de tirada
+    updateSpreadTypesList();
+}
+
+function initializeSpreadForm() {
+    console.log('Inicializando formulario de tirada...');
+    
+    const now = new Date();
+    const spreadDateInput = document.getElementById('spread-date');
+    if (spreadDateInput) {
+        spreadDateInput.valueAsDate = now;
+    }
+    
+    // Limpiar selección previa
+    currentSpreadEntry = {
+        date: new Date(),
+        notes: "",
+        spreadType: null,
+        spreadCards: [],
+        deckId: currentDeckId
+    };
+    
+    currentSpreadType = null;
+    
+    // Cargar tipos de tirada
+    loadSpreadTypes();
+    
+    // Event listeners para formulario de tirada
+    const saveSpreadBtn = document.getElementById('save-spread-btn');
+    const clearSpreadBtn = document.getElementById('clear-spread-btn');
+    
+    if (saveSpreadBtn) {
+        saveSpreadBtn.addEventListener('click', saveSpreadEntry);
+    }
+    
+    if (clearSpreadBtn) {
+        clearSpreadBtn.addEventListener('click', clearSpreadForm);
+    }
+    
+    // Event listener para cambio de mazo en formulario de tirada
+    const spreadDeckSelect = document.getElementById('spread-deck-select');
+    if (spreadDeckSelect) {
+        spreadDeckSelect.addEventListener('change', function() {
+            currentSpreadEntry.deckId = this.value;
+            currentDeckId = this.value;
+            updateSpreadTypesList();
+        });
+    }
+    
+    console.log('Formulario de tirada inicializado');
+}
+
+function getDefaultPositionName(index) {
+    const defaults = ['Pasado', 'Presente', 'Futuro', 'Desafío', 'Consejo', 'Resultado'];
+    return defaults[index] || `Posición ${index + 1}`;
+}
+
+        function setupDeckModalEvents() {
+            document.querySelector('#decks-modal .close-modal').addEventListener('click', closeDeckModal);
+            document.getElementById('cancel-deck').addEventListener('click', closeDeckModal);
+            document.getElementById('decks-modal').addEventListener('click', function(e) {
+                if (e.target === this) closeDeckModal();
+            });
+            
+            document.getElementById('save-deck').addEventListener('click', saveDeck);
+            
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('btn-set-default')) {
+                    setDefaultDeck(e.target.getAttribute('data-id'));
+                }
+                if (e.target.classList.contains('btn-edit')) {
+                    editDeck(e.target.getAttribute('data-id'));
+                }
+                if (e.target.classList.contains('btn-delete')) {
+                    deleteDeck(e.target.getAttribute('data-id'));
+                }
+            });
+        }
+
+        async function saveDeck() {
+            const deckId = document.getElementById('editing-deck-id').value;
+            const name = document.getElementById('deck-name').value;
+            const purchaseDate = document.getElementById('deck-purchase-date').value;
+            const extraCards = document.getElementById('deck-extra-cards').value;
+            const nameChanges = document.getElementById('deck-name-changes').value;
+            const cardTypes = document.getElementById('deck-card-types').value;
+            
+            if (!name) {
+                alert('El nombre del mazo es requerido');
+                return;
+            }
+            
+            try {
+                let cardMappings = {};
+                if (nameChanges) {
+                    try {
+                        cardMappings = JSON.parse(nameChanges);
+                    } catch (e) {
+                        alert('Error en el formato JSON de cambios de nombre');
+                        return;
+                    }
+                }
+                
+                const deckData = {
+                    name,
+                    purchase_date: purchaseDate,
+                    extra_cards: extraCards,
+                    name_changes: nameChanges,
+                    card_types: cardTypes,
+                    card_mappings: cardMappings
+                };
+                
+                if (deckId) {
+                    deckData.id = deckId;
+                } else {
+                    deckData.id = 'deck-' + Date.now();
+                    deckData.is_default = false;
+                }
+                
+                const { data, error } = await supabase
+                    .from('decks')
+                    .upsert([deckData]);
+                    
+                if (error) throw error;
+                
+                alert('Mazo guardado correctamente');
+                closeDeckModal();
+                loadDecks();
+                
+            } catch (error) {
+                console.error('Error al guardar deck:', error);
+                alert('Error al guardar: ' + error.message);
+            }
+        }
+
+        async function setDefaultDeck(deckId) {
+            try {
+                await supabase
+                    .from('decks')
+                    .update({ is_default: false });
+                    
+                const { error } = await supabase
+                    .from('decks')
+                    .update({ is_default: true })
+                    .eq('id', deckId);
+                    
+                if (error) throw error;
+                
+                alert('Mazo establecido como predeterminado');
+                closeDeckModal();
+                loadDecks();
+                
+            } catch (error) {
+                console.error('Error al establecer deck por defecto:', error);
+                alert('Error: ' + error.message);
+            }
+        }
+
+        function editDeck(deckId) {
+            const deck = decks.find(d => d.id === deckId);
+            if (!deck) return;
+            
+            document.getElementById('editing-deck-id').value = deck.id;
+            document.getElementById('deck-name').value = deck.name || '';
+            document.getElementById('deck-purchase-date').value = deck.purchase_date || '';
+            document.getElementById('deck-extra-cards').value = deck.extra_cards || '';
+            document.getElementById('deck-name-changes').value = deck.name_changes || '';
+            document.getElementById('deck-card-types').value = deck.card_types || 'All';
+            
+            document.getElementById('save-deck').textContent = 'Actualizar Mazo';
+        }
+
+        async function deleteDeck(deckId) {
+            if (!confirm('¿Estás seguro de que quieres eliminar este mazo? Esta acción no se puede deshacer.')) {
+                return;
+            }
+            
+            try {
+                const { error } = await supabase
+                    .from('decks')
+                    .delete()
+                    .eq('id', deckId);
+                    
+                if (error) throw error;
+                
+                alert('Mazo eliminado correctamente');
+                closeDeckModal();
+                loadDecks();
+                
+            } catch (error) {
+                console.error('Error al eliminar deck:', error);
+                alert('Error al eliminar: ' + error.message);
+            }
+        }
+
+        function closeDeckModal() {
+            const modal = document.getElementById('decks-modal');
+            if (modal) modal.remove();
+        }
+
+        function initializeSpreadForm() {    
+            generateSpreadPositions(3);
+        }
+
+        function generateSpreadPositions(count) {
+            const positionsContainer = document.getElementById('spread-positions');
+            positionsContainer.innerHTML = '';
+            
+            for (let i = 0; i < count; i++) {
+                const positionHTML = `
+                    <div class="position-item" data-index="${i}">
+                        <div class="position-number">${i + 1}</div>
+                        <input type="text" class="position-input" placeholder="Significado de la posición ${i + 1}" value="${getDefaultPositionName(i)}">
+                        ${i > 0 ? '<button type="button" class="remove-position">&times;</button>' : ''}
+                    </div>
+                `;
+                positionsContainer.insertAdjacentHTML('beforeend', positionHTML);
+            }
+            
+            document.querySelectorAll('.remove-position').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.closest('.position-item').remove();
+                    updatePositionNumbers();
+                });
+            });
+        }
+
+        function loadSpreadsList() {
+            const spreadsList = document.getElementById('spreads-list');
+            
+            if (spreadTypes.length === 0) {
+                spreadsList.innerHTML = '<p>No hay tiradas guardadas</p>';
+                return;
+            }
+            
+            let html = '<div class="deck-item-name" style="font-size: 1.3rem; margin-left: 5px; margin-bottom: 8px;">Tiradas Guardadas</div>';
+            
+            spreadTypes.forEach(spread => {
+                const deckName = decks.find(d => d.id === spread.deck_id)?.name || 'Desconocido';
+                
+                html += `
+                    <div class="deck-item">
+                        <div class="deck-item-header">
+                            <div class="deck-item-name">${spread.name}</div>
+                            <div class="deck-item-actions">
+                                <button class="btn-small btn-edit-spread" data-id="${spread.id}">Editar</button>
+                                <button class="btn-small btn-delete-spread" data-id="${spread.id}">Eliminar</button>
+                            </div>
+                        </div>
+                        <div class="deck-item-details">
+                            <div><strong>Cartas:</strong> ${spread.card_count}</div>
+                            <div><strong>Mazo:</strong> ${deckName}</div>
+                            <div><strong>Etiquetas:</strong> ${spread.tags || 'Ninguna'}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            spreadsList.innerHTML = html;
+        }
+
+function setupSpreadModalEvents() {
+    document.querySelector('#spreads-modal .close-modal').addEventListener('click', closeSpreadModal);
+    document.getElementById('cancel-spread').addEventListener('click', closeSpreadModal);
+    document.getElementById('spreads-modal').addEventListener('click', function(e) {
+        if (e.target === this) closeSpreadModal();
+    });
+    
+    // SOLO en el modal de gestión, manejar el cambio de número de cartas
+    document.getElementById('spread-card-count').addEventListener('change', function() {
+        generateSpreadPositions(parseInt(this.value));
+    });
+    
+    // SOLO en el modal de gestión, manejar agregar posición
+    document.getElementById('add-position-btn').addEventListener('click', function() {
+        const count = parseInt(document.getElementById('spread-card-count').value) + 1;
+        document.getElementById('spread-card-count').value = count;
+        generateSpreadPositions(count);
+    });
+    
+    document.getElementById('save-spread').addEventListener('click', saveSpread);
+    
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('btn-edit-spread')) {
+            editSpread(e.target.getAttribute('data-id'));
+        }
+        if (e.target.classList.contains('btn-delete-spread')) {
+            deleteSpread(e.target.getAttribute('data-id'));
+        }
+    });
+}
+
+async function saveSpread() {
+            const spreadId = document.getElementById('editing-spread-id').value;
+            const name = document.getElementById('spread-name').value;
+            const cardCount = parseInt(document.getElementById('spread-card-count').value);
+            const deckId = document.getElementById('spread-deck').value;
+            const description = document.getElementById('spread-description').value;
+            const tags = document.getElementById('spread-tags').value;
+            
+            if (!name) {
+                alert('El nombre de la tirada es requerido');
+                return;
+            }
+            
+            if (cardCount < 1) {
+                alert('El número de cartas debe ser al menos 1');
+                return;
+            }
+            
+            const positions = [];
+            document.querySelectorAll('.position-input').forEach(input => {
+                if (input.value.trim()) {
+                    positions.push(input.value.trim());
+                }
+            });
+            
+            if (positions.length !== cardCount) {
+                alert('Debe completar todas las posiciones');
+                return;
+            }
+            
+            try {
+                const spreadData = {
+                    name,
+                    card_count: cardCount,
+                    deck_id: deckId,
+                    positions,
+                    description,
+                    tags,
+                };
+                
+                if (spreadId) {
+                    spreadData.id = spreadId;
+                } else {
+                    spreadData.id = 'spread-' + Date.now();
+                }
+                
+                const { data, error } = await supabase
+                    .from('spread_types')
+                    .upsert([spreadData]);
+                    
+                if (error) throw error;
+                
+                alert('Tirada guardada correctamente');
+                closeSpreadModal();
+                loadSpreadTypes();
+                
+            } catch (error) {
+                console.error('Error al guardar tirada:', error);
+                alert('Error al guardar: ' + error.message);
+            }
+        }
+
+        function editSpread(spreadId) {
+            const spread = spreadTypes.find(s => s.id === spreadId);
+            if (!spread) return;
+            
+            document.getElementById('editing-spread-id').value = spread.id;
+            document.getElementById('spread-name').value = spread.name || '';
+            document.getElementById('spread-card-count').value = spread.card_count || 3;
+            document.getElementById('spread-deck').value = spread.deck_id || 'default';
+            document.getElementById('spread-description').value = spread.description || '';
+            document.getElementById('spread-tags').value = spread.tags || '';
+            
+            generateSpreadPositions(spread.card_count);
+            
+            setTimeout(() => {
+                document.querySelectorAll('.position-input').forEach((input, index) => {
+                    if (spread.positions && spread.positions[index]) {
+                        input.value = spread.positions[index];
+                    }
+                });
+            }, 100);
+            
+            document.getElementById('save-spread').textContent = 'Actualizar Tirada';
+        }
+
+        async function deleteSpread(spreadId) {
+            if (!confirm('¿Estás seguro de que quieres eliminar esta tirada? Esta acción no se puede deshacer.')) {
+                return;
+            }
+            
+            try {
+                const { error } = await supabase
+                    .from('spread_types')
+                    .delete()
+                    .eq('id', spreadId);
+                    
+                if (error) throw error;
+                
+                alert('Tirada eliminada correctamente');
+                closeSpreadModal();
+                loadSpreadTypes();
+                
+            } catch (error) {
+                console.error('Error al eliminar tirada:', error);
+                alert('Error al eliminar: ' + error.message);
+            }
+        }
+
+        function closeSpreadModal() {
+            const modal = document.getElementById('spreads-modal');
+            if (modal) modal.remove();
+        }
+
+
+
+
+        
+        // ===== FUNCIÓN PARA CARGAR TIPOS DE TIRADA =====
+async function loadSpreadTypes() {
+    try {
+        console.log('Cargando tipos de tirada desde Supabase...');
+        
+        const { data, error } = await supabase
+            .from('spread_types')
+            .select('*')
+            .order('name');
+
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+            spreadTypes = data;
+            console.log('Tipos de tirada cargados:', spreadTypes.length);
+            
+            // Asegurarse de que las posiciones estén en el formato correcto
+            spreadTypes.forEach(spread => {
+                if (typeof spread.positions === 'string') {
+                    try {
+                        spread.positions = JSON.parse(spread.positions);
+                    } catch (e) {
+                        console.warn(`Error parseando posiciones para ${spread.name}:`, e);
+                        // Si falla el parseo, crear posiciones por defecto
+                        spread.positions = Array.from({length: spread.card_count}, (_, i) => `Posición ${i + 1}`);
+                    }
+                }
+                
+                // Si no hay posiciones, crearlas
+                if (!spread.positions || spread.positions.length === 0) {
+                    spread.positions = Array.from({length: spread.card_count}, (_, i) => `Posición ${i + 1}`);
+                }
+            });
+        } else {
+            console.log('No se encontraron tiradas en Supabase, usando datos por defecto');
+            spreadTypes = getDefaultSpreadTypes();
+        }
+        
+        // Actualizar la lista visual si estamos en el formulario de tiradas
+        if (document.getElementById('spread-types-list')) {
+            updateSpreadTypesList();
+        }
+        
+        return spreadTypes;
+        
+    } catch (error) {
+        console.error('Error al cargar tipos de tiradas:', error);
+        spreadTypes = getDefaultSpreadTypes();
+        
+        if (document.getElementById('spread-types-list')) {
+            updateSpreadTypesList();
+        }
+        
+        return spreadTypes;
+    }
+}
+
+
+
+
+</script>
+
+<script src="data.js"></script>
+<script src="main.js"></script>
+<script src="astrology_section.js"></script>
+<script src="stats.js"></script>
+<script src="historylog.js"></script>
+<script src="charts.js"></script>
+
+</body>
+</html>

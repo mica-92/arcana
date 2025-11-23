@@ -1,0 +1,343 @@
+/* ===== ESTILOS PARA LA SECCIÓN DE ESTADÍSTICAS ===== */
+
+.statistics-section {
+    margin: 20px auto;
+    font-family: 'DM Sans', sans-serif;
+    max-width: 400px;
+    padding: 5px;
+}
+
+.unique-card {
+    margin:10px;
+    border: 2px solid var(--primary-color);
+    background: white;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.stats-periods {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0 20px;
+}
+
+.period-btn {
+    padding: 10px 16px;
+    border: 1px solid var(--primary-color);
+    background: white;
+    color: var(--primary-color);
+    cursor: pointer;
+    font-family: 'Inconsolata', monospace;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.period-btn.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.period-btn:hover {
+    background: var(--primary80);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.stats-borde {
+    border: 2px solid var(--primary-color);
+    margin: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 5px;
+}
+
+
+
+/* ===== ESTILOS PARA ESTADÍSTICAS ESPECÍFICAS ===== */
+
+
+
+/* Efectos de hover diferenciados */
+.stat-card:hover .stat-value {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+}
+
+/* Animación de aparición para los elementos de estadísticas */
+@keyframes statItemAppear {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.stat-card {
+    animation: statItemAppear 0.5s ease-out forwards;
+}
+
+/* Retrasos escalonados para la animación */
+.stat-card:nth-child(1) { animation-delay: 0.1s; }
+.stat-card:nth-child(2) { animation-delay: 0.2s; }
+.stat-card:nth-child(3) { animation-delay: 0.3s; }
+.stat-card:nth-child(4) { animation-delay: 0.4s; }
+.stat-card:nth-child(5) { animation-delay: 0.5s; }
+.stat-card:nth-child(6) { animation-delay: 0.6s; }
+.stat-card:nth-child(7) { animation-delay: 0.7s; }
+.stat-card:nth-child(8) { animation-delay: 0.8s; }
+.stat-card:nth-child(9) { animation-delay: 0.9s; }
+.stat-card:nth-child(10) { animation-delay: 1.0s; }
+.stat-card:nth-child(11) { animation-delay: 1.1s; }
+.stat-card:nth-child(12) { animation-delay: 1.2s; }
+
+/* ===== VARIABLES CSS (deben estar definidas en tu :root) ===== */
+
+/* ===== ESTILOS PARA TÍTULOS Y ENCABEZADOS ===== */
+.history-title {
+    font-weight: 600;
+    font-size: 2rem;
+    line-height: 1.6rem;
+    text-transform: uppercase;
+    text-align: center;
+    font-family: 'Roboto Serif';
+    color: var(--primary-color);
+}
+
+.history-headline {
+    font-weight: 400;
+    font-size: 1rem;
+    text-align: center;
+    font-style: italic;
+    color: var(--primary80);
+    font-family: 'Inconsolata', sans-serif;
+    max-width: 400px;
+    margin: auto;
+    margin-bottom: 25px;
+}
+
+
+/* ===== ESTILOS MODIFICADOS PARA ESTADÍSTICAS EN FILAS ===== */
+.stats-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.stat-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border: none;
+    background: transparent;
+    min-height: auto;
+    min-width: auto;
+    flex: 0 0 auto;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s ease;
+    margin: 10px 0px;
+
+}
+
+.stat-card:last-child {
+    border-bottom: none;
+}
+
+.stat-card:hover {
+    background: rgba(0, 0, 0, 0.02);
+    transform: none;
+    box-shadow: none;
+}
+
+.stat-value {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 0;
+    font-family: 'Inconsolata', monospace;
+    color: var(--primary-color);
+    line-height: 1;
+    order: 2;
+    text-align: right;
+    min-width: 50px;
+    line-height: 1.6rem;
+}
+
+.stat-label {
+    font-size: 1rem;
+    line-height: 1.6rem;
+    color: var(--primary-color);
+    font-family: 'Inconsolata', sans-serif;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    order: 1;
+    flex: 1;
+}
+
+.stat-icon {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+}
+
+.stat-astro {
+    font-family: "Astronomicon", "Segoe UI Symbol", "Apple Symbols", sans-serif;
+    font-size: 1.9em;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color);
+    line-height: 1;
+    width: 24px;
+    height: 24px;
+}
+
+/* Eliminar los saltos de línea <br> */
+.stat-label br {
+    display: none;
+}
+
+
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .stat-label {
+        gap: 10px;
+    }
+    
+    .stat-icon {
+        font-size: 1.1rem;
+        height: 48px;
+    }
+    
+    .stat-astro {
+        height: 48px;
+    }
+
+    .stat-card {
+        margin: 0;
+    }
+}
+
+
+/* Modal de selección de período */
+.period-selector-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--primary80);
+    z-index: 3000;
+    align-items: center;
+    justify-content: center;
+}
+
+.period-selector-modal.active {
+    display: flex;
+}
+
+.period-selector-content {
+    background: var(--background-color);
+    border-radius: 3px;
+    border: 2px solid var(--primary-color);
+    padding: 10px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    color: var(--background-color);
+}
+
+.period-selector-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--primary80);
+    background: var(--primary-color);
+    border-radius: 3px;
+    color: var(--background-color);
+    font-family: 'Inconsolata';
+}
+
+.period-selector-title {
+    font-size: 1.6rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    padding: 10px;
+}
+
+.period-selector-close {
+    background: var(--background-color);
+    border: 2px solid var(--primary80);
+    font-size: 1.3rem;
+    font-weight: 900;
+    font-family: 'Inconsolata';
+    cursor: pointer;
+    color: var(--primary80);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    padding: 0;
+    line-height: 1;
+    margin: 10px;
+}
+
+.period-selector-close:hover {
+    border: 2px solid var(--primary-color);
+    background-color: var(--accent-color);
+    color: var(--background-color);
+}
+
+.period-selector-options {
+    margin-bottom: 25px;
+}
+
+.period-selector-option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 10px;
+}
+
+.period-selector-option label {
+    font-weight: bold;
+    font-family: 'Inconsolata';
+    color: var(--primary-color);
+    min-width: 80px;
+    margin-left: 10px;
+}
+
+.period-selector-option select {
+    flex: 1;
+    padding: 8px 12px;
+    border: 2px solid var(--primary-color);
+    border-radius: 5px;
+    font-size: 1rem;
+    font-family: 'Inconsolata';
+}
+

@@ -1,0 +1,164 @@
+
+/* WELCOME */
+.welcome {
+    padding: 5px;
+    max-width: 400px;
+    margin: auto;
+}
+
+.daily-card-section,
+.astrology-section {
+    padding: 10px;
+}
+
+.today-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80px; /* o la altura que prefieras */
+    gap: 15px;
+    padding: 15px 0;
+}
+
+.today-card-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80px; /* o la altura que prefieras */
+    gap: 15px;
+    padding-top: 15px;
+    font-family: 'Inconsolata';
+}
+
+.today-card-display h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+.greeting-header {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    text-align: center;
+    font-weight: 700;
+    font-style: italic;
+    line-height: 36px;
+}
+
+.today-card-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-family: 'Fraunces', serif;
+}
+
+.today-card-details {
+    text-align: left;
+    max-width: 300px;
+    margin: 0 auto;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 6px;
+}
+
+.today-card-notes {
+    margin-top: 15px;
+    padding: 15px;
+    background: #fff3cd;
+    border-radius: 6px;
+    border-left: 4px solid #ffc107;
+}
+
+.orientation-symbol {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-left: 8px;
+    border: 1px solid var(--primary-color);
+}
+
+.orientation-symbol.direct {
+    background-color: var(--background-color);
+    color: var(--primary-color);
+}
+
+.orientation-symbol.reverse {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    font-weight: bold;
+}
+.no-card-today {
+    text-align: center;
+    padding: 30px;
+}
+
+.no-card-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center; /* opcional - para centrar horizontalmente */
+    text-align: center; /* opcional - para centrar el texto */
+}
+
+
+
+.mono-text-upper {
+    font-size: 1rem;
+    opacity: 0.8;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    text-align: center;
+    text-transform: uppercase;
+    font-family: 'Inconsolata';
+    border-bottom: 1px solid var(--primary80);
+}
+
+
+.arcana-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+}
+
+.arcana-grid.single-item {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    max-width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.arcana-item {
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+}
+
+.arcana-content {
+    display: flex;
+    flex-direction: column;
+
+}
+
+
+/* Responsive design for mobile */
+@media (max-width: 768px) {
+    .arcana-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+
+    }
+    
+    .arcana-grid.single-item {
+        max-width: 100%;
+    }
+}

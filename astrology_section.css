@@ -1,0 +1,222 @@
+.astrology-display {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.astro-card-header {
+    font-weight: 400;
+    font-size: 1.6rem;
+    text-transform: uppercase;
+    font-style: italic;
+    box-sizing: border-box;
+    padding: 10px 0 0px 0;
+    text-align: center;
+    font-family: 'Playdair Display';
+    border-bottom: 1px solid var(--primary80);
+    margin-bottom: 20px;
+
+}
+
+.astro-headline {
+    font-weight: 400;
+    font-size: 18px;
+    padding: 2px 0 2px 0;
+    text-align: center;
+    margin: 0px 30px;
+    font-style: italic;
+}
+
+.today-headline {
+    font-weight: 400;
+    font-size: 18px;
+    padding: 2px 0 2px 0;
+    text-align: center;
+    border-bottom: 2px solid var(--primary-color);
+    border-top: 2px solid var(--primary-color);
+    margin: 10px 20px;
+    font-family: 'Inconsolata';
+}
+
+.astro-body {
+    font-family: "Astronomicon", "Segoe UI Symbol", "Apple Symbols", sans-serif;
+    font-weight: normal;
+    font-style: normal;
+    display: inline-block;
+    font-size: 3rem;
+    line-height: 1;
+    text-align: left;
+}
+
+.astro-name {
+    font-weight: bold;
+    font-style: normal;
+    font-size: 2rem;
+    line-height: 1;
+    text-align: left;
+    padding: 3px 0;
+}
+
+.body-name {
+    font-weight: normal;
+    font-style: normal;
+    font-size: 1.1rem;
+    line-height: 1;
+    text-align: left;
+    padding: 3px 0;
+    text-transform: uppercase;
+    color: var(--primary-color);
+}
+
+.body-position {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.astro-position {
+    font-family: "Astronomicon", "Segoe UI Symbol", "Apple Symbols", sans-serif;
+    font-weight: normal;
+    font-style: normal;
+    display: inline-block;
+    font-size: 1.5em;
+    line-height: 1.5rem;
+}
+
+.astro-arcane {
+    font-family: "Astronomicon", "Segoe UI Symbol", "Apple Symbols", sans-serif;
+    font-weight: normal;
+    font-style: normal;
+    display: inline-block;
+    font-size: 1.5em;
+    line-height: 1.5rem;
+    font-weight: bold;
+}
+
+/* Estilos para los elementos de tarot cards con margen */
+.tarot-cards {
+    margin-top: 15px;
+}
+
+.tarot-card-item {
+    padding: 6px 0;
+    display: block;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 1.5rem;
+    font-style: italic;
+}
+
+.tarot-card-item i.fa-angle-right {
+    color: var(--primary-color);
+    margin-top: 2px;
+    font-size: 1em;
+}
+
+
+.body-position {
+    margin: 10px 0;
+}
+
+/* Estilos para los símbolos */
+.tarot-card-item {
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.moon-item {
+    padding: 6px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 1.2rem;
+    font-family: 'Inconsolata';
+}
+
+.rotated-180 {
+    transform: rotate(180deg);
+    display: inline-block; /* Needed for transform to work properly */
+}
+
+/* Estilos para la fase lunar centrada */
+
+
+.moon-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.moon-phase-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Asegurar que los iconos de Font Awesome estén centrados */
+.moon-phase .fa-circle,
+.moon-phase .fa-moon,
+.moon-phase .fa-circle-half-stroke {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+}
+
+.astro-aspecto {
+    font-family: "Astronomicon", "Segoe UI Symbol", "Apple Symbols", sans-serif;
+    font-weight: normal;
+    font-style: normal;
+    display: inline-block;
+    font-size: 2em;
+    line-height: 1.5em;
+    font-weight: bold;
+}
+
+.moon-phase-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    border-bottom: 1px solid var(--primary-color);
+}
+
+.moon-phase-item:last-child {
+    border-bottom: none;
+}
+
+.moon-sign-symbol {
+    width: 24px;
+    text-align: center;
+    font-family: 'Astronomicon', monospace;
+    font-size: 1.6em;
+}
+
+.moon-aspect-symbol {
+    width: 24px;
+    text-align: center;
+    font-family: 'Astronomicon', monospace;
+    font-size: 1.9em;
+}
+
+.moon-phase-date {
+    flex: 1;
+    font-family: 'Inconsolata', monospace;
+    font-size: 1rem;
+}
+
+.moon-phase-type {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 1rem;
+    color: #666;
+    font-family: 'Inconsolata';
+}
+
+
+
+.moon-phase-item:last-child {
+    border-bottom: none;
+}

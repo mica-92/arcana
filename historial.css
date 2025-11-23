@@ -1,0 +1,595 @@
+/* Tabs del historial */
+.history-borde {
+    margin: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 5px;
+}
+
+.history-headline {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    font-weight: 400;
+    font-size: 1.8rem;
+    padding: 2px 0 2px 0;
+    text-align: center;
+    border-bottom: 2px solid var(--primary-color);
+    margin: 0px 0 20px 0;
+    font-family: 'Inconsolata';
+}
+
+.history-tabs {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0 20px;
+
+}
+
+.history-tab {
+    padding: 10px 16px;
+    border: 1px solid var(--primary-color);
+    background: white;
+    color: var(--primary-color);
+    cursor: pointer;
+    font-family: 'Inconsolata', monospace;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.history-tab:hover {
+    background: var(--primary80);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.history-tab.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+
+
+
+
+
+.spread-info-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.spread-info-btn:hover {
+    background: var(--secondary-color);
+    transform: scale(1.1);
+}
+
+/* Modal de información del spread */
+.spread-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 20px;
+}
+
+.spread-modal-content {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+
+.spread-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+    padding: 15px;
+    background: rgba(109, 89, 122, 0.05);
+    border-radius: 10px;
+}
+
+.spread-stat {
+    text-align: center;
+}
+
+.spread-stat-value {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+.spread-cards-grid {
+    display: grid;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.spread-card-position {
+    background: rgba(109, 89, 122, 0.05);
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid var(--secondary-color);
+}
+
+.position-header {
+    display: flex;
+    justify-content: between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+.position-name {
+    font-weight: bold;
+    color: var(--secondary-color);
+    font-family: 'Inconsolata';
+}
+
+
+.spread-card-details {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+
+.spread-card-name {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin: 5px;  
+    padding: 5px;
+    background-color: var(--secondary-color);
+    border-radius: 3px;  
+    flex: 1;
+    color: white;
+    font-family: 'Inconsolata';
+}
+
+.spread-card-orientation {
+    background: var(--light-color);
+    color: var(--text-dark);
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.spread-card-info {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 8px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.empty-position {
+    color: #999;
+    font-style: italic;
+    text-align: center;
+    padding: 10px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    
+    .spread-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .spread-modal-content {
+        margin: 10px;
+        padding: 20px;
+    }
+    
+    .spread-card-details {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+
+/* Asegurar que el contenedor principal tenga altura suficiente */
+.log-entry {
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* Esto ya centra verticalmente */
+    justify-content: space-between;
+    border: none;
+    background: transparent;
+    min-height: 50px; /* Añadir altura mínima */
+    min-width: auto;
+    flex: 0 0 auto;
+    border-bottom: 1px solid var(--primary80);
+    transition: background-color 0.2s ease;
+}
+
+/* HEADER - CORREGIDO para centrado vertical */
+.daily-header, .spread-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Esto centra verticalmente */
+    width: 100%; /* Asegurar que ocupe todo el ancho */
+    gap: 10px;
+    flex-wrap: nowrap;
+    min-height: 40px; /* Altura mínima consistente */
+    line-height: 1.4; /* Misma línea base para texto */
+}
+
+/* Elementos hijos - asegurar alineación vertical */
+.daily-date, .spread-date {
+    font-weight: bold;
+    color: var(--primary-color);
+    font-size: 1rem;
+    min-width: 100px;
+    display: flex;
+    align-items: center; /* Centrado vertical interno */
+    height: 100%; /* Ocupar toda la altura del contenedor */
+}
+
+.daily-card, .spread-name {
+    font-size: 1.1rem;
+    color: var(--secondary-color);
+    display: flex;
+    align-items: center; /* Centrado vertical interno */
+    gap: 10px;
+    height: 100%; /* Ocupar toda la altura del contenedor */
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* RESPONSIVE - Mantener centrado vertical en móviles */
+@media (max-width: 768px) {
+    .daily-header, .spread-header {
+        min-height: 35px; /* Reducir ligeramente en móviles */
+        gap: 8px;
+    }
+    
+    .daily-date, .spread-date {
+        min-width: 90px; /* Ajustar para móviles */
+        font-size: 0.9rem;
+    }
+    
+    .daily-card, .spread-name {
+        font-size: 1rem;
+    }
+    
+    /* Asegurar que no se rompa el layout */
+    .log-entry {
+        min-height: 45px;
+        padding: 6px 0;
+    }
+}
+
+.log-entry:last-child {
+    border-bottom: none;
+}
+
+.log-entry:hover {
+    background: rgba(0, 0, 0, 0.02);
+    transform: none;
+    box-shadow: none;
+}
+    
+
+
+
+
+
+/* Modal para gestionar decks */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 998;
+    padding: 20px;
+}
+
+.modal-content, .spread-modal-content  {
+    background: white;
+    border-radius: 12px;
+    padding: 10px;
+    max-width: 500px;
+    width: 100%;
+    font-family: 'Inconsolata';
+    font-size: 1rem;
+    border: 3px solid var(--primary-color);
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.form-input, .form-select, .form-textarea {
+    padding: 10px;
+    border: 1px solid var(--primary-color);
+    font-family: 'Inconsonata', monospace;
+    font-size: 0.7rem;
+    color: #1742ab;
+    background-color: var(--background-color);
+
+}
+
+.spread-form, .deck-form {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: rgba(101, 124, 181, 0.1);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-label {
+    font-weight: bold;
+    color: var(--primary-color);
+    font-size: 1rem;
+}
+
+.form-textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.selected-tarot-card, .decks-list {
+    padding: 20px;
+    background-color: #b5657610;
+}
+
+.deck-item {
+    background: var(--background-color);
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 3px;
+    border: 1px solid var(--primary-color);
+    border-left: 4px solid var(--primary-color);
+}
+
+.deck-item-header {
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+
+
+.deck-item-name {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.deck-item-details {
+    font-size: 0.9rem;
+    color: var(--primary80);
+}
+
+.deck-item-actions {
+    gap: 5px;
+    margin: 10px 0;
+}
+
+.btn-small {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: 'Inconsolata';
+}
+
+.btn-edit, .btn-edit-spread {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.btn-delete, .btn-delete-spread {
+    background: var(--accent-color);
+    color: white;
+}
+
+.btn-set-default {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* GESTIONAR TIPOS DE TIRADAS */
+
+
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.positions-list {
+    margin-top: 10px;
+}
+
+.position-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    padding: 10px;
+    background: transparent;
+    border: 1px solid var(--primary-color);
+}
+
+
+.position-input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+.add-position-btn {
+    background: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Inconsolata';
+}
+
+.remove-position {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+/* Estilos para formularios en modales */
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.positions-list {
+    margin-top: 10px;
+}
+
+
+
+.position-input {
+    flex: 1;
+    padding: 8px;
+    border-radius: 3px;
+    background-color: transparent;
+    font-family: 'Inconsolata';
+    color: var(--primary-color);
+    border: 0;
+}
+
+.remove-position {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* Estilos para entradas del historial en una línea */
+.spread-header {
+    display: flex;
+    align-items: center;
+    font-family: 'Inconsolata', monospace;
+    font-size: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.daily-date,
+.spread-date {
+    font-family: 'Inconsolata', monospace;
+    font-size: 1rem;
+    flex-shrink: 0;
+    line-height: 1.6rem;
+}
+
+.spread-name {
+    color: #1742ab80;
+    font-weight: bold;
+}
+
+.daily-card,
+.spread-name {
+    font-family: 'Inconsolata', monospace;
+    font-size: 1rem;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    align-items: center;
+}
+
+.reversal-badge {
+    font-family: 'Inconsolata', monospace;
+    font-size: 0.8rem;
+    background: var(--primary-color);
+    height: 24px;
+    width: 24px;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 50px;
+    margin-left: 8px;
+    /* Centrado horizontal y vertical */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Asegurar que sea un círculo perfecto */
+    border-radius: 50%;
+    /* Box sizing para incluir padding en las dimensiones */
+    box-sizing: border-box;
+}
