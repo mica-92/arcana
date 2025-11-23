@@ -65,7 +65,7 @@ body {
 }
 @font-face {
     font-family: 'Astronomicon';
-    src: url('https://github.com/mica-92/arcana/blob/44d31f3742502b59215be1a3b322e6a53a032d5d/Astronomicon.ttf') format('truetype');
+    src: url('Astronomicon.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
     font-display: swap; /* Para mejor rendimiento de carga */
@@ -951,5 +951,6 @@ h1 {
     color: #b8b8b8;
 
 }
+
 
 
