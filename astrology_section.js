@@ -58,7 +58,7 @@ async function loadAstrologyData() {
                 tarotCards: { 
                     signMajor: 'La Muerte', 
                     planetMajor: 'La Torre',
-                    minor: '7 de Copas',
+                    minor: '7 de Cups',
                     ruler: 'Mars'
                 }
             },
@@ -72,7 +72,7 @@ async function loadAstrologyData() {
                 tarotCards: { 
                     signMajor: 'El Ermitaño', 
                     planetMajor: 'El Mago',
-                    minor: '8 de Pentáculos', 
+                    minor: '8 de Pentacles', 
                     ruler: 'Mercury'
                 }
             },
@@ -632,18 +632,18 @@ function getZodiacSignFromLongitude(longitude) {
 // ===== FUNCIONES DE TAROT Y ARCANOS =====
 function getMajorArcanaForSign(signInEnglish) {
     const signArcana = {
-        'Aries': 'El Emperador',
-        'Taurus': 'El Hierofante',
-        'Gemini': 'Los Enamorados',
-        'Cancer': 'La Carroza',
-        'Leo': 'La Fuerza',
-        'Virgo': 'El Ermitaño',
-        'Libra': 'La Justicia',
-        'Scorpio': 'La Muerte',
-        'Sagittarius': 'El Templanza',
-        'Capricorn': 'El Diablo',
-        'Aquarius': 'La Estrella',
-        'Pisces': 'La Luna'
+        'Aries': 'The Emperor',
+        'Taurus': 'The Hierophant',
+        'Gemini': 'The Lovers',
+        'Cancer': 'The Chariot',
+        'Leo': 'Strength',
+       'Virgo': 'The Hermit',
+        'Libra': 'Justice',
+       'Scorpio': 'Death',
+       'Sagittarius': 'Temperance',
+       'Capricorn': 'The Devil',
+        'Aquarius': 'The Star',
+        'Pisces': 'The Moon',
     };
     
     return signArcana[signInEnglish] || 'Arcano no definido';
@@ -651,16 +651,16 @@ function getMajorArcanaForSign(signInEnglish) {
 
 function getMajorArcanaForPlanet(planetInEnglish) {
     const planetArcana = {
-        'Sun': 'El Sol',
-        'Moon': 'La Sacerdotisa',
-        'Mercury': 'El Mago',
-        'Venus': 'La Emperatriz',
-        'Mars': 'La Torre',
-        'Jupiter': 'La Rueda de la Fortuna',
-        'Saturn': 'El Mundo',
-        'Uranus': 'El Loco',
-        'Neptune': 'El Colgado',
-        'Pluto': 'El Juicio'
+        'Sun': 'The Sun',
+        'Moon': 'The High Priestess',
+        'Mercury': 'The Magician',
+        'Venus': 'The Empress',
+        'Mars': 'The Tower',
+        'Jupiter': 'The Wheel of Fortune',
+        'Saturn': 'The World',
+        'Uranus': 'The Fool',
+        'Neptune': 'The Hanged Man',
+        'Pluto': 'Judgment'
     };
     
     return planetArcana[planetInEnglish] || 'Arcano no definido';
@@ -668,53 +668,53 @@ function getMajorArcanaForPlanet(planetInEnglish) {
 
 function getDominantArcana(sign, planet) {
     const signToMajorArcana = {
-        'Aries': 'El Emperador',
-        'Tauro': 'El Hierofante',
-        'Géminis': 'Los Enamorados',
-        'Cáncer': 'La Carroza',
-        'Leo': 'La Fuerza',
-        'Virgo': 'El Ermitaño',
-        'Libra': 'La Justicia',
-        'Escorpio': 'La Muerte',
-        'Sagitario': 'El Templanza',
-        'Capricornio': 'El Diablo',
-        'Acuario': 'La Estrella',
-        'Piscis': 'La Luna'
+        'Aries': 'The Emperor',
+        'Tauro': 'The Hierophant',
+        'Géminis': 'The Lovers',
+        'Cáncer': 'The Chariot',
+        'Leo': 'Strength',
+        'Virgo': 'The Hermit',
+        'Libra': 'Justice',
+        'Escorpio': 'Death',
+        'Sagitario': 'Temperance',
+        'Capricornio': 'The Devil',
+        'Acuario': 'The Star',
+        'Piscis': 'The Moon'
     };
 
     const planetToMajorArcana = {
-        'Sun': 'El Sol',
-        'Moon': 'La Sacerdotisa',
-        'Mercury': 'El Mago',
-        'Venus': 'La Emperatriz',
-        'Mars': 'La Torre',
-        'Jupiter': 'La Rueda de la Fortuna',
-        'Saturn': 'El Mundo',
-        'Uranus': 'El Loco',
-        'Neptune': 'El Colgado',
-        'Pluto': 'El Juicio'
+        'Sun': 'The Sun',
+        'Moon': 'The High Priestess',
+        'Mercury': 'The Magician',
+        'Venus': 'The Empress',
+        'Mars': 'The Tower',
+        'Jupiter': 'The Wheel of Fortune',
+        'Saturn': 'The World',
+        'Uranus': 'The Fool',
+        'Neptune': 'The Hanged Man',
+        'Pluto': 'Judgment'
     };
 
     const signToElement = {
-        'Aries': 'Fuego',
-        'Leo': 'Fuego',
-        'Sagitario': 'Fuego',
-        'Tauro': 'Tierra',
-        'Virgo': 'Tierra',
-        'Capricornio': 'Tierra',
-        'Géminis': 'Aire',
-        'Libra': 'Aire',
-        'Acuario': 'Aire',
-        'Cáncer': 'Agua',
-        'Escorpio': 'Agua',
-        'Piscis': 'Agua'
+        'Aries': 'Fire',
+        'Leo': 'Fire',
+        'Sagitario': 'Fire',
+        'Tauro': 'Earth',
+        'Virgo': 'Earth',
+        'Capricornio': 'Earth',
+        'Géminis': 'Air',
+        'Libra': 'Air',
+        'Acuario': 'Air',
+        'Cáncer': 'Water',
+        'Escorpio': 'Water',
+        'Piscis': 'Water'
     };
 
     const elementToCourtCard = {
-        'Fuego': 'Rey de Bastos',
-        'Tierra': 'Rey de Pentáculos',
-        'Aire': 'Rey de Espadas',
-        'Agua': 'Rey de Copas'
+        'Fire': 'Rey de Wands',
+        'Earth': 'Rey de Pentacles',
+        'Air': 'Rey de Swords',
+        'Water': 'Rey de Cups'
     };
 
     const signArcana = signToMajorArcana[sign] || 'Arcano no definido';
@@ -744,28 +744,28 @@ function getDominantArcana(sign, planet) {
             const dominantArcana = getDominantArcana(currentSign, traditionalRuler);
             
             const planetMajorArcana = {
-                'Sun': 'El Sol',
-                'Moon': 'La Sacerdotisa',
-                'Mercury': 'El Mago',
-                'Venus': 'La Emperatriz',
-                'Mars': 'La Torre',
-                'Jupiter': 'La Rueda de la Fortuna',
-                'Saturn': 'El Mundo'
+                'Sun': 'The Sun',
+                'Moon': 'The High Priestess',
+                'Mercury': 'The Magician',
+                'Venus': 'The Empress',
+                'Mars': 'The Tower',
+                'Jupiter': 'The Wheel of Fortune',
+                'Saturn': 'The World'
             };
             
             const decanMinorArcana = {
-                'Aries': ['2 de Bastos', '3 de Bastos', '4 de Bastos'],
-                'Tauro': ['5 de Pentáculos', '6 de Pentáculos', '7 de Pentáculos'],
-                'Géminis': ['8 de Espadas', '9 de Espadas', '10 de Espadas'],
-                'Cáncer': ['2 de Copas', '3 de Copas', '4 de Copas'],
-                'Leo': ['5 de Bastos', '6 de Bastos', '7 de Bastos'],
-                'Virgo': ['8 de Pentáculos', '9 de Pentáculos', '10 de Pentáculos'],
-                'Libra': ['2 de Espadas', '3 de Espadas', '4 de Espadas'],
-                'Escorpio': ['5 de Copas', '6 de Copas', '7 de Copas'],
-                'Sagitario': ['8 de Bastos', '9 de Bastos', '10 de Bastos'],
-                'Capricornio': ['2 of Pentacles', '3 de Pentáculos', '4 de Pentáculos'],
-                'Acuario': ['5 de Espadas', '6 de Espadas', '7 de Espadas'],
-                'Piscis': ['8 de Copas', '9 de Copas', '10 de Copas']
+                'Aries': ['2 Wands', '3 Wands', '4 Wands'],
+                'Tauro': ['5 Pentacles', '6 Pentacles', '7 Pentacles'],
+                'Géminis': ['8 Swords', '9 Swords', '10 Swords'],
+                'Cáncer': ['2 Cups', '3 Cups', '4 Cups'],
+                'Leo': ['5 Wands', '6 Wands', '7 Wands'],
+                'Virgo': ['8 Pentacles', '9 Pentacles', '10 Pentacles'],
+                'Libra': ['2 Swords', '3 Swords', '4 Swords'],
+                'Escorpio': ['5 Cups', '6 Cups', '7 Cups'],
+                'Sagitario': ['8 Wands', '9 Wands', '10 Wands'],
+                'Capricornio': ['2 of Pentacles', '3 Pentacles', '4 Pentacles'],
+                'Acuario': ['5 Swords', '6 Swords', '7 Swords'],
+                'Piscis': ['8 Cups', '9 Cups', '10 Cups']
             };
             
             const signMajorCard = dominantArcana.signArcana;
