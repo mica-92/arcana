@@ -63,6 +63,13 @@ body {
     font-family: 'DM Sans';
     
 }
+@font-face {
+    font-family: 'Astronomicon';
+    src: url('Astronomicon.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap; /* Para mejor rendimiento de carga */
+}
 
 .outer-border {
     margin: 5px; border-radius: 5px; 
@@ -934,4 +941,5 @@ h1 {
 .most-frequent-card .card-count {
     font-size: 1rem;
     color: #b8b8b8;
+
 }
