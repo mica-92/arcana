@@ -741,8 +741,7 @@ function getChartOptions(title, data) {
                 display: false // Desactivamos la leyenda nativa de Chart.js
             },
             tooltip: {
-                enabled: false,
-                external: customTooltip
+                enabled: false
             },
         },
         elements: {
@@ -945,67 +944,6 @@ function createInfoChart(ctx, legendId, message) {
             </div>
         </div>`;
     }
-}
-
-function customTooltip(context) {
-    let tooltipEl = document.getElementById('chartjs-tooltip');
-    
-    if (!tooltipEl) {
-        tooltipEl = document.createElement('div');
-        tooltipEl.id = 'chartjs-tooltip';
-        tooltipEl.innerHTML = '<div class="tooltip-content"></div>';
-        document.body.appendChild(tooltipEl);
-    }
-    
-    const tooltipModel = context.tooltip;
-    if (tooltipModel.opacity === 0) {
-        tooltipEl.style.opacity = '0';
-        return;
-    }
-    
-    const symbolMap = {
-        'Derecha': '`', 'Reversa': 'b',
-        'Major Arcana': 'y', 'Wands': '±', 'Cups': '³', 'Swords': '²', 'Pentacles': '´', 'Court Cards': 'u',
-        'Fuego': '±', 'Agua': '³', 'Aire': '²', 'Tierra': '´',
-        'Fire': '±', 'Water': '³', 'Air': '²', 'Earth': '´',
-        'Sol': 'Q', 'Luna': 'R', 'Mercurio': 'S', 'Venus': 'T', 'Marte': 'U', 'Júpiter': 'V', 'Saturno': 'W',
-        'Sun': 'Q', 'Moon': 'R', 'Mercury': 'S', 'Mars': 'U', 'Jupiter': 'V', 'Saturn': 'W',
-        'Aries': 'A', 'Tauro': 'B', 'Géminis': 'C', 'Cáncer': 'D', 'Leo': 'E', 'Virgo': 'F', 'Libra': 'G',
-        'Escorpio': 'H', 'Sagitario': 'I', 'Capricornio': 'J', 'Acuario': 'K', 'Piscis': 'L',
-        'Taurus': 'B', 'Gemini': 'C', 'Cancer': 'D', 'Scorpio': 'H', 'Sagittarius': 'I', 'Capricorn': 'J',
-        'Aquarius': 'K', 'Pisces': 'L',
-        'Majors': 'y', 'Minors': 't', 'Courts': 'u',
-        'First': '1', 'Second': '2', 'Third': '3', 'Fourth': '4', 'Fifth': '5', 'Sixth': '6', 'Seventh': '7',
-        'One': '1', 'Two': '2', 'Three': '3', 'Four': '4', 'Five': '5', 'Six': '6', 'Seven': '7', 'Eight': '8', 'Nine': '9', 'Ten': '10',
-        'Pages': '§', 'Knights': '£', 'Queens': '¢', 'Kings': '¦'
-    };
-    
-    const label = tooltipModel.dataPoints[0].label;
-    const value = tooltipModel.dataPoints[0].raw;
-    const total = tooltipModel.dataPoints[0].dataset.data.reduce((a, b) => a + b, 0);
-    const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
-    const symbol = symbolMap[label] || '●';
-    const color = tooltipModel.labelColors[0].borderColor;
-    
-    const content = `
-        <div class="tooltip-header" style="border-left-color: ${color}">
-            <span class="tooltip-symbol astronomicon">${symbol}</span>
-            <span class="tooltip-label">${label}</span>
-        </div>
-        <div class="tooltip-body">
-            <span class="tooltip-value">${value} carta${value !== 1 ? 's' : ''}</span><br>
-            <span class="tooltip-percentage">${percentage}%</span>
-        </div>
-    `;
-    
-    tooltipEl.querySelector('.tooltip-content').innerHTML = content;
-    
-    const position = context.chart.canvas.getBoundingClientRect();
-    tooltipEl.style.opacity = '1';
-    tooltipEl.style.position = 'absolute';
-    tooltipEl.style.left = position.left + window.pageXOffset + tooltipModel.caretX + 'px';
-    tooltipEl.style.top = position.top + window.pageYOffset + tooltipModel.caretY + 'px';
-    tooltipEl.style.pointerEvents = 'none';
 }
 
 function updateCharts() {

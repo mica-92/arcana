@@ -37,43 +37,11 @@
     justify-content: center;
     flex-wrap: wrap;
     margin-bottom: 30px;
-    gap: 20px;
 }
 
-/* Contenedor del gráfico con tooltip fijo */
-.chart-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 300px;
-    width: 300px;
-    padding: 8px;
-    background: linear-gradient(145deg, #ffffff, #f0f0f0);
-    border-radius: 50%;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
 
-.chart-container::before {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: linear-gradient(145deg, var(--primary-color), var(--primary80));
-    border-radius: 50%;
-    z-index: -1;
-    opacity: 0.7;
-}
 
-/* Canvas del gráfico */
-.chart-container canvas {
-    animation: chartAppear 0.6s ease-out;
-    border-radius: 50%;
-    max-width: 100%;
-    max-height: 100%;
-}
+
 
 /* Tooltip central fijo - siempre visible */
 .chart-center-tooltip {
@@ -295,10 +263,7 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-    .chart-container {
-        height: 250px;
-        width: 250px;
-    }
+
     
     .chart-center-tooltip {
         padding: 12px 16px;
@@ -322,43 +287,9 @@
 .chart-legend {
     display: block;
     width: 100%;
-    margin-top: 15px;
 }
 
-/* Asegúrate de que el contenedor de gráficos tenga suficiente espacio */
-.charts-row {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 30px;
-    gap: 20px;
-}
 
-.chart-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 300px;
-    width: 300px;
-    padding: 8px;
-    background: linear-gradient(145deg, #ffffff, #f0f0f0);
-    border-radius: 50%;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-/* ===== ESTILOS PARA LEYENDA INLINE ===== */
-.inline-legend {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 5px;
-    padding: 5px;
-    border-radius: 12px;
-    border: 2px solid var(--primary-color);
-    max-width: 600px;
-}
 
 .legend-item-inline {
     display: flex;
@@ -401,15 +332,7 @@
     white-space: nowrap;
 }
 
-/* ALTERNATIVA: Centrado directo en la estructura existente */
-.charts-row {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 30px;
-    gap: 20px;
-}
+
 
 /* Asegurar que la leyenda esté centrada */
 .chart-legend {
@@ -424,9 +347,6 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 8px;
-    padding: 12px 15px;
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 12px;
-    border: 2px solid var(--primary-color);
+
     max-width: 600px;
 }

@@ -134,7 +134,7 @@ function showManageSpreadsModal() {
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="modal-title">Gestionar Tipos de Tiradas</div>
-                    <button class="close-modal" id="spreads-close-btn">&times;</button>
+                    <button class="close-modal" id="spreads-close-btn"><i class="fa-solid fa-times"></i></button>
                 </div>
                 
                 <div class="spread-form">
@@ -353,7 +353,7 @@ function showManageSpreadsModal() {
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="modal-title">Gestionar Tipos de Tiradas</div>
-                    <button class="close-modal" id="spreads-close-btn">&times;</button>
+                    <button class="close-modal" id="spreads-close-btn"><i class="fa-solid fa-times"></i></button>
                 </div>
                 
                 <div class="spread-form">
