@@ -12,45 +12,171 @@ let charts = {
     courtTypes: null
 };
 
-// Colores para los gráficos
+// Paleta de colores basada en los colores existentes
+const colorPalette = {
+    primary: '#1742ab',      // Azul primario
+    primary80: '#1742ab80',  // Azul primario con 80% opacidad
+    secondary: '#b56576',    // Rosa secundario
+    secondary80: '#b5657680',// Rosa secundario con 80% opacidad
+    
+    // Naranjas y amarillos en armonía con la paleta
+    orange: '#ea7317',       // Naranja existente
+    orange80: '#ea731780',   // Naranja con 80% opacidad
+    amber: '#ff9e00',        // Ámbar vibrante
+    amber80: '#ff9e0080',    // Ámbar con 80% opacidad
+    gold: '#ffb700',         // Dorado cálido
+    gold80: '#ffb70080',     // Dorado con 80% opacidad
+    yellow: '#ffd500',       // Amarillo existente
+    yellow80: '#ffd50080',   // Amarillo con 80% opacidad
+    
+    // Colores complementarios
+    teal: '#34a0a4',         // Verde azulado
+    teal80: '#34a0a480',     // Verde azulado con 80% opacidad
+    forest: '#1e6091',       // Azul forestal
+    forest80: '#1e609180',   // Azul forestal con 80% opacidad
+    magenta: '#d81159',      // Magenta vibrante
+    magenta80: '#d8115980',  // Magenta con 80% opacidad
+    mint: '#52b69a',         // Verde menta
+    mint80: '#52b69a80',     // Verde menta con 80% opacidad
+    plum: '#8f2d56',         // Ciruela oscuro
+    plum80: '#8f2d5680',     // Ciruela con 80% opacidad
+    lime: '#b5e48c',         // Lima suave
+    lime80: '#b5e48c80',     // Lima con 80% opacidad
+    
+    // Colores de acento
+    coral: '#ff6b6b',        // Coral existente
+    coral80: '#ff6b6b80',    // Coral con 80% opacidad
+    aqua: '#4ecdc4',         // Aqua existente
+    aqua80: '#4ecdc480',     // Aqua con 80% opacidad
+    sky: '#45b7d1',          // Azul cielo existente
+    sky80: '#45b7d180',      // Azul cielo con 80% opacidad
+    honey: '#feca57',        // Miel existente
+    honey80: '#feca5780'     // Miel con 80% opacidad
+};
+
+// Colores para los gráficos - actualizados con la nueva paleta
 const statChartColors = {
-    orientation: ['#1742ab', '#1742ab80'],
+    orientation: [
+        colorPalette.primary, 
+        colorPalette.primary80
+    ],
     suits: [
-        '#ea7317', '#ea731780', '#1742ab', '#1742ab80'
+        colorPalette.orange,    // Bastos/Wands
+        colorPalette.orange80,
+        colorPalette.primary,   // Copas/Cups  
+        colorPalette.primary80,
+        colorPalette.amber,     // Espadas/Swords
+        colorPalette.amber80,
+        colorPalette.gold       // Oros/Pentacles
     ],
     types: [
-        '#00296b', '#8f2d56', '#ff6b6b'
+        colorPalette.primary,   // Arcanos Mayores
+        colorPalette.secondary, // Arcanos Menores
+        colorPalette.coral      // Cartas de Corte
     ],
     elements: [
-        '#ea7317', '#ea731780', '#1742ab', '#1742ab80'
+        colorPalette.orange,    // Fuego
+        colorPalette.orange80,
+        colorPalette.primary,   // Agua
+        colorPalette.primary80,
+        colorPalette.amber,     // Aire
+        colorPalette.amber80,
+        colorPalette.gold       // Tierra
     ],
     planets: [
-        '#ea7317', '#ea731780', '#1742ab', '#1742ab80',
-        '#ffd500', '#ffd50080', '#34a0a4', '#34a0a480',
-        '#1e6091', '#1e609180', '#1e6091'
+        colorPalette.orange,    // Sol
+        colorPalette.orange80,
+        colorPalette.primary,   // Luna
+        colorPalette.primary80,
+        colorPalette.amber,     // Mercurio
+        colorPalette.amber80,
+        colorPalette.gold,      // Venus
+        colorPalette.gold80,
+        colorPalette.yellow,    // Marte
+        colorPalette.yellow80,
+        colorPalette.teal       // Júpiter
     ],
     signs: [
-        '#ea7317', '#ea731780', '#1742ab', '#1742ab80',
-        '#ffd500', '#ffd50080', '#34a0a4', '#34a0a480',
-        '#1e6091', '#1e609180', '#1e6091', '#d81159',
-        '#d8115980', '#52b69a', '#52b69a80', '#8f2d56',
-        '#b5e48c'
+        colorPalette.orange,    // Aries
+        colorPalette.orange80,
+        colorPalette.primary,   // Tauro
+        colorPalette.primary80,
+        colorPalette.amber,     // Géminis
+        colorPalette.amber80,
+        colorPalette.gold,      // Cáncer
+        colorPalette.gold80,
+        colorPalette.yellow,    // Leo
+        colorPalette.yellow80,
+        colorPalette.teal,      // Virgo
+        colorPalette.teal80,
+        colorPalette.forest,    // Libra
+        colorPalette.forest80,
+        colorPalette.magenta,   // Escorpio
+        colorPalette.magenta80,
+        colorPalette.mint,      // Sagitario
+        colorPalette.mint80,
+        colorPalette.plum,      // Capricornio
+        colorPalette.plum80,
+        colorPalette.lime,      // Acuario
+        colorPalette.lime80,
+        colorPalette.coral      // Piscis
     ],
     septenary: [
-        '#ea7317', '#ea731780', '#1742ab', '#1742ab80',
-        '#ffd500', '#ffd50080', '#34a0a4', '#34a0a480'
+        colorPalette.orange,    // 1ra Séptuple
+        colorPalette.orange80,
+        colorPalette.primary,   // 2da Séptuple
+        colorPalette.primary80,
+        colorPalette.amber,     // 3ra Séptuple
+        colorPalette.amber80,
+        colorPalette.gold,      // 4ta Séptuple
+        colorPalette.gold80,
+        colorPalette.yellow,    // 5ta Séptuple
+        colorPalette.yellow80,
+        colorPalette.teal,      // 6ta Séptuple
+        colorPalette.teal80,
+        colorPalette.forest     // 7ma Séptuple
     ],
     vertical: [
-        '#ea7317', '#ea731780', '#1742ab', '#1742ab80',
-        '#ffd500', '#ffd50080', '#34a0a4', '#34a0a480'
+        colorPalette.orange,    // 1ra Vertical
+        colorPalette.orange80,
+        colorPalette.primary,   // 2da Vertical
+        colorPalette.primary80,
+        colorPalette.amber,     // 3ra Vertical
+        colorPalette.amber80,
+        colorPalette.gold,      // 4ta Vertical
+        colorPalette.gold80,
+        colorPalette.yellow,    // 5ta Vertical
+        colorPalette.yellow80,
+        colorPalette.teal,      // 6ta Vertical
+        colorPalette.teal80,
+        colorPalette.forest     // 7ma Vertical
     ],
     numerology: [
-        '#ea7317', '#ea731780', '#1742ab', '#1742ab80',
-        '#ffd500', '#ffd50080', '#34a0a4', '#34a0a480',
-        '#52b69a', '#52b69a80', '#8f2d56', '#b5e48c'
+        colorPalette.orange,    // 1
+        colorPalette.orange80,
+        colorPalette.primary,   // 2
+        colorPalette.primary80,
+        colorPalette.amber,     // 3
+        colorPalette.amber80,
+        colorPalette.gold,      // 4
+        colorPalette.gold80,
+        colorPalette.yellow,    // 5
+        colorPalette.yellow80,
+        colorPalette.teal,      // 6
+        colorPalette.teal80,
+        colorPalette.forest,    // 7
+        colorPalette.forest80,
+        colorPalette.magenta,   // 8
+        colorPalette.magenta80,
+        colorPalette.mint,      // 9
+        colorPalette.mint80,
+        colorPalette.plum       // 10
     ],
     courtTypes: [
-        '#ff6b6b', '#4ecdc4', '#45b7d1', '#feca57'
+        colorPalette.orange,     // Pajes/Pages
+        colorPalette.teal,      // Caballeros/Knights
+        colorPalette.primary,       // Reinas/Queens
+        colorPalette.gold      // Reyes/Kings
     ]
 };
 

@@ -10,9 +10,10 @@ function showSpreadInfoModal(entry) {
     
     const spreadCards = entry.spread_cards || [];
     const totalCards = spreadCards.length;
-    const filledCards = spreadCards.filter(card => card && card.card).length;
-    const uprightCards = spreadCards.filter(card => card && card.card && card.orientation === 'upright').length;
-    const reversedCards = spreadCards.filter(card => card && card.card && card.orientation === 'reversed').length;
+    const validCards = spreadCards.filter(card => card && card.card);
+    const totalValidCards = validCards.length;
+    const uprightCards = validCards.filter(card => card.orientation === 'upright').length;
+    const reversedCards = validCards.filter(card => card.orientation === 'reversed').length;
     const spreadStats = calculateSpreadStatistics(spreadCards);
     const detailedStats = calculateDetailedSpreadStatistics(spreadCards);
     
@@ -133,8 +134,9 @@ function showSpreadInfoModal(entry) {
                     <div class="modal-subtitle">Estadísticas de la Tirada</div>
                 </div>
                 
+                <!-- CAMBIO AQUÍ: Reemplazar porcentaje por formato reversa/total -->
                 <div class="stat-card">
-                    <div class="stat-value">${Math.round(spreadStats.reversalPercentage)}%</div>
+                    <div class="stat-value">${reversedCards}/${totalValidCards}</div>
                     <div class="stat-label">En Reversa</div>
                 </div>
                 
@@ -262,7 +264,6 @@ function showSpreadInfoModal(entry) {
     
     console.log('✅ Modal creado - SOLO EVENTOS INLINE, NO setupSpreadInfoModalEventsFunction');
 }
-
 // FUNCIÓN FINAL DE CIERRE - SOLO UNA VEZ
 function closeSpreadModalFinal() {
     console.log('🔴 CERRANDO MODAL - FUNCIÓN FINAL');
@@ -422,15 +423,20 @@ function createSpreadCardsHTML(spreadCards, spreadTypeId, iconMap) {
         }
 
         const card = cardData.card;
-        const orientationSymbol = cardData.orientation === 'reversed' ? 'b' : '`';
-        const orientationClass = cardData.orientation === 'reversed' ? 'reversed' : 'upright';
+        const isReversed = cardData.orientation === 'reversed';
         
         html += `
             <div class="deck-item">
                 <div class="deck-item-name">${cardData.position || `Posición ${index + 1}`}</div>
-                <div class="position-name" style="color: var(--primary80)">${card.Name}</div>
+                <div style="display: flex; align-items: center; justify-content: flex-start; gap: 8px; margin-bottom: 8px;">
+                    <div class="position-name" style="color: var(--primary80)">${card.Name}</div>
+                    ${isReversed ? `
+                    <div class="reversal-badge" style="font-family: 'Inconsolata', monospace; font-size: 0.8rem; background: var(--primary-color); height: 24px; width: 24px; color: white; padding: 2px 6px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-sizing: border-box;" title="Carta Reversa">
+                        R
+                    </div>
+                    ` : ''}
+                </div>
                 <div class="spread-card-info" style="font-size: 20px; font-family: 'Astronomicon', 'Inconsolata', monospace;">
-                    ${orientationSymbol}
                     ${card.Element ? `<span>${getSymbol(card.Element)}</span>` : ''}
                     ${card.Planet ? `<span>${getSymbol(card.Planet)}</span>` : ''}
                     ${card.Sign ? `<span>${getSymbol(card.Sign)}</span>` : ''}

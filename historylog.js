@@ -368,10 +368,10 @@ function createDailyDetailsHTML(entry) {
         // Mapeo de símbolos para mostrar iconos en lugar de texto
         const symbolMap = {
             // Orientación
-            'upright': '`',
-            'reversed': 'b',
-            'Derecha': '`',
-            'Reversa': 'b',
+            'upright': 'D',
+            'reversed': 'R',
+            'Derecha': 'D',
+            'Reversa': 'R',
             
             // Palos
             'Major Arcana': 'y',
@@ -483,10 +483,9 @@ function createDailyDetailsHTML(entry) {
             }
         }
 
-        // Procesar orientación y aplicar mapeo de símbolos
+        // Procesar orientación
         const orientation = entry.tarot_orientation || entry.orientation || 'upright';
-        const orientationSymbol = symbolMap[orientation] || 
-                                (orientation === 'reversed' ? 'b' : '`');
+        const isReversed = orientation === 'reversed' || orientation === 'Reversa';
         
         const suitSymbol = symbolMap[cardSuit] || cardSuit;
         const elementSymbol = symbolMap[cardElement] || cardElement;
@@ -498,15 +497,18 @@ function createDailyDetailsHTML(entry) {
             <div class="deck-item-name">
                 <div class="deck-item" style="margin-bottom:10px;">
                     <div class="tarot-card-display">
-                        <div class="tarot-card-header">
+                        <div class="tarot-card-header" style="display: flex; align-items: center; justify-content: flex-start; gap: 8px;">
                             <div class="position-name" style="color: var(--primary80);">${cardName}</div>
+                            ${isReversed ? `
+                            <div class="reversal-badge" style="font-family: 'Inconsolata', monospace; font-size: 0.8rem; background: var(--primary-color); height: 24px; width: 24px; color: white; padding: 2px 6px; border-radius: 50%; margin-left: 8px; display: flex; align-items: center; justify-content: center; box-sizing: border-box;" title="Carta Reversa">
+                                R
+                            </div>
+                            ` : ''}
                         </div>
                         <div class="spread-card-info">
-                            ${orientationSymbol ? `<div title="${orientation === 'reversed' ? 'Reversa' : 'Derecha'}" style="font-family:'Astronomicon'; font-weight: normal; font-size:20px;">${orientationSymbol}</div>` : ''}
                             ${elementSymbol ? `<div title="Elemento" style="font-family:'Astronomicon'; font-weight: normal; font-size:20px;">${elementSymbol}</div>` : ''}
                             ${planetSymbol ? `<div title="Planeta" style="font-family:'Astronomicon'; font-weight: normal; font-size:20px;">${planetSymbol}</div>` : ''}
                             ${signSymbol ? `<div title="Signo Zodiacal" style="font-family:'Astronomicon'; font-weight: normal; font-size:20px;">${signSymbol}</div>` : ''}
-                            ${suitSymbol ? `<div title="Palo" style="font-family:'Astronomicon'; font-weight: normal; font-size:20px;">${suitSymbol}</div>` : ''}
                         </div>
                     </div>
                 </div>

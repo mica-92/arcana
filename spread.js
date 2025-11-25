@@ -922,14 +922,14 @@ function generateSpreadEntryPositions(spreadType) {
         positionsHTML += `
             <div class="spread-position-group">
                 <div class="position-controls">
-                    <select class="form-select" data-position="${position}" style="background: #b5657630; height: 41px; color: var(--secondary-color); border: 2px solid var(--secondary-color)" >
+                    <select class="form-select position-card-select" data-position="${position}" style="background: #b5657630; height: 41px; color: var(--secondary-color); border: 2px solid var(--secondary-color)">
                         <option value="">${index + 1}. ${position}</option>
                         ${typeof tarotCards !== 'undefined' ? 
                             Object.values(tarotCards).map(card => 
                                 `<option value="${card.ID}">${card.Name} (${card.Suit})</option>`
                             ).join('') : '<option value="">Cartas no disponibles</option>'}
                     </select>
-                    <select class="form-select" data-position="${position}" style="margin-top: 8px; background: #b5657630; color: var(--secondary-color); border: 2px solid var(--secondary-color)">
+                    <select class="form-select position-orientation-select" data-position="${position}" style="margin-top: 8px; background: #b5657630; color: var(--secondary-color); border: 2px solid var(--secondary-color)">
                         <option value="upright">Derecha</option>
                         <option value="reversed">Reversa</option>
                     </select>
@@ -943,28 +943,44 @@ function generateSpreadEntryPositions(spreadType) {
     container.style.display = 'block';
     console.log('✅ Contenedor actualizado y mostrado');
     
-    // Añadir event listeners a los selects de cartas y orientación
+    // Añadir event listeners CORREGIDOS
+    setupSpreadPositionEventListeners();
+    
+    console.log('✅ Todos los event listeners de posiciones configurados');
+}
+
+// NUEVA FUNCIÓN PARA CONFIGURAR EVENT LISTENERS
+function setupSpreadPositionEventListeners() {
+    console.log('🔧 Configurando event listeners para posiciones...');
+    
+    // Remover listeners existentes para evitar duplicados
     const cardSelects = document.querySelectorAll('.position-card-select');
     const orientationSelects = document.querySelectorAll('.position-orientation-select');
     
-    console.log('🔧 Configurando', cardSelects.length, 'selects de cartas');
-    console.log('🔧 Configurando', orientationSelects.length, 'selects de orientación');
-    
     cardSelects.forEach(select => {
+        select.replaceWith(select.cloneNode(true));
+    });
+    orientationSelects.forEach(select => {
+        select.replaceWith(select.cloneNode(true));
+    });
+    
+    // Agregar nuevos listeners
+    document.querySelectorAll('.position-card-select').forEach(select => {
         select.addEventListener('change', function() {
             console.log('🔄 Carta cambiada en posición:', this.getAttribute('data-position'));
             updateSpreadModalCard(this);
         });
     });
     
-    orientationSelects.forEach(select => {
+    document.querySelectorAll('.position-orientation-select').forEach(select => {
         select.addEventListener('change', function() {
             console.log('🔄 Orientación cambiada en posición:', this.getAttribute('data-position'));
             updateSpreadModalCard(this);
         });
     });
     
-    console.log('✅ Todos los event listeners de posiciones configurados');
+    console.log(`✅ ${cardSelects.length} selects de cartas configurados`);
+    console.log(`✅ ${orientationSelects.length} selects de orientación configurados`);
 }
 
 function updateSpreadModalCard(element) {

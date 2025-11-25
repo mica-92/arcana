@@ -267,7 +267,8 @@
 
 .daily-card, .spread-name {
     font-size: 1.1rem;
-    color: var(--secondary-color);
+    color: #ea731790;
+    font-weight: bold;
     display: flex;
     align-items: center; /* Centrado vertical interno */
     gap: 10px;
@@ -276,6 +277,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-family: 'Inconsolata', monospace;
 }
 
 /* RESPONSIVE - Mantener centrado vertical en móviles */
@@ -575,17 +577,6 @@
 .spread-name {
     color: #1742ab80;
     font-weight: bold;
-}
-
-.daily-card,
-.spread-name {
-    font-family: 'Inconsolata', monospace;
-    font-size: 1rem;
-    flex: 1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    align-items: center;
 }
 
 .reversal-badge {

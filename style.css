@@ -60,7 +60,7 @@ body {
     max-width: 800px;
     margin: 0 auto;
     font-family: 'DM Sans';
-    height: 100vh; /* Asegurar que body ocupe toda la altura */
+    height: 100dvh; /* Asegurar que body ocupe toda la altura */
     overflow: hidden; /* Prevenir scroll del body */
 }
 
@@ -1357,6 +1357,12 @@ header {
         right: 15px;
         top: 70px;
         font-size: 0.7rem;
+    }
+
+    .app-footer {
+
+        justify-content: left;
+
     }
 }
 
