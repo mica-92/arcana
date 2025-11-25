@@ -15,7 +15,7 @@
 
 .astro-card-header {
     font-weight: 400;
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     text-transform: uppercase;
     font-style: italic;
     box-sizing: border-box;
@@ -102,9 +102,7 @@
 }
 
 /* Estilos para los elementos de tarot cards con margen */
-.tarot-cards {
-    margin-top: 15px;
-}
+
 
 .tarot-card-item {
     padding: 6px 0;
@@ -121,9 +119,7 @@
     font-size: 1em;
 }
 
-.body-position {
-    margin: 10px 0;
-}
+
 
 /* Estilos para los símbolos */
 .tarot-card-item {
