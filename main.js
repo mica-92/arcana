@@ -77,24 +77,36 @@ function displayTodayCard() {
 
         const now = new Date();
         const hours = now.getHours();
-        let greeting = "Buenos dias Mica.<br> Que lindo verte por acá";
-        
+        let greeting = "Buenos dias";
         if (hours >= 12 && hours < 21) {
-            greeting = "Buenas tardes Mica!<br> Como va el día?";
+            greeting = "Buenas tardes";
         } else if (hours >= 21 || hours < 6) {
-            greeting = "Hermosa Noche Mica!";
+            greeting = "Hermosa Noche";
         }
+        
+        // Formatear fecha y hora
+        const options = { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        };
+        const dateTimeStr = now.toLocaleDateString('es-AR', options);
         
         // Determine grid class based on number of items
         const gridClass = arcanaCount === 1 ? 'arcana-grid single-item' : 'arcana-grid';
         
         container.innerHTML = `
-            <div class="greeting-header">
-                ${greeting}
+            <div class="mono-text-upper date-time-display">
+            ${dateTimeStr}</div>
+        <div class="mono-text-upper" style="margin-bottom: 15px;">
+            bienvenida a tu reporte arcánico</div>
+             <div class="history-title" style="margin-bottom: 15px;">
+                Tu carta del día es:
             </div>
-            
-            <div class="mono-text-upper">bienvenida a tu reporte arcánico</div>
-            
+                        
             <div class="today-card-display">
                 <h3>${card.Name} <span class="orientation-symbol ${orientationSymbol === 'R' ? 'reverse' : 'direct'}">${orientationSymbol}</span></h3>
             </div>
@@ -121,21 +133,32 @@ function displayNoCardToday() {
         greeting = "Hermosa Noche Mica!";
     }
     
+    // Formatear fecha y hora
+    const options = { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    };
+    const dateTimeStr = now.toLocaleDateString('es-AR', options);
+    
     container.innerHTML = `
         <div class="no-card-container">
-            <div class="greeting-header">
-                ${greeting}
+            <div class="mono-text-upper date-time-display">
+            ${dateTimeStr}</div>
+        <div class="mono-text-upper" style="margin-bottom: 15px;">
+            bienvenida a tu reporte arcánico</div>
+             <div class="history-title" style="margin-bottom: 15px;">
+                Aún no has sacado tu carta del día:
             </div>
-            <div class="today-headline">bienvenida a tu reporte arcánico</div>
-            <div class="today-p">Aún no has sacado tu carta del día</div>
             <button class="btn-primary" id="draw-today-card">Sacar Carta del Día</button>
         </div>
     `;
     
     document.getElementById('draw-today-card').addEventListener('click', function() {
-        // Abrir el modal de carta del día
-        document.getElementById('daily-card-form').classList.add('show');
-        initializeDailyForm();
-        applyFormOverlay('daily-card-form');
+        // Abrir el nuevo modal de carta del día
+        showDailyCardModal();
     });
 }

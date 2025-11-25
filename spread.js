@@ -1,179 +1,870 @@
-// ===== FUNCIONES CORREGIDAS PARA TIRADAS =====
-function initializeSpreadForm() {
-    console.log('🚀 Inicializando formulario de tirada...');
+// ===== FUNCIONES PARA MODAL DE GESTIÓN DE TIRADAS =====
+
+// ===== NUEVAS FUNCIONES ESPECÍFICAS PARA CERRAR MODAL DE GESTIÓN =====
+function closeManageSpreadsModal() {
+    console.log('🔴 EJECUTANDO closeManageSpreadsModal()');
+    const spreadsModal = document.getElementById('spreads-modal');
+    if (spreadsModal) {
+        spreadsModal.remove();
+        console.log('✅ Modal de gestión de tiradas CERRADO');
+    } else {
+        console.log('ℹ️ Modal de gestión no encontrado (ya estaba cerrado)');
+    }
+}
+
+function setupManageSpreadsCloseEvents() {
+    console.log('🔄 Configurando eventos de cierre ESPECÍFICOS para gestión...');
     
-    // ✅ ESTADO INICIAL ROBUSTO
-    const now = new Date();
-    const spreadDateInput = document.getElementById('spread-date');
-    
-    // Validar y establecer fecha
-    if (spreadDateInput) {
-        try {
-            spreadDateInput.valueAsDate = now;
-            console.log('✅ Fecha establecida:', now.toISOString().split('T')[0]);
-        } catch (error) {
-            console.warn('⚠️ No se pudo establecer la fecha automáticamente');
-            spreadDateInput.value = now.toISOString().split('T')[0];
-        }
+    // Botón cerrar (X)
+    const closeBtn = document.querySelector('#spreads-modal .close-modal');
+    if (closeBtn) {
+        console.log('✅ Botón X encontrado, agregando listener directo');
+        closeBtn.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('🟡 CLIC en botón X - cerrando modal');
+            closeManageSpreadsModal();
+        };
+    } else {
+        console.error('❌ Botón X NO encontrado');
     }
     
-    // ✅ REINICIO COMPLETO DEL ESTADO
+    // Botón cancelar
+    const cancelBtn = document.getElementById('cancel-spread');
+    if (cancelBtn) {
+        console.log('✅ Botón Cancelar encontrado, agregando listener directo');
+        cancelBtn.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('🟡 CLIC en botón Cancelar - cerrando modal');
+            closeManageSpreadsModal();
+        };
+    } else {
+        console.error('❌ Botón Cancelar NO encontrado');
+    }
+    
+    // Clic fuera del modal
+    const modal = document.getElementById('spreads-modal');
+    if (modal) {
+        console.log('✅ Modal encontrado, agregando listener para clic fuera');
+        modal.onclick = function(e) {
+            if (e.target === this) {
+                console.log('🟡 CLIC fuera del modal - cerrando');
+                closeManageSpreadsModal();
+            }
+        };
+    } else {
+        console.error('❌ Modal NO encontrado para clic fuera');
+    }
+    
+    console.log('✅ Eventos de cierre ESPECÍFICOS configurados');
+}
+
+// ===== NUEVAS FUNCIONES ESPECÍFICAS PARA CERRAR MODAL DE GESTIÓN =====
+function closeManageSpreadsModal() {
+    console.log('🔴 EJECUTANDO closeManageSpreadsModal()');
+    const spreadsModal = document.getElementById('spreads-modal');
+    if (spreadsModal) {
+        spreadsModal.remove();
+        console.log('✅ Modal de gestión de tiradas CERRADO');
+    } else {
+        console.log('ℹ️ Modal de gestión no encontrado (ya estaba cerrado)');
+    }
+}
+
+function setupManageSpreadsCloseEvents() {
+    console.log('🔄 Configurando eventos de cierre ESPECÍFICOS para gestión...');
+    
+    // Botón cerrar (X)
+    const closeBtn = document.querySelector('#spreads-modal .close-modal');
+    if (closeBtn) {
+        console.log('✅ Botón X encontrado, agregando listener directo');
+        closeBtn.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('🟡 CLIC en botón X - cerrando modal');
+            closeManageSpreadsModal();
+        };
+    } else {
+        console.error('❌ Botón X NO encontrado');
+    }
+    
+    // Botón cancelar
+    const cancelBtn = document.getElementById('cancel-spread');
+    if (cancelBtn) {
+        console.log('✅ Botón Cancelar encontrado, agregando listener directo');
+        cancelBtn.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('🟡 CLIC en botón Cancelar - cerrando modal');
+            closeManageSpreadsModal();
+        };
+    } else {
+        console.error('❌ Botón Cancelar NO encontrado');
+    }
+    
+    // Clic fuera del modal
+    const modal = document.getElementById('spreads-modal');
+    if (modal) {
+        console.log('✅ Modal encontrado, agregando listener para clic fuera');
+        modal.onclick = function(e) {
+            if (e.target === this) {
+                console.log('🟡 CLIC fuera del modal - cerrando');
+                closeManageSpreadsModal();
+            }
+        };
+    } else {
+        console.error('❌ Modal NO encontrado para clic fuera');
+    }
+    
+    console.log('✅ Eventos de cierre ESPECÍFICOS configurados');
+}
+
+// ===== FUNCIONES PARA MODAL DE GESTIÓN DE TIRADAS =====
+
+
+function showManageSpreadsModal() {
+    console.log('🎯 INICIANDO showManageSpreadsModal()');
+    
+    // Cerrar modales existentes primero
+    closeAllSpreadModals();
+    
+    const modalHTML = `
+        <div class="modal-overlay" id="spreads-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">Gestionar Tipos de Tiradas</div>
+                    <button class="close-modal" id="spreads-close-btn">&times;</button>
+                </div>
+                
+                <div class="spread-form">
+                    <input type="hidden" id="editing-spread-id" value="">
+                    <div class="form-group">
+                        <label class="form-label">Nombre de la Tirada</label>
+                        <input type="text" class="form-input" id="spread-name" placeholder="Ej: Luna Llena, Cruz Celta" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Número de Cartas</label>
+                            <input type="number" class="form-input" id="spread-card-count" min="1" max="20" value="3">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label class="form-label">Mazo Asociado</label>
+                            <select class="form-select" id="spread-deck">
+                                ${decks.map(deck => 
+                                    `<option value="${deck.id}">${deck.name}</option>`
+                                ).join('')}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Descripción</label>
+                        <textarea class="form-textarea" id="spread-description" placeholder="Descripción de la tirada..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Tags</label>
+                        <input type="text" class="form-input" id="spread-tags" placeholder="Ej: Astrología, Básica, Avanzada">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Posiciones de las Cartas</label>
+                        <div class="positions-list" id="spread-positions">
+                            <!-- Las posiciones se generarán aquí -->
+                        </div>
+                        <button type="button" class="add-position-btn" id="add-position-btn">+ Agregar Posición</button>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancel-spread">Cancelar</button>
+                        <button type="button" class="btn-primary" id="save-spread">Guardar Tirada</button>
+                    </div>
+                </div>
+                
+                <div class="decks-list" id="spreads-list">
+                    <div class="modal-header-subtitle">
+                        <div class="modal-subtitle">Tiradas Registradas</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    console.log('✅ Modal HTML insertado en el DOM');
+    
+    // 🔄 CONFIGURACIÓN INMEDIATA SIN TIMEOUT
+    console.log('🔄 Configurando eventos inmediatamente...');
+    
+    // 1. PRIMERO los eventos de cierre (lo más importante)
+    setupManageSpreadsCloseEvents();
+    
+    // 2. LUEGO el resto de la funcionalidad
+    const initialCount = parseInt(document.getElementById('spread-card-count').value) || 3;
+    generateSpreadManagementPositions(initialCount);
+    
+    // 3. Configurar otros eventos
+    setupSpreadModalEvents();
+    loadSpreadsList();
+    
+    console.log('✅ Modal de gestión de tiradas COMPLETAMENTE configurado');
+}
+
+
+function setupSpreadModalEvents() {
+    console.log('🔧 Configurando eventos secundarios del modal...');
+    
+    // Solo eventos que NO son de cierre
+    const cardCountInput = document.getElementById('spread-card-count');
+    const addPositionBtn = document.getElementById('add-position-btn');
+    const saveSpreadBtn = document.getElementById('save-spread');
+    
+    // ✅ CAMBIO EN NÚMERO DE CARTAS
+    if (cardCountInput) {
+        cardCountInput.addEventListener('change', function() {
+            const newCount = parseInt(this.value);
+            console.log('🔄 Cambiando número de cartas a:', newCount);
+            
+            if (newCount >= 1 && newCount <= 20) {
+                generateSpreadManagementPositions(newCount);
+            } else {
+                console.warn('❌ Número de cartas inválido, restableciendo a 3');
+                this.value = 3;
+                generateSpreadManagementPositions(3);
+            }
+        });
+    }
+    
+    // ✅ AGREGAR POSICIÓN
+    if (addPositionBtn) {
+        addPositionBtn.addEventListener('click', function() {
+            const currentCount = parseInt(document.getElementById('spread-card-count').value);
+            const newCount = currentCount + 1;
+            
+            if (newCount <= 20) {
+                document.getElementById('spread-card-count').value = newCount;
+                console.log('➕ Agregando posición, total:', newCount);
+                generateSpreadManagementPositions(newCount);
+            } else {
+                console.warn('❌ Límite máximo de 20 posiciones alcanzado');
+                alert('Máximo 20 posiciones permitidas');
+            }
+        });
+    }
+    
+    // ✅ GUARDAR TIRADA
+    if (saveSpreadBtn) {
+        saveSpreadBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('💾 Guardando tipo de tirada...');
+            saveSpread();
+        });
+    }
+    
+    // ✅ EVENT DELEGATION PARA BOTONES DINÁMICOS
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('btn-edit-spread')) {
+            const spreadId = e.target.getAttribute('data-id');
+            console.log('✏️ Editando tirada:', spreadId);
+            editSpread(spreadId);
+        }
+        
+        if (e.target.classList.contains('btn-delete-spread')) {
+            const spreadId = e.target.getAttribute('data-id');
+            console.log('🗑️ Solicitando eliminación de tirada:', spreadId);
+            deleteSpread(spreadId);
+        }
+    });
+    
+    console.log('✅ Eventos secundarios del modal configurados');
+}
+
+// ✅ FUNCIÓN AUXILIAR PARA CONFIGURAR EVENT LISTENERS
+function setupPositionEventListeners() {
+    const removeButtons = document.querySelectorAll('.remove-position');
+    
+    removeButtons.forEach(btn => {
+        // Remover listeners existentes para evitar duplicados
+        btn.replaceWith(btn.cloneNode(true));
+    });
+    
+    // Agregar nuevos listeners
+    document.querySelectorAll('.remove-position').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const positionItem = this.closest('.position-item');
+            if (positionItem) {
+                positionItem.remove();
+                updatePositionNumbersAndCount();
+            }
+        });
+    });
+}
+
+// ✅ FUNCIÓN AUXILIAR ACTUALIZADA
+function updatePositionNumbersAndCount() {
+    const positions = document.querySelectorAll('.position-item');
+    let hasEmptyPositions = false;
+    
+    positions.forEach((item, index) => {
+        const numberElement = item.querySelector('.position-number');
+        const inputElement = item.querySelector('.position-input');
+        
+        if (numberElement) numberElement.textContent = index + 1;
+        if (inputElement) {
+            inputElement.setAttribute('data-position', index);
+            inputElement.setAttribute('placeholder', `Significado de la posición ${index + 1}`);
+            
+            // Verificar si hay posiciones vacías
+            if (!inputElement.value.trim()) {
+                hasEmptyPositions = true;
+            }
+        }
+        
+        item.setAttribute('data-index', index);
+    });
+    
+    // Actualizar contador de cartas
+    const cardCountInput = document.getElementById('spread-card-count');
+    if (cardCountInput) {
+        cardCountInput.value = positions.length;
+    }
+    
+    // Mostrar advertencia si hay posiciones vacías
+    if (hasEmptyPositions && positions.length > 0) {
+        console.warn('⚠️ Hay posiciones sin nombre completado');
+    }
+    
+    console.log(`🔄 Posiciones actualizadas: ${positions.length}`);
+}
+
+function showManageSpreadsModal() {
+    console.log('🎯 INICIANDO showManageSpreadsModal()');
+    
+    // Cerrar modales existentes primero
+    closeAllSpreadModals();
+    
+    const modalHTML = `
+        <div class="modal-overlay" id="spreads-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">Gestionar Tipos de Tiradas</div>
+                    <button class="close-modal" id="spreads-close-btn">&times;</button>
+                </div>
+                
+                <div class="spread-form">
+                    <input type="hidden" id="editing-spread-id" value="">
+                    <div class="form-group">
+                        <label class="form-label">Nombre de la Tirada</label>
+                        <input type="text" class="form-input" id="spread-name" placeholder="Ej: Luna Llena, Cruz Celta" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Número de Cartas</label>
+                            <input type="number" class="form-input" id="spread-card-count" min="1" max="20" value="3">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label class="form-label">Mazo Asociado</label>
+                            <select class="form-select" id="spread-deck">
+                                ${decks.map(deck => 
+                                    `<option value="${deck.id}">${deck.name}</option>`
+                                ).join('')}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Descripción</label>
+                        <textarea class="form-textarea" id="spread-description" placeholder="Descripción de la tirada..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Tags</label>
+                        <input type="text" class="form-input" id="spread-tags" placeholder="Ej: Astrología, Básica, Avanzada">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Posiciones de las Cartas</label>
+                        <div class="positions-list" id="spread-positions">
+                            <!-- Las posiciones se generarán aquí -->
+                        </div>
+                        <button type="button" class="add-position-btn" id="add-position-btn">+ Agregar Posición</button>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancel-spread">Cancelar</button>
+                        <button type="button" class="btn-primary" id="save-spread">Guardar Tirada</button>
+                    </div>
+                </div>
+                
+                <div class="decks-list" id="spreads-list">
+                    <div class="modal-header-subtitle">
+                        <div class="modal-subtitle">Tiradas Registradas</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    console.log('✅ Modal HTML insertado en el DOM');
+    
+    // 🔄 CONFIGURACIÓN INMEDIATA SIN TIMEOUT
+    console.log('🔄 Configurando eventos inmediatamente...');
+    
+    // 1. PRIMERO los eventos de cierre (lo más importante)
+    setupManageSpreadsCloseEvents();
+    
+    // 2. LUEGO el resto de la funcionalidad
+    const initialCount = parseInt(document.getElementById('spread-card-count').value) || 3;
+    generateSpreadManagementPositions(initialCount);
+    
+    // 3. Configurar otros eventos
+    setupSpreadModalEvents();
+    loadSpreadsList();
+    
+    console.log('✅ Modal de gestión de tiradas COMPLETAMENTE configurado');
+}
+
+function generateSpreadManagementPositions(count) {
+    console.log('Generando posiciones para GESTIÓN:', count);
+    
+    const positionsContainer = document.getElementById('spread-positions');
+    
+    // ✅ VERIFICACIÓN ROBUSTA DEL ELEMENTO
+    if (!positionsContainer) {
+        console.error('❌ Elemento spread-positions no encontrado en el DOM');
+        console.warn('Posibles causas:');
+        console.warn('1. El modal no se ha cargado correctamente');
+        console.warn('2. El ID del elemento ha cambiado');
+        console.warn('3. Timing issue - el elemento aún no existe');
+        return;
+    }
+    
+    // ✅ VALIDACIÓN DEL PARÁMETRO COUNT
+    if (typeof count !== 'number' || count < 1 || count > 20) {
+        console.warn('⚠️ Número de posiciones inválido, usando valor por defecto (3)');
+        count = 3;
+    }
+    
+    try {
+        positionsContainer.innerHTML = '';
+        
+        for (let i = 0; i < count; i++) {
+            const positionHTML = `
+                <div class="position-item" data-index="${i}">
+                    <div class="position-number">${i + 1}. </div>
+                    <input type="text" class="position-input" 
+                           placeholder="Significado de la posición ${i + 1}" 
+                           value="${getDefaultPositionName(i)}"
+                           data-position="${i}">
+                    ${i > 0 ? '<button type="button" class="remove-position" data-action="remove">&times;</button>' : ''}
+                </div>
+            `;
+            positionsContainer.insertAdjacentHTML('beforeend', positionHTML);
+        }
+        
+        console.log(`✅ ${count} posiciones generadas correctamente`);
+        
+        // ✅ CONFIGURACIÓN DE EVENT LISTENERS MEJORADA
+        setupPositionEventListeners();
+        
+    } catch (error) {
+        console.error('❌ Error crítico al generar posiciones:', error);
+        positionsContainer.innerHTML = `
+            <div class="error-message">
+                Error al generar las posiciones. Por favor, recarga la página.
+            </div>
+        `;
+    }
+}
+
+function getDefaultPositionName(index) {
+    const defaults = ['Pasado', 'Presente', 'Futuro', 'Desafío', 'Consejo', 'Resultado'];
+    return defaults[index] || `Posición ${index + 1}`;
+}
+
+async function saveSpread() {
+    const spreadId = document.getElementById('editing-spread-id').value;
+    const name = document.getElementById('spread-name').value;
+    const cardCount = parseInt(document.getElementById('spread-card-count').value);
+    const deckId = document.getElementById('spread-deck').value;
+    const description = document.getElementById('spread-description').value;
+    const tags = document.getElementById('spread-tags').value;
+    
+    if (!name) {
+        alert('El nombre de la tirada es requerido');
+        return;
+    }
+    
+    if (cardCount < 1) {
+        alert('El número de cartas debe ser al menos 1');
+        return;
+    }
+    
+    const positions = [];
+    document.querySelectorAll('.position-input').forEach(input => {
+        if (input.value.trim()) {
+            positions.push(input.value.trim());
+        }
+    });
+    
+    if (positions.length !== cardCount) {
+        alert('Debe completar todas las posiciones');
+        return;
+    }
+    
+    try {
+        const spreadData = {
+            name,
+            card_count: cardCount,
+            deck_id: deckId,
+            positions,
+            description,
+            tags,
+        };
+        
+        if (spreadId) {
+            spreadData.id = spreadId;
+        } else {
+            spreadData.id = 'spread-' + Date.now();
+        }
+        
+        const { data, error } = await supabase
+            .from('spread_types')
+            .upsert([spreadData]);
+            
+        if (error) throw error;
+        
+        alert('Tirada guardada correctamente');
+        closeManageSpreadsModal(); // ← CAMBIADO
+        loadSpreadTypes();
+        
+    } catch (error) {
+        console.error('Error al guardar tirada:', error);
+        alert('Error al guardar: ' + error.message);
+    }
+}
+
+function editSpread(spreadId) {
+    const spread = spreadTypes.find(s => s.id === spreadId);
+    if (!spread) return;
+    
+    document.getElementById('editing-spread-id').value = spread.id;
+    document.getElementById('spread-name').value = spread.name || '';
+    document.getElementById('spread-card-count').value = spread.card_count || 3;
+    document.getElementById('spread-deck').value = spread.deck_id || 'default';
+    document.getElementById('spread-description').value = spread.description || '';
+    document.getElementById('spread-tags').value = spread.tags || '';
+    
+    generateSpreadManagementPositions(spread.card_count);
+    
+    setTimeout(() => {
+        document.querySelectorAll('.position-input').forEach((input, index) => {
+            if (spread.positions && spread.positions[index]) {
+                input.value = spread.positions[index];
+            }
+        });
+    }, 100);
+    
+    document.getElementById('save-spread').textContent = 'Actualizar Tirada';
+}
+
+async function deleteSpread(spreadId) {
+    if (!confirm('¿Estás seguro de que quieres eliminar esta tirada? Esta acción no se puede deshacer.')) {
+        return;
+    }
+    
+    try {
+        const { error } = await supabase
+            .from('spread_types')
+            .delete()
+            .eq('id', spreadId);
+            
+        if (error) throw error;
+        
+        alert('Tirada eliminada correctamente');
+        closeManageSpreadsModal(); // ← CAMBIADO
+        loadSpreadTypes();
+        
+    } catch (error) {
+        console.error('Error al eliminar tirada:', error);
+        alert('Error al eliminar: ' + error.message);
+    }
+}
+
+function loadSpreadsList() {
+    const spreadsList = document.getElementById('spreads-list');
+    
+    if (spreadTypes.length === 0) {
+        spreadsList.innerHTML = '<p>No hay tiradas guardadas</p>';
+        return;
+    }
+    
+    let html = '<div class="modal-header-subtitle"><div class="modal-subtitle">Tiradas Registradas</div></div>';
+    
+    spreadTypes.forEach(spread => {
+        const deckName = decks.find(d => d.id === spread.deck_id)?.name || 'Desconocido';
+        
+        html += `
+            <div class="deck-item">
+                <div class="deck-item-header">
+                    <div class="deck-item-name">${spread.name}</div>
+                    <div class="deck-item-actions">
+                        <button class="btn-small btn-edit-spread" data-id="${spread.id}">Editar</button>
+                        <button class="btn-small btn-delete-spread" data-id="${spread.id}">Eliminar</button>
+                    </div>
+                </div>
+                <div class="deck-item-details">
+                    <div><strong>Cartas:</strong> ${spread.card_count}</div>
+                    <div><strong>Mazo:</strong> ${deckName}</div>
+                    <div><strong>Etiquetas:</strong> ${spread.tags || 'Ninguna'}</div>
+                </div>
+            </div>
+        `;
+    });
+    
+    spreadsList.innerHTML = html;
+}
+
+// ===== FUNCIONES PARA MODAL DE NUEVA TIRADA =====
+
+function showSpreadModal() {
+    console.log('🎯 showSpreadModal() EJECUTÁNDOSE - Verificar si llega aquí');
+    
+    // Verificar que las dependencias estén cargadas
+    if (typeof decks === 'undefined') {
+        console.error('❌ decks no está definido');
+        alert('Error: Los mazos no están cargados. Intenta nuevamente.');
+        return;
+    }
+
+    console.log('✅ Dependencias cargadas, creando modal...');
+    
+    if (typeof currentSpreadEntry === 'undefined') {
+        console.error('❌ currentSpreadEntry no está definido');
+        // Inicializar como fallback
+        currentSpreadEntry = {
+            date: new Date(),
+            notes: "",
+            spreadType: null,
+            spreadCards: [],
+            deckId: 'default'
+        };
+    }
+
+    // Cerrar cualquier modal existente primero
+    closeAllSpreadModals();
+    
+    const modalHTML = `
+        <div class="modal-overlay" id="spread-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">Nueva Tirada</div>
+                    <button class="close-modal" style="font-size: 1rem; font-weight: 600;">&times;</button>
+                </div>
+                
+                <div class="daily-form">
+                    <div class="form-group">
+                        <label class="form-label">Fecha</label>
+                        <input type="date" class="form-input" id="spread-modal-date" value="${new Date().toISOString().split('T')[0]}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Mazo</label>
+                        <select class="form-select" id="spread-modal-deck-select">
+                            <option value="default">Mazo Predeterminado</option>
+                            ${decks.map(deck => 
+                                `<option value="${deck.id}" ${deck.is_default ? 'selected' : ''}>${deck.name}</option>`
+                            ).join('')}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Tipo de Tirada</label>
+                        <select class="form-select" id="spread-modal-type-select">
+                            <option value="">Seleccionar tipo de tirada...</option>
+                            ${typeof spreadTypes !== 'undefined' && spreadTypes.length > 0 ? 
+                                spreadTypes.map(spread => 
+                                    `<option value="${spread.id}">${spread.name} (${spread.card_count} cartas)</option>`
+                                ).join('') : '<option value="">Cargando tipos de tirada...</option>'}
+                        </select>
+                    </div>
+                    
+                    <div id="spread-modal-positions-container" class="spread-positions-container" style="display: none;">
+                        <!-- Aquí se generarán dinámicamente las posiciones según el tipo de tirada -->
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Notas</label>
+                        <textarea class="form-textarea" id="spread-modal-notes" placeholder="Escribe tus reflexiones sobre esta tirada..."></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button class="btn-secondary" id="clear-spread-modal">Limpiar</button>
+                        <button class="btn-primary" id="save-spread-modal">Guardar Tirada</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    setupSpreadEntryModalEvents();
+    initializeSpreadEntryModal();
+    
+    console.log('✅ Modal de tirada creado correctamente');
+}
+
+function setupSpreadEntryModalEvents() {
+    console.log('🔧 Configurando eventos del modal de NUEVA tirada...');
+    
+    // Cerrar modal
+    const closeBtn = document.querySelector('#spread-modal .close-modal');
+    const modal = document.getElementById('spread-modal');
+    
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeAllSpreadModals);
+        console.log('✅ Listener de cierre configurado');
+    }
+    
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) closeAllSpreadModals();
+        });
+    }
+    
+    // Botones de acción
+    const saveBtn = document.getElementById('save-spread-modal');
+    const clearBtn = document.getElementById('clear-spread-modal');
+    const typeSelect = document.getElementById('spread-modal-type-select');
+    const deckSelect = document.getElementById('spread-modal-deck-select');
+    
+    if (saveBtn) {
+        saveBtn.addEventListener('click', saveSpreadModalEntry);
+        console.log('✅ Listener de guardar configurado');
+    }
+    
+    if (clearBtn) {
+        clearBtn.addEventListener('click', clearSpreadEntryModalForm);
+        console.log('✅ Listener de limpiar configurado');
+    }
+    
+    if (typeSelect) {
+        // Remover event listener existente para evitar duplicados
+        typeSelect.replaceWith(typeSelect.cloneNode(true));
+        const newTypeSelect = document.getElementById('spread-modal-type-select');
+        
+        newTypeSelect.addEventListener('change', function() {
+            const spreadTypeId = this.value;
+            console.log('🔄 Tipo de tirada seleccionado:', spreadTypeId);
+            
+            if (spreadTypeId && typeof spreadTypes !== 'undefined') {
+                const selectedSpread = spreadTypes.find(spread => spread.id === spreadTypeId);
+                console.log('🔍 Tirada encontrada:', selectedSpread);
+                
+                if (selectedSpread) {
+                    currentSpreadEntry.spreadType = selectedSpread;
+                    console.log('🎯 Generando posiciones para:', selectedSpread.name);
+                    generateSpreadEntryPositions(selectedSpread);
+                } else {
+                    console.error('❌ Tirada no encontrada con ID:', spreadTypeId);
+                }
+            } else {
+                console.log('❌ No hay tipo de tirada seleccionado');
+                currentSpreadEntry.spreadType = null;
+                const container = document.getElementById('spread-modal-positions-container');
+                if (container) {
+                    container.style.display = 'none';
+                    container.innerHTML = '';
+                }
+            }
+        });
+        console.log('✅ Listener de tipo de tirada configurado');
+    }
+    
+    if (deckSelect) {
+        deckSelect.addEventListener('change', function() {
+            currentSpreadEntry.deckId = this.value;
+            console.log('🔄 Mazo cambiado a:', this.value);
+        });
+    }
+    
+    console.log('✅ Todos los eventos del modal de NUEVA tirada configurados');
+}
+
+function initializeSpreadEntryModal() {
+    console.log('🔄 Inicializando modal de NUEVA tirada...');
+    
+    // Asegurarse de que los tipos de tirada estén cargados
+    console.log('🔍 spreadTypes disponible:', typeof spreadTypes);
+    console.log('🔍 Número de spreadTypes:', spreadTypes ? spreadTypes.length : 0);
+    console.log('🔍 Contenido de spreadTypes:', spreadTypes);
+    
+    if (typeof spreadTypes === 'undefined' || spreadTypes.length === 0) {
+        console.log('🔄 Cargando tipos de tirada...');
+        loadSpreadTypes().then(() => {
+            console.log('✅ Tipos de tirada cargados, actualizando select...');
+            updateSpreadEntryModalTypes();
+        }).catch(error => {
+            console.error('❌ Error cargando tipos de tirada:', error);
+        });
+    } else {
+        console.log('✅ Tipos de tirada ya cargados, actualizando select...');
+        updateSpreadEntryModalTypes();
+    }
+    
+    // Inicializar valores por defecto
+    const dateInput = document.getElementById('spread-modal-date');
+    const notesInput = document.getElementById('spread-modal-notes');
+    const typeSelect = document.getElementById('spread-modal-type-select');
+    const deckSelect = document.getElementById('spread-modal-deck-select');
+    const positionsContainer = document.getElementById('spread-modal-positions-container');
+    
+    if (dateInput) dateInput.valueAsDate = new Date();
+    if (notesInput) notesInput.value = '';
+    if (typeSelect) typeSelect.value = '';
+    if (deckSelect) deckSelect.value = currentSpreadEntry.deckId || 'default';
+    if (positionsContainer) {
+        positionsContainer.style.display = 'none';
+        positionsContainer.innerHTML = '';
+    }
+    
+    // Reiniciar la entrada actual de tirada
     currentSpreadEntry = {
         date: new Date(),
         notes: "",
         spreadType: null,
         spreadCards: [],
-        deckId: currentDeckId || 'default',
-        _initialized: true,
-        _timestamp: Date.now()
+        deckId: deckSelect ? deckSelect.value : 'default'
     };
     
-    currentSpreadType = null;
-    
-    console.log('🔄 Estado de tirada reiniciado:', currentSpreadEntry);
-    
-    // ✅ CONFIGURACIÓN DE EVENT LISTENERS CON VALIDACIÓN
-    setupSpreadFormEventListeners();
-    
-    // ✅ CARGA ASINCRÓNICA DE TIPOS DE TIRADA
-    loadSpreadTypes()
-        .then(() => {
-            console.log('✅ Tipos de tirada cargados:', spreadTypes.length);
-            updateSpreadTypesList();
-        })
-        .catch(error => {
-            console.error('❌ Error al cargar tipos de tirada:', error);
-            // Usar datos por defecto como fallback
-            spreadTypes = getDefaultSpreadTypes();
-            updateSpreadTypesList();
-        });
-    
-    // ✅ LIMPIAR INTERFAZ
-    const positionsDisplay = document.getElementById('selected-spread-positions');
-    const notesTextarea = document.getElementById('spread-notes');
-    const deckSelect = document.getElementById('spread-deck-select');
-    
-    if (positionsDisplay) {
-        positionsDisplay.innerHTML = '';
-        console.log('✅ Display de posiciones limpiado');
-    }
-    
-    if (notesTextarea) {
-        notesTextarea.value = '';
-        console.log('✅ Notas limpiadas');
-    }
-    
-    if (deckSelect && decks.length > 0) {
-        const defaultDeck = decks.find(d => d.is_default) || decks[0];
-        if (defaultDeck) {
-            deckSelect.value = defaultDeck.id;
-            currentSpreadEntry.deckId = defaultDeck.id;
-            currentDeckId = defaultDeck.id;
-            console.log('✅ Mazo por defecto establecido:', defaultDeck.name);
-        }
-    }
-    
-    // ✅ APLICAR OVERLAY
-    applyFormOverlay('spread-form');
-    
-    console.log('✅ Formulario de tirada inicializado correctamente');
+    console.log('✅ Modal de NUEVA tirada inicializado correctamente');
 }
 
-// ✅ FUNCIÓN AUXILIAR PARA CONFIGURAR EVENT LISTENERS
-function setupSpreadFormEventListeners() {
-    console.log('🔧 Configurando event listeners del formulario...');
+function updateSpreadEntryModalTypes() {
+    const typeSelect = document.getElementById('spread-modal-type-select');
+    if (!typeSelect || !spreadTypes) return;
     
-    // ✅ BOTONES DE ACCIÓN PRINCIPAL
-    const saveSpreadBtn = document.getElementById('save-spread-btn');
-    const clearSpreadBtn = document.getElementById('clear-spread-btn');
-    const spreadDeckSelect = document.getElementById('spread-deck-select');
-    const closeSpreadBtn = document.getElementById('close-spread-btn');
+    typeSelect.innerHTML = '<option value="">Seleccionar tipo de tirada...</option>';
     
-    // Remover event listeners existentes para evitar duplicados
-    if (saveSpreadBtn) {
-        saveSpreadBtn.replaceWith(saveSpreadBtn.cloneNode(true));
-    }
-    if (clearSpreadBtn) {
-        clearSpreadBtn.replaceWith(clearSpreadBtn.cloneNode(true));
-    }
-    if (spreadDeckSelect) {
-        spreadDeckSelect.replaceWith(spreadDeckSelect.cloneNode(true));
-    }
-    if (closeSpreadBtn) {
-        closeSpreadBtn.replaceWith(closeSpreadBtn.cloneNode(true));
-    }
-    
-    // ✅ CONFIGURAR NUEVOS EVENT LISTENERS
-    const newSaveBtn = document.getElementById('save-spread-btn');
-    const newClearBtn = document.getElementById('clear-spread-btn');
-    const newDeckSelect = document.getElementById('spread-deck-select');
-    const newCloseBtn = document.getElementById('close-spread-btn');
-    
-    if (newSaveBtn) {
-        newSaveBtn.addEventListener('click', function(e) {
-            console.log('💾 Guardando tirada...');
-            e.preventDefault();
-            saveSpreadEntry();
-        });
-        console.log('✅ Listener de guardado configurado');
-    }
-    
-    if (newClearBtn) {
-        newClearBtn.addEventListener('click', function(e) {
-            console.log('🗑️ Limpiando formulario...');
-            e.preventDefault();
-            clearSpreadForm();
-        });
-        console.log('✅ Listener de limpieza configurado');
-    }
-    
-    if (newCloseBtn) {
-        newCloseBtn.addEventListener('click', function(e) {
-            console.log('❌ Cerrando formulario de tirada...');
-            e.preventDefault();
-            document.getElementById('spread-form').classList.remove('show');
-            removeFormOverlay();
-        });
-        console.log('✅ Listener de cierre configurado');
-    }
-    
-    if (newDeckSelect) {
-        newDeckSelect.addEventListener('change', function() {
-            const newDeckId = this.value;
-            console.log('🔄 Cambiando mazo:', newDeckId);
-            
-            currentSpreadEntry.deckId = newDeckId;
-            currentDeckId = newDeckId;
-            
-            // Recargar tipos de tirada filtrados por el nuevo mazo
-            updateSpreadTypesList();
-            
-            // Si hay una tirada seleccionada, verificar compatibilidad
-            if (currentSpreadType && currentSpreadType.deck_id !== newDeckId) {
-                console.warn('⚠️ Tirada actual no compatible con el mazo seleccionado');
-                // Opcional: limpiar selección de tirada
-                // currentSpreadEntry.spreadType = null;
-                // currentSpreadType = null;
-                // updateSpreadTypesList();
-            }
-        });
-        console.log('✅ Listener de cambio de mazo configurado');
-    }
-    
-    // ✅ VALIDACIÓN EN TIEMPO REAL DE NOTAS
-    const notesTextarea = document.getElementById('spread-notes');
-    if (notesTextarea) {
-        notesTextarea.addEventListener('input', function() {
-            currentSpreadEntry.notes = this.value;
-            console.log(`📝 Notas actualizadas: ${this.value.length} caracteres`);
-        });
-    }
-    
-    console.log('✅ Todos los event listeners configurados correctamente');
+    spreadTypes.forEach(spread => {
+        const option = document.createElement('option');
+        option.value = spread.id;
+        option.textContent = `${spread.name} (${spread.card_count} cartas)`;
+        typeSelect.appendChild(option);
+    });
 }
 
-// ===== FUNCIONES PARA FORMULARIO DE TIRADA =====
-function clearSpreadForm() {
+function clearSpreadEntryModalForm() {
     currentSpreadEntry = {
         date: new Date(),
         notes: "",
@@ -182,18 +873,131 @@ function clearSpreadForm() {
         deckId: 'default'
     };
     
-    document.getElementById('spread-date').valueAsDate = new Date();
-    document.getElementById('spread-notes').value = '';
-    document.getElementById('selected-spread-positions').innerHTML = '';
-    document.getElementById('spread-deck-select').value = currentSpreadEntry.deckId;
+    const dateInput = document.getElementById('spread-modal-date');
+    const notesInput = document.getElementById('spread-modal-notes');
+    const typeSelect = document.getElementById('spread-modal-type-select');
+    const deckSelect = document.getElementById('spread-modal-deck-select');
+    const positionsContainer = document.getElementById('spread-modal-positions-container');
     
-    // Resetear selección de tirada
-    updateSpreadTypesList();
+    if (dateInput) dateInput.valueAsDate = new Date();
+    if (notesInput) notesInput.value = '';
+    if (typeSelect) typeSelect.value = '';
+    if (deckSelect) deckSelect.value = currentSpreadEntry.deckId;
+    if (positionsContainer) {
+        positionsContainer.style.display = 'none';
+        positionsContainer.innerHTML = '';
+    }
+    
+    console.log('🗑️ Formulario de NUEVA tirada modal limpiado');
 }
 
-// ===== MODIFICAR LA FUNCIÓN DE GUARDADO DE TIRADA =====
-async function saveSpreadEntry() {
-    const dateInput = document.getElementById('spread-date').value;
+function generateSpreadEntryPositions(spreadType) {
+    console.log('🎯 generateSpreadEntryPositions() ejecutándose con:', spreadType);
+    
+    const container = document.getElementById('spread-modal-positions-container');
+    console.log('🔍 Contenedor de posiciones:', container);
+    
+    if (!container) {
+        console.error('❌ Contenedor de posiciones no encontrado');
+        return;
+    }
+    
+    if (!spreadType) {
+        console.error('❌ spreadType es undefined');
+        return;
+    }
+    
+    if (!spreadType.positions || !Array.isArray(spreadType.positions)) {
+        console.error('❌ Posiciones inválidas:', spreadType.positions);
+        console.log('🔍 Estructura completa de spreadType:', spreadType);
+        return;
+    }
+    
+    console.log('✅ Generando', spreadType.positions.length, 'posiciones');
+    
+    let positionsHTML = '<div class="form-label" style="margin-top: 12px; color: var(--secondary-color);">Posiciones de la Tirada:</div>';
+    
+    spreadType.positions.forEach((position, index) => {
+        console.log('📝 Añadiendo posición:', position, 'índice:', index);
+        positionsHTML += `
+            <div class="spread-position-group">
+                <div class="position-controls">
+                    <select class="form-select" data-position="${position}" style="background: #b5657630; height: 41px; color: var(--secondary-color); border: 2px solid var(--secondary-color)" >
+                        <option value="">${index + 1}. ${position}</option>
+                        ${typeof tarotCards !== 'undefined' ? 
+                            Object.values(tarotCards).map(card => 
+                                `<option value="${card.ID}">${card.Name} (${card.Suit})</option>`
+                            ).join('') : '<option value="">Cartas no disponibles</option>'}
+                    </select>
+                    <select class="form-select" data-position="${position}" style="margin-top: 8px; background: #b5657630; color: var(--secondary-color); border: 2px solid var(--secondary-color)">
+                        <option value="upright">Derecha</option>
+                        <option value="reversed">Reversa</option>
+                    </select>
+                </div>
+            </div>
+        `;
+    });
+    
+    console.log('📄 HTML generado, actualizando contenedor...');
+    container.innerHTML = positionsHTML;
+    container.style.display = 'block';
+    console.log('✅ Contenedor actualizado y mostrado');
+    
+    // Añadir event listeners a los selects de cartas y orientación
+    const cardSelects = document.querySelectorAll('.position-card-select');
+    const orientationSelects = document.querySelectorAll('.position-orientation-select');
+    
+    console.log('🔧 Configurando', cardSelects.length, 'selects de cartas');
+    console.log('🔧 Configurando', orientationSelects.length, 'selects de orientación');
+    
+    cardSelects.forEach(select => {
+        select.addEventListener('change', function() {
+            console.log('🔄 Carta cambiada en posición:', this.getAttribute('data-position'));
+            updateSpreadModalCard(this);
+        });
+    });
+    
+    orientationSelects.forEach(select => {
+        select.addEventListener('change', function() {
+            console.log('🔄 Orientación cambiada en posición:', this.getAttribute('data-position'));
+            updateSpreadModalCard(this);
+        });
+    });
+    
+    console.log('✅ Todos los event listeners de posiciones configurados');
+}
+
+function updateSpreadModalCard(element) {
+    const position = element.getAttribute('data-position');
+    const cardSelect = document.querySelector(`.position-card-select[data-position="${position}"]`);
+    const orientationSelect = document.querySelector(`.position-orientation-select[data-position="${position}"]`);
+    
+    if (!cardSelect || !orientationSelect) {
+        console.error('Elementos de selección no encontrados para posición:', position);
+        return;
+    }
+    
+    const cardId = cardSelect.value;
+    const orientation = orientationSelect.value;
+    
+    // Remover la carta existente para esta posición
+    currentSpreadEntry.spreadCards = currentSpreadEntry.spreadCards.filter(card => card.position !== position);
+    
+    // Agregar la nueva carta si se seleccionó una
+    if (cardId && tarotCards[cardId]) {
+        const card = tarotCards[cardId];
+        currentSpreadEntry.spreadCards.push({
+            position: position,
+            card: card,
+            orientation: orientation
+        });
+        
+        console.log('Carta agregada en modal:', { position, card: card.Name, orientation });
+    }
+}
+
+async function saveSpreadModalEntry() {
+    const dateInput = document.getElementById('spread-modal-date').value;
     let entryDate;
 
     if (dateInput) {
@@ -204,8 +1008,8 @@ async function saveSpreadEntry() {
     }
 
     currentSpreadEntry.date = entryDate;
-    currentSpreadEntry.notes = document.getElementById('spread-notes').value;
-    currentSpreadEntry.deckId = document.getElementById('spread-deck-select').value;
+    currentSpreadEntry.notes = document.getElementById('spread-modal-notes').value;
+    currentSpreadEntry.deckId = document.getElementById('spread-modal-deck-select').value;
 
     // Validaciones
     if (!currentSpreadEntry.spreadType) {
@@ -237,298 +1041,110 @@ async function saveSpreadEntry() {
 
         if (error) throw error;
 
-        console.log('Tirada guardada en Supabase:', data);
+        console.log('Tirada guardada desde modal en Supabase:', data);
 
         await loadLogHistory();
-        clearSpreadForm();
+        clearSpreadEntryModalForm();
+        closeAllSpreadModals();
 
         alert('Tirada guardada correctamente');
-        document.getElementById('spread-form').classList.remove('show');
-        removeFormOverlay();
 
     } catch (error) {
-        console.error('Error al guardar tirada:', error);
+        console.error('Error al guardar tirada desde modal:', error);
         alert('Error al guardar: ' + error.message);
     }
 }
 
-// Función para actualizar la lista de tipos de tiradas CORREGIDA
-function updateSpreadTypesList() {
-    const spreadList = document.getElementById('spread-types-list');
-    const positionsDisplay = document.getElementById('selected-spread-positions');
-    
-    if (!spreadList) {
-        console.error('Elemento spread-types-list no encontrado');
-        return;
+// ===== FUNCIÓN UNIFICADA PARA CERRAR MODALES =====
+
+function closeAllSpreadModals() {
+    // Cerrar modal de NUEVA TIRADA
+    const spreadModal = document.getElementById('spread-modal');
+    if (spreadModal) {
+        spreadModal.remove();
+        console.log('✅ Modal de nueva tirada cerrado');
     }
     
-    if (spreadTypes.length === 0) {
-        spreadList.innerHTML = '<div class="empty-history">No hay tipos de tiradas guardados</div>';
-        positionsDisplay.innerHTML = '';
-        return;
-    }
-    
-    let html = '';
-    
-    // Filtrar tiradas por el deck actual
-    const filteredSpreads = spreadTypes.filter(spread => 
-        spread.deck_id === currentDeckId || spread.deck_id === 'default'
-    );
-    
-    filteredSpreads.forEach(spread => {
-        const isActive = currentSpreadType && currentSpreadType.id === spread.id;
-        html += `
-            <div class="spread-type-item ${isActive ? 'active' : ''}" data-id="${spread.id}">
-                <div class="spread-type-details">
-                   > ${spread.name} • ${spread.card_count} cartas • ${spread.description || 'Sin descripción'}
-                </div>
-                ${spread.tags ? `
-                    <div class="spread-type-tags">
-                        ${spread.tags.split(',').map(tag => 
-                            `<span class="spread-tag">${tag.trim()}</span>`
-                        ).join('')}
-                    </div>
-                ` : ''}
-            </div>
-        `;
-    });
-    
-    spreadList.innerHTML = html;
-    
-    // Añadir event listeners a los items - CORREGIDO
-    document.querySelectorAll('.spread-type-item').forEach(item => {
-        // Remover event listeners existentes para evitar duplicados
-        const newItem = item.cloneNode(true);
-        item.parentNode.replaceChild(newItem, item);
-        
-        // Agregar nuevo event listener
-        newItem.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            const spreadId = this.getAttribute('data-id');
-            console.log('🔄 Seleccionando tirada:', spreadId);
-            selectSpreadType(spreadId);
-        });
-    });
-    
-    // Actualizar display de posiciones si hay una tirada seleccionada
-    if (currentSpreadType) {
-        showSpreadCardsInput();
+    // Cerrar modal de GESTIÓN DE TIRADAS
+    const spreadsModal = document.getElementById('spreads-modal');
+    if (spreadsModal) {
+        spreadsModal.remove();
+        console.log('✅ Modal de gestión de tiradas cerrado');
     }
 }
 
-// Función para seleccionar tipo de tirada CORREGIDA
-function selectSpreadType(spreadId) {
-    console.log('🔄 Seleccionando tirada:', spreadId);
-    
-    // Buscar la tirada
-    currentSpreadType = spreadTypes.find(spread => spread.id === spreadId);
-    
-    if (!currentSpreadType) {
-        console.error('❌ Tirada no encontrada:', spreadId);
-        return;
-    }
-    
-    // Actualizar la entrada actual de tirada
-    currentSpreadEntry.spreadType = currentSpreadType;
-    currentSpreadEntry.spreadCards = []; // Limpiar cartas anteriores
-    
-    console.log('✅ Tirada seleccionada:', currentSpreadType.name);
-    
-    // Actualizar la lista para mostrar la selección activa
-    updateSpreadTypesList();
-    
-    // Mostrar interfaz para seleccionar cartas - NO cerrar el modal
-    showSpreadCardsInput();
-    
-    // Hacer scroll suave a la sección de cartas
-    const positionsDisplay = document.getElementById('selected-spread-positions');
-    if (positionsDisplay) {
-        setTimeout(() => {
-            positionsDisplay.scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'nearest' 
-            });
-        }, 300);
-    }
+// Debug al cargar
+console.log('📁 spread.js cargado - showSpreadModal disponible:', typeof showSpreadModal);
+console.log('🔍 generateSpreadManagementPositions (gestión):', typeof generateSpreadManagementPositions);
+console.log('🔍 generateSpreadEntryPositions (nueva):', typeof generateSpreadEntryPositions);
+
+// ===== ESTILOS CSS ADICIONALES PARA EL MODAL DE TIRADAS =====
+/*
+.spread-positions-container {
+    margin: 1rem 0;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
 }
 
-// Función para mostrar la interfaz de selección de cartas CORREGIDA
-function showSpreadCardsInput() {
-    if (!currentSpreadEntry.spreadType) {
-        console.error('❌ No hay tipo de tirada seleccionado');
-        return;
-    }
-    
-    const positionsDisplay = document.getElementById('selected-spread-positions');
-    if (!positionsDisplay) {
-        console.error('❌ Elemento selected-spread-positions no encontrado');
-        return;
-    }
-    
-    console.log('🔄 Mostrando posiciones para:', currentSpreadEntry.spreadType.name);
-    
-    let cardsHTML = `
-        <div class="selected-tarot-card">
-            <div class="tarot-card-display">TIRADA:
-                <div class="tarot-card-name">${currentSpreadEntry.spreadType.name}</div>
-                <div class="spread-cards-input">
-    `;
-    
-    // Generar inputs para cada posición
-    currentSpreadEntry.spreadType.positions.forEach((position, index) => {
-        const existingCard = currentSpreadEntry.spreadCards.find(card => card.position === position);
-        
-cardsHTML += `
-    <div class="spread-card-input-item">
-        <div class="position-header">
-            <div class="position-number">${index + 1}</div>
-            <div class="position-name">${position}</div>
-        </div>
-        <div class="card-selection">
-            <select class="spread-card-select" data-position="${position}">
-                <option value="">Seleccionar carta...</option>
-                ${Object.values(tarotCards).map(card => 
-                    `<option value="${card.ID}" ${existingCard && existingCard.card && existingCard.card.ID === card.ID ? 'selected' : ''}>
-                        ${card.Name} (${card.Suit})
-                    </option>`
-                ).join('')}
-            </select>
-            <select class="spread-orientation-select" data-position="${position}">
-                <option value="upright" ${existingCard && existingCard.orientation === 'upright' ? 'selected' : ''}>Derecha</option>
-                <option value="reversed" ${existingCard && existingCard.orientation === 'reversed' ? 'selected' : ''}>Reversa</option>
-            </select>
-        </div>
-    </div>
-`;
-    });
-    
-    cardsHTML += `
-                </div>
-                <button type="button" class="remove-tarot-card" id="remove-spread-selection" style="position: absolute; top: 10px; right: 10px; background: var(--background-color); color: var(--primary-color); border: 2px solid var(--primary-color); border-radius: 4px; width: 30px; height: 30px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-                    ×
-                </button>
-            </div>
-        </div>
-    `;
-    
-    positionsDisplay.innerHTML = cardsHTML;
-    
-    // Añadir event listeners a los selects de cartas - CORREGIDO
-    document.querySelectorAll('#selected-spread-positions .spread-card-select').forEach(select => {
-        select.addEventListener('change', function() {
-            updateSpreadCard(this);
-        });
-        
-        // Si hay una carta seleccionada, actualizar el estado
-        if (select.value) {
-            updateSpreadCard(select);
-        }
-    });
-    
-    document.querySelectorAll('#selected-spread-positions .spread-orientation-select').forEach(select => {
-        select.addEventListener('change', function() {
-            updateSpreadCard(this);
-        });
-    });
-    
-    // Event listener para cambiar de tirada - CORREGIDO
-    const removeButton = document.getElementById('remove-spread-selection');
-    if (removeButton) {
-        removeButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log('🗑️ Cambiando selección de tirada...');
-            
-            currentSpreadEntry.spreadType = null;
-            currentSpreadEntry.spreadCards = [];
-            currentSpreadType = null;
-            
-            document.getElementById('selected-spread-positions').innerHTML = '';
-            updateSpreadTypesList();
-        });
-    }
-    
-    console.log('✅ Interfaz de selección de cartas mostrada correctamente');
-}
-// Función para actualizar carta en la tirada CORREGIDA
-function updateSpreadCard(element) {
-    const position = element.getAttribute('data-position');
-    const cardSelect = document.querySelector(`#selected-spread-positions .spread-card-select[data-position="${position}"]`);
-    const orientationSelect = document.querySelector(`#selected-spread-positions .spread-orientation-select[data-position="${position}"]`);
-    
-    if (!cardSelect || !orientationSelect) {
-        console.error('Elementos de selección no encontrados para posición:', position);
-        return;
-    }
-    
-    const cardId = cardSelect.value;
-    const orientation = orientationSelect.value;
-    
-    // Remover la carta existente para esta posición
-    currentSpreadEntry.spreadCards = currentSpreadEntry.spreadCards.filter(card => card.position !== position);
-    
-    // Agregar la nueva carta si se seleccionó una
-    if (cardId && tarotCards[cardId]) {
-        const card = tarotCards[cardId];
-        currentSpreadEntry.spreadCards.push({
-            position: position,
-            card: card,
-            orientation: orientation
-        });
-        
-        console.log('Carta agregada:', { position, card: card.Name, orientation });
-    }
+.spread-positions-title {
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #2d3748;
+    font-size: 1.1rem;
 }
 
-// ===== FUNCIONES DE OVERLAY PARA FORMULARIOS =====
-function applyFormOverlay(formId) {
-    // Crear overlay si no existe
-    let overlay = document.getElementById('form-overlay');
-    if (!overlay) {
-        overlay = document.createElement('div');
-        overlay.id = 'form-overlay';
-        overlay.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
-            z-index: 998;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        `;
-        document.body.appendChild(overlay);
-        
-        // Cerrar formulario al hacer clic en el overlay
-        overlay.addEventListener('click', function() {
-            document.getElementById(formId).classList.remove('show');
-            removeFormOverlay();
-        });
-        
-        // Animar la aparición del overlay
-        setTimeout(() => {
-            overlay.style.opacity = '1';
-        }, 10);
-    }
-    
-    // Asegurar que el formulario esté por encima del overlay
-    const form = document.getElementById(formId);
-    if (form) {
-        form.style.zIndex = '999';
-    }
+.spread-position-group {
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: white;
+    border-radius: 6px;
+    border-left: 4px solid #4a90e2;
 }
 
-function removeFormOverlay() {
-    const overlay = document.getElementById('form-overlay');
-    if (overlay) {
-        overlay.style.opacity = '0';
-        setTimeout(() => {
-            if (overlay.parentNode) {
-                overlay.parentNode.removeChild(overlay);
-            }
-        }, 300);
+.position-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.position-number {
+    background: #4a90e2;
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-right: 0.5rem;
+}
+
+.position-name {
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.position-controls {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.position-controls select {
+    padding: 0.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    font-size: 0.875rem;
+}
+
+@media (max-width: 768px) {
+    .position-controls {
+        grid-template-columns: 1fr;
     }
 }
+*/

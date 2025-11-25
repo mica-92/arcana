@@ -44,10 +44,13 @@ function showManageDecksModal() {
                         <button class="btn-secondary" id="cancel-deck">Cancelar</button>
                         <button class="btn-primary" id="save-deck">Guardar Mazo</button>
                     </div>
+                </div>                
+                
+                <div class="modal-header-subtitle">
+                    <div class="modal-subtitle">Mazos Registrados</div>
                 </div>
-                <div class="modal-header" style="margin: 0; background:rgba(181, 101, 118, 0.063); padding-bottom: 0;">
-                    <div class="deck-item-name">Gestionar Mazos</div>
-                </div>
+
+                    <div class="form-label" style="margin-top: 12px; color: var(--secondary-color);">Gestionar Mazos</div>
                 
                 
                 <div class="decks-list" id="decks-list">
@@ -102,17 +105,18 @@ function loadDecksList() {
     decks.forEach(deck => {
         html += `
             <div class="deck-item">
+                <div class="deck-item-name" style="color: var(--secondary-color);">${deck.name} ${deck.is_default ? '(<i>Default</i>)' : ''}</div>
+
+                <div class="deck-item-details" style="color: #b5657680;">
+                    <div><strong>Fecha de Compra:</strong> ${deck.purchase_date || 'No especificada'}</div>
+                    <div><strong>Tipos de Cartas:</strong> ${deck.card_types || 'Todos'}</div>
+                </div>
                 <div class="deck-item-header">
-                    <div class="deck-item-name">${deck.name} ${deck.is_default ? '(<i>Default</i>)' : ''}</div>
                     <div class="deck-item-actions">
                         ${!deck.is_default ? `<button class="btn-small btn-set-default" data-id="${deck.id}">Default</button>` : ''}
                         <button class="btn-small btn-edit" data-id="${deck.id}">Editar</button>
                         ${!deck.is_default ? `<button class="btn-small btn-delete" data-id="${deck.id}">Eliminar</button>` : ''}
                     </div>
-                </div>
-                <div class="deck-item-details">
-                    <div><strong>Fecha de Compra:</strong> ${deck.purchase_date || 'No especificada'}</div>
-                    <div><strong>Tipos de Cartas:</strong> ${deck.card_types || 'Todos'}</div>
                 </div>
             </div>
         `;

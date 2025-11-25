@@ -8,11 +8,13 @@
 }
 
 .unique-card {
-    margin:10px;
+    margin: 10px;
     border: 2px solid var(--primary-color);
     background: white;
     border-radius: 5px;
     padding: 10px;
+    margin-top: 20px;
+    margin-bottom: 30px;
 }
 
 .stats-periods {
@@ -111,6 +113,7 @@
     text-align: center;
     font-family: 'Roboto Serif';
     color: var(--primary-color);
+    margin-top: 10px;
 }
 
 .history-headline {
@@ -147,8 +150,9 @@
     flex: 0 0 auto;
     border-bottom: 1px solid #f0f0f0;
     transition: background-color 0.2s ease;
-    margin: 10px 0px;
-
+    border-radius: 12px;
+    padding: 8px;
+    color: var(--secondary-color);
 }
 
 .stat-card:last-child {
@@ -166,7 +170,7 @@
     font-weight: bold;
     margin-bottom: 0;
     font-family: 'Inconsolata', monospace;
-    color: var(--primary-color);
+    color: var(--secondary-color);
     line-height: 1;
     order: 2;
     text-align: right;
@@ -177,7 +181,8 @@
 .stat-label {
     font-size: 1rem;
     line-height: 1.6rem;
-    color: var(--primary-color);
+    color: var(--secondary-color);
+    margin-bottom: 5px;   
     font-family: 'Inconsolata', sans-serif;
     display: flex;
     flex-direction: row;
@@ -217,25 +222,7 @@
 
 
 
-/* ===== RESPONSIVE DESIGN ===== */
-@media (max-width: 768px) {
-    .stat-label {
-        gap: 10px;
-    }
-    
-    .stat-icon {
-        font-size: 1.1rem;
-        height: 48px;
-    }
-    
-    .stat-astro {
-        height: 48px;
-    }
 
-    .stat-card {
-        margin: 0;
-    }
-}
 
 
 /* Modal de selección de período */

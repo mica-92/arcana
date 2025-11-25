@@ -84,6 +84,7 @@ function calculateStatistics() {
 }
 
 
+// MODIFICAR la función setupStatisticsEvents para mantener la categoría
 function setupStatisticsEvents() {
     console.log('Configurando eventos de estadísticas');
     
@@ -102,11 +103,23 @@ function setupStatisticsEvents() {
                 currentPeriod = period;
                 customPeriodData = null;
                 calculateStatistics();
+                
+                // NUEVO: Mantener scroll position en el contenedor de gráficos
+                const containerGraphs = document.querySelector('.container-graphs');
+                if (containerGraphs) {
+                    // Guardar posición actual del scroll
+                    const scrollPosition = containerGraphs.scrollTop;
+                    
+                    // Recalcular estadísticas y luego restaurar posición
+                    setTimeout(() => {
+                        containerGraphs.scrollTop = scrollPosition;
+                    }, 100);
+                }
             }
         });
     });
 
-    // Cerrar modal haciendo clic fuera del contenido
+    // Resto del código existente...
     const modal = document.getElementById('period-selector-modal');
     if (modal) {
         modal.addEventListener('click', function(e) {
@@ -116,12 +129,73 @@ function setupStatisticsEvents() {
         });
     }
     
-    // También agregar evento para tecla Escape
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             hidePeriodSelector();
         }
     });
+}
+
+// MODIFICAR la función applyCustomPeriod para mantener la categoría
+function applyCustomPeriod() {
+    const periodType = document.getElementById('custom-period-type').value;
+    const year = parseInt(document.getElementById('custom-year').value);
+    const month = periodType === 'month' ? parseInt(document.getElementById('custom-month').value) : null;
+    const week = periodType === 'week' ? parseInt(document.getElementById('custom-week').value) : null;
+    
+    if (!year) {
+        alert('Por favor selecciona un año válido');
+        return;
+    }
+    
+    customPeriodData = {
+        type: periodType,
+        year: year,
+        month: month,
+        week: week
+    };
+    
+    currentPeriod = 'custom';
+    
+    // Actualizar botones activos
+    document.querySelectorAll('.period-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-period') === 'custom') {
+            btn.classList.add('active');
+        }
+    });
+    
+    hidePeriodSelector();
+    calculateStatistics();
+    
+    // NUEVO: Mantener scroll position
+    const containerGraphs = document.querySelector('.container-graphs');
+    if (containerGraphs) {
+        setTimeout(() => {
+            containerGraphs.scrollTop = 0; // O mantener posición específica si se prefiere
+        }, 100);
+    }
+    
+    console.log('Período personalizado aplicado:', customPeriodData);
+}
+
+
+function getElementFromCourtRank(cardName) {
+    if (cardName.includes('Page')) return 'Earth';
+    if (cardName.includes('Knight')) return 'Air';
+    if (cardName.includes('Queen')) return 'Water';
+    if (cardName.includes('King')) return 'Fire';
+    return null;
+}
+
+function getElementFromSuit(suit) {
+    const suitToElement = {
+        'Wands': 'Fire',
+        'Cups': 'Water', 
+        'Swords': 'Air',
+        'Pentacles': 'Earth'
+    };
+    return suitToElement[suit] || null;
 }
 
 function calculateBasicStats(entries) {
@@ -132,7 +206,7 @@ function calculateBasicStats(entries) {
     const uniqueCards = new Set();
     const cardCounts = {};
     
-    // Reiniciar contadores CORREGIDOS
+    // Reiniciar contadores
     statisticsData.suits = { 
         'Major Arcana': 0, 
         'Wands': 0, 
@@ -146,10 +220,30 @@ function calculateBasicStats(entries) {
         'Sun': 0, 'Moon': 0, 'Mercury': 0, 'Venus': 0, 
         'Mars': 0, 'Jupiter': 0, 'Saturn': 0 
     };
-    statisticsData.signs = { // ← AGREGAR INICIALIZACIÓN DE SIGNOS
+    statisticsData.signs = {
         'Aries': 0, 'Taurus': 0, 'Gemini': 0, 'Cancer': 0,
         'Leo': 0, 'Virgo': 0, 'Libra': 0, 'Scorpio': 0,
         'Sagittarius': 0, 'Capricorn': 0, 'Aquarius': 0, 'Pisces': 0
+    };
+    
+    // NUEVOS CONTADORES
+    statisticsData.septenary = {
+        'First': 0, 'Second': 0, 'Third': 0, 'Fourth': 0,
+        'Fifth': 0, 'Sixth': 0, 'Seventh': 0
+    };
+    
+    statisticsData.vertical = {
+        'First': 0, 'Second': 0, 'Third': 0, 'Fourth': 0,
+        'Fifth': 0, 'Sixth': 0, 'Seventh': 0  
+    };
+    
+    statisticsData.numerology = {
+        '1': 0, '2': 0, '3': 0, '4': 0, '5': 0,
+        '6': 0, '7': 0, '8': 0, '9': 0, '10': 0
+    };
+    
+    statisticsData.courtTypes = {
+        'Pages': 0, 'Knights': 0, 'Queens': 0, 'Kings': 0
     };
     
     dailyEntries.forEach(entry => {
@@ -183,14 +277,32 @@ function calculateBasicStats(entries) {
                                cardName.includes('Queen') || 
                                cardName.includes('King');
             
+            // Detectar tipo de court card
+            if (isCourtCard) {
+                statisticsData.suits['Court Cards']++;
+                
+                if (cardName.includes('Page')) statisticsData.courtTypes['Pages']++;
+                else if (cardName.includes('Knight')) statisticsData.courtTypes['Knights']++;
+                else if (cardName.includes('Queen')) statisticsData.courtTypes['Queens']++;
+                else if (cardName.includes('King')) statisticsData.courtTypes['Kings']++;
+            }
+            
             // Detectar si es arcano mayor
             const isMajorArcana = cardSuit === 'Major Arcana' || cardSuit === 'Majors';
             
-            // ← AGREGAR ESTA LÓGICA DE CLASIFICACIÓN QUE FALTABA
             if (isCourtCard) {
-                statisticsData.suits['Court Cards']++;
+                // Ya contado arriba en Court Cards
             } else if (isMajorArcana) {
                 statisticsData.suits['Major Arcana']++;
+                
+                // NUEVO: Contar Septenary y Vertical solo para Majors
+                if (card.Septenary && statisticsData.septenary.hasOwnProperty(card.Septenary)) {
+                    statisticsData.septenary[card.Septenary]++;
+                }
+                
+                if (card.Vertical && statisticsData.vertical.hasOwnProperty(card.Vertical)) {
+                    statisticsData.vertical[card.Vertical]++;
+                }
             } else {
                 // Es arcano menor - clasificar por palo
                 switch(cardSuit) {
@@ -209,6 +321,11 @@ function calculateBasicStats(entries) {
                     default:
                         statisticsData.suits['Major Arcana']++;
                 }
+            }
+            
+            // NUEVO: Contar numerología para todas las cartas
+            if (card.Numerology && statisticsData.numerology.hasOwnProperty(card.Numerology)) {
+                statisticsData.numerology[card.Numerology]++;
             }
             
             // ELEMENTOS
@@ -246,7 +363,7 @@ function calculateBasicStats(entries) {
                 statisticsData.planets[card.Planet]++;
             }
             
-            // SIGNOS - solo para no court cards ← AGREGAR ESTA LÓGICA
+            // SIGNOS - solo para no court cards
             if (!isCourtCard && card.Sign && statisticsData.signs.hasOwnProperty(card.Sign)) {
                 statisticsData.signs[card.Sign]++;
             }
@@ -265,13 +382,27 @@ function calculateBasicStats(entries) {
     }
     
     statisticsData.mostFrequentCard = mostFrequentCard;
+    
+    // Log para debugging
+    console.log('=== ESTADÍSTICAS CALCULADAS ===');
+    console.log('Total entradas:', statisticsData.totalEntries);
+    console.log('Suit counts:', statisticsData.suits);
+    console.log('Septenary counts:', statisticsData.septenary);
+    console.log('Vertical counts:', statisticsData.vertical);
+    console.log('Numerology counts:', statisticsData.numerology);
+    console.log('Court types counts:', statisticsData.courtTypes);
+    console.log('Element counts:', statisticsData.elements);
+    console.log('Planet counts:', statisticsData.planets);
+    console.log('Sign counts:', statisticsData.signs);
+    console.log('Orientations:', statisticsData.orientations);
+    console.log('Most frequent card:', statisticsData.mostFrequentCard);
 }
 
 function displayMostFrequentCard() {
     const mostFrequent = statisticsData.mostFrequentCard;
     document.getElementById('most-frequent-name').textContent = mostFrequent.name || "-";
     document.getElementById('most-frequent-count').textContent = 
-        `Apareció ${mostFrequent.count} vez${mostFrequent.count !== 1 ? 'es' : ''}`;
+        `Apareció ${mostFrequent.count} ve${mostFrequent.count !== 1 ? 'ces' : 'z'}`;
 }
 
 // ACTUALIZAR la función displayStatistics
@@ -283,6 +414,10 @@ function displayStatistics() {
     displaySignsPercentages(); // ← Agregar esta línea
         displayMostFrequentCard(); // ← NUEVA LLAMADA
 
+    // displaySeptenaryPercentages();
+    // displayVerticalPercentages();
+    // displayNumerologyPercentages();
+    // displayCourtTypesPercentages();
 }
 
 
@@ -481,39 +616,6 @@ function hidePeriodSelector() {
     }
 }
 
-function applyCustomPeriod() {
-    const periodType = document.getElementById('custom-period-type').value;
-    const year = parseInt(document.getElementById('custom-year').value);
-    const month = periodType === 'month' ? parseInt(document.getElementById('custom-month').value) : null;
-    const week = periodType === 'week' ? parseInt(document.getElementById('custom-week').value) : null;
-    
-    if (!year) {
-        alert('Por favor selecciona un año válido');
-        return;
-    }
-    
-    customPeriodData = {
-        type: periodType,
-        year: year,
-        month: month,
-        week: week
-    };
-    
-    currentPeriod = 'custom';
-    
-    // Actualizar botones activos
-    document.querySelectorAll('.period-btn').forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.getAttribute('data-period') === 'custom') {
-            btn.classList.add('active');
-        }
-    });
-    
-    hidePeriodSelector();
-    calculateStatistics();
-    
-    console.log('Período personalizado aplicado:', customPeriodData);
-}
 
 function updateCustomPeriodOptions() {
     const yearSelect = document.getElementById('custom-year');
@@ -652,4 +754,5 @@ function displayBasicStats() {
             const month = String(date.getMonth() + 1).padStart(2, '0');
             const year = date.getFullYear();
             return `${day}.${month}.${year}`;
+
         }

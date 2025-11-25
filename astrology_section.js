@@ -273,16 +273,21 @@ function displayAstrologyInfo() {
     const moonSignSymbol = getZodiacSymbol(moonData.sign);
     const moonPlanetSymbol = getPlanetSymbol(moonData.tarotCards?.ruler);
     
-    // Información adicional de la fase lunar
+    // En tu JavaScript
     const moonPhaseInfo = moonPhaseData ? `
         <div class="moon-phase-detailed">
-            <div class="moon-phase-main">
-                <div class="moon-item"><b>FASE LUNAR:</b></div> 
-                <div class="moon-item">${moonPhaseData.emoji} ${moonPhaseData.name} (${moonPhaseData.percentage}%)</div>
+            <div class="moon-phase-header">
+                <div class="moon-label"><b>FASE LUNAR:</b></div> 
+                <button class="moon-phase-info-btn" id="moon-phase-info-btn" title="Ver próximas fases">
+                    <i class="fa-solid fa-info"></i>
+                </button>
+            </div>
+            <div class="moon-phase-content">
+                ${moonPhaseData.emoji} ${moonPhaseData.name} (${moonPhaseData.percentage}%)
             </div>
         </div>
     ` : '';
-    
+
     container.innerHTML = `
     <div class="astro-card-header">Pronóstico Astrológico</div>
 
@@ -313,49 +318,152 @@ function displayAstrologyInfo() {
         </div>
         
         <div class="celestial-body">
-            <div class="astro-body"style="display: block; text-align: right;">R</div>
-            <div class="astro-name"style="text-align: right;">SELENE</div>
-            <div class="body-name"style="text-align: right;">en ${moonData.sign || 'Calculando...'}</div>
+            <div class="astro-body" style="display: block; text-align: right;">R</div>
+            <div class="astro-name" style="text-align: right;">SELENE</div>
+            <div class="body-name" style="text-align: right;">en ${moonData.sign || 'Calculando...'}</div>
             ${moonIsValid ? 
-                `<div class="body-position"style="text-align: right;">${moonData.positionString}</div>` : 
+                `<div class="body-position" style="text-align: right;">${moonData.positionString}</div>` : 
                 `<div class="body-position calculating">Cálculo en progreso...</div>`
             }
             <div class="tarot-cards">
-                <div class="tarot-card-item"style="text-align: right;">
+                <div class="tarot-card-item" style="text-align: right;">
                     <div class="astro-arcane">${moonSignSymbol}</div> ${moonData.tarotCards?.signMajor || 'Calculando...'} 
                     <i class="fa-solid fa-angle-left"></i>
                 </div>
-                <div class="tarot-card-item"style="text-align: right;">
+                <div class="tarot-card-item" style="text-align: right;">
                      <div class="astro-arcane">${moonPlanetSymbol}</div> ${moonData.tarotCards?.planetMajor || 'Calculando...'}
                     <i class="fa-solid fa-angle-left"></i>
                 </div>
-                <div class="tarot-card-item"style="text-align: right;">
+                <div class="tarot-card-item" style="text-align: right;">
                     <b>${moonData.tarotCards?.decandisplay || ''}</b> ${moonData.tarotCards?.minor || 'Calculando...'} 
                     <i class="fa-solid fa-angle-left"></i>
                 </div>
             </div>
         </div>
+            <div class="celestial-body">
+
+    ${moonPhaseInfo}</div>
+
     
-    ${moonPhaseInfo}
-    
-${aspectData ? `
-        <div class="moon-phase" style="text-align: right;">
-            <div class="moon-item" style="display: block;"><b>ASPECTO:</b></div> 
-            <div class="moon-item">${aspectData.type} ${aspectData.type === 'APOSTROPHE' ? `(${Math.round(aspectData.exactDifference)}°)` : ''}${aspectData.emoji}</div>
+    ${aspectData ? `
+        <div class="moon-phase">
+            <div class="moon-phase-header" style="justify-content: right;">
+
+            <div class="moon-label" style="margin-right:50px;"><b>ASPECTO:</b></div> </div>
+            <div class="moon-phase-content" style="text-align: right; margin-right:50px;">${aspectData.type} ${aspectData.type === 'APOSTROPHE' ? `(${Math.round(aspectData.exactDifference)}°)` : ''}${aspectData.emoji}</div>
         </div>
     ` : ''}
     </div>
-
-    <div class="moon-phase">
-        <div class="astro-name" style="margin-top: 25px;">PRÓXIMAS FASES:</div>
-        <div id="future-moon-phases-inline">
-            <!-- Las fases lunares futuras se cargarán aquí -->
-        </div>
-    </div>
+    
     `;
     
-    loadFutureMoonPhasesInline();
+    // Agregar event listener para el botón de información
+    const infoBtn = document.getElementById('moon-phase-info-btn');
+    if (infoBtn) {
+        infoBtn.addEventListener('click', showMoonPhasesModal);
+    }
 }
+
+// ===== MODAL DE FASES LUNARES FUTURAS =====
+function showMoonPhasesModal() {
+    // Crear el modal si no existe
+    let modal = document.getElementById('moon-phases-modal');
+    
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'moon-phases-modal';
+        modal.className = 'moon-phases-modal';
+        modal.innerHTML = `
+            <div class="moon-phases-modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">PRÓXIMAS FASES LUNARES</div>
+                    <button class="close-modal" id="moon-phases-close-btn">
+                        <i class="fa-solid fa-times"></i>
+                    </button>
+                </div>
+                <div class="moon-phases-modal-body" id="moon-phases-modal-body">
+                    <!-- Las fases lunares futuras se cargarán aquí -->
+                </div>
+            </div>
+            
+        `;
+        document.body.appendChild(modal);
+        
+        // Agregar event listener para cerrar
+        document.getElementById('moon-phases-close-btn').addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+        
+        // Cerrar al hacer clic fuera del modal
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    }
+    
+    // Cargar las fases lunares en el modal
+    loadMoonPhasesModalContent();
+    
+    // Mostrar el modal
+    modal.style.display = 'flex';
+}
+
+function loadMoonPhasesModalContent() {
+    const container = document.getElementById('moon-phases-modal-body');
+    if (!container) return;
+    
+    const aspects = calculateFutureMoonAspects();
+    let html = '';
+    
+    if (aspects.length === 0) {
+        html = '<div class="no-moon-phases">No hay próximas fases lunares para mostrar.</div>';
+    } else {
+        aspects.forEach(aspect => {
+            const dateStr = formatDate(aspect.date);
+            const moonSignSymbol = getZodiacSymbol(aspect.moonSign);
+            const moonSignName = translateSignToSpanish(aspect.moonSign);
+            
+            let phaseHTML = '';
+            if (aspect.showPhase) {
+                const phaseType = aspect.isNewMoon ? 'Luna Nueva' : 'Luna Llena';
+                const phaseIcon = aspect.isNewMoon ? 
+                    '<i class="fa-regular fa-circle"></i>' : 
+                    '<i class="fa-solid fa-circle"></i>';
+                phaseHTML = `
+                    <div class="moon-phase-modal-type">
+                        ${phaseIcon} ${phaseType}
+                    </div>
+                `;
+            } else {
+                phaseHTML = `<div class="moon-phase-modal-type">${aspect.type}</div>`;
+            }
+            
+            html += `
+                <div class="moon-phase-modal-item">
+                    <div class="moon-phase-modal-date">
+                        <strong>${dateStr}</strong>
+                    </div>
+                    <div class="moon-phase-modal-details">
+                        <div class="moon-phase-modal-aspect">
+                            <span class="moon-aspect-symbol">${aspect.emoji}</span>
+                           
+                        </div>
+                        <div class="moon-phase-modal-sign">
+                            <span class="moon-sign-symbol">${moonSignSymbol}</span>
+                        </div>
+                        <div class="moon-phase-modal-sign">
+                         ${phaseHTML}</div>
+                    </div>
+                </div>
+            `;
+        });
+    }
+    
+    container.innerHTML = html;
+}
+
+
 // Agregar el CSS adicional al documento
 const style = document.createElement('style');
 document.head.appendChild(style);
@@ -412,14 +520,7 @@ function calculateSunMoonAspect(sunLongitude, moonLongitude) {
     }
 }
 
-// ===== ACTUALIZAR LA FUNCIÓN displayAstrologyInfo =====
-function calculateSunLongitude(date) {
-    return calculatePreciseSunLongitude(date);
-}
 
-function calculateMoonLongitude(date) {
-    return calculatePreciseMoonLongitude(date);
-}
 
 function getDetailedPosition(longitude) {
     const normalizedLongitude = normalizeLongitude(longitude);
@@ -500,44 +601,6 @@ function calculateFutureMoonAspects() {
     return aspects;
 }
 
-function loadFutureMoonPhasesInline() {
-    const container = document.getElementById('future-moon-phases-inline');
-    if (!container) return;
-    
-    const aspects = calculateFutureMoonAspects();
-    let html = '';
-    
-    aspects.forEach(aspect => {
-        const dateStr = formatDate(aspect.date);
-        const moonSignSymbol = getZodiacSymbol(aspect.moonSign);
-        
-        let phaseHTML = '';
-        if (aspect.showPhase) {
-            const phaseType = aspect.isNewMoon ? 'LN' : 'LL';
-            const phaseIcon = aspect.isNewMoon ? 
-                '<i class="fa-regular fa-circle"></i>' : 
-                '<i class="fa-solid fa-circle"></i>';
-            phaseHTML = `
-                <div class="moon-phase-type">
-                    ${phaseIcon} ${phaseType}
-                </div>
-            `;
-        } else {
-            phaseHTML = '<div class="moon-phase-type"></div>';
-        }
-        
-        html += `
-            <div class="moon-phase-item">
-                <div class="moon-aspect-symbol">${aspect.emoji}</div>
-                <div class="moon-sign-symbol">${moonSignSymbol}</div>
-                <div class="moon-phase-date">${dateStr}</div>
-                ${phaseHTML}
-            </div>
-        `;
-    });
-    
-    container.innerHTML = html;
-}
 
 // ===== FUNCIONES DE TRADUCCIÓN Y SÍMBOLOS =====
 function translateSignToSpanish(signInEnglish) {
@@ -731,82 +794,82 @@ function getDominantArcana(sign, planet) {
     };
 }
 
-        function getTarotCardsForCelestialBody(body, longitude) {
-            const signIndex = Math.floor(longitude / 30);
-            const degreeInSign = longitude % 30;
-            const decan = Math.floor(degreeInSign / 10);
-            
-            const signs = ['Aries', 'Tauro', 'Géminis', 'Cáncer', 'Leo', 'Virgo', 
-                          'Libra', 'Escorpio', 'Sagitario', 'Capricornio', 'Acuario', 'Piscis'];
-            
-            const currentSign = signs[signIndex];
-            const traditionalRuler = getTraditionalRuler(currentSign);
-            const dominantArcana = getDominantArcana(currentSign, traditionalRuler);
-            
-            const planetMajorArcana = {
-                'Sun': 'The Sun',
-                'Moon': 'The High Priestess',
-                'Mercury': 'The Magician',
-                'Venus': 'The Empress',
-                'Mars': 'The Tower',
-                'Jupiter': 'The Wheel of Fortune',
-                'Saturn': 'The World'
-            };
-            
-            const decanMinorArcana = {
-                'Aries': ['2 Wands', '3 Wands', '4 Wands'],
-                'Tauro': ['5 Pentacles', '6 Pentacles', '7 Pentacles'],
-                'Géminis': ['8 Swords', '9 Swords', '10 Swords'],
-                'Cáncer': ['2 Cups', '3 Cups', '4 Cups'],
-                'Leo': ['5 Wands', '6 Wands', '7 Wands'],
-                'Virgo': ['8 Pentacles', '9 Pentacles', '10 Pentacles'],
-                'Libra': ['2 Swords', '3 Swords', '4 Swords'],
-                'Escorpio': ['5 Cups', '6 Cups', '7 Cups'],
-                'Sagitario': ['8 Wands', '9 Wands', '10 Wands'],
-                'Capricornio': ['2 of Pentacles', '3 Pentacles', '4 Pentacles'],
-                'Acuario': ['5 Swords', '6 Swords', '7 Swords'],
-                'Piscis': ['8 Cups', '9 Cups', '10 Cups']
-            };
-            
-            const signMajorCard = dominantArcana.signArcana;
-            const planetMajorCard = planetMajorArcana[traditionalRuler] || dominantArcana.planetArcana;
-            const minorCard = decanMinorArcana[currentSign] ? decanMinorArcana[currentSign][decan] : 'Carta no definida';
-            const courtCard = dominantArcana.courtCard;
-            const decanNumber = decan + 1;
-            const decanDisplay = `${decanNumber}D`;
-            
-            return {
-                signMajor: signMajorCard,
-                planetMajor: planetMajorCard,
-                minor: minorCard,
-                minorWithDecan: `${minorCard}`,
-                decandisplay: `<b>${decanDisplay}</b>`,
-                courtCard: courtCard,
-                ruler: traditionalRuler,
-                element: dominantArcana.element,
-                decan: decanDisplay,
-                description: dominantArcana.description
-            };
-        }
+function getTarotCardsForCelestialBody(body, longitude) {
+    const signIndex = Math.floor(longitude / 30);
+    const degreeInSign = longitude % 30;
+    const decan = Math.floor(degreeInSign / 10);
+    
+    const signs = ['Aries', 'Tauro', 'Géminis', 'Cáncer', 'Leo', 'Virgo', 
+                    'Libra', 'Escorpio', 'Sagitario', 'Capricornio', 'Acuario', 'Piscis'];
+    
+    const currentSign = signs[signIndex];
+    const traditionalRuler = getTraditionalRuler(currentSign);
+    const dominantArcana = getDominantArcana(currentSign, traditionalRuler);
+    
+    const planetMajorArcana = {
+        'Sun': 'The Sun',
+        'Moon': 'The High Priestess',
+        'Mercury': 'The Magician',
+        'Venus': 'The Empress',
+        'Mars': 'The Tower',
+        'Jupiter': 'The Wheel of Fortune',
+        'Saturn': 'The World'
+    };
+    
+    const decanMinorArcana = {
+        'Aries': ['2 Wands', '3 Wands', '4 Wands'],
+        'Tauro': ['5 Pentacles', '6 Pentacles', '7 Pentacles'],
+        'Géminis': ['8 Swords', '9 Swords', '10 Swords'],
+        'Cáncer': ['2 Cups', '3 Cups', '4 Cups'],
+        'Leo': ['5 Wands', '6 Wands', '7 Wands'],
+        'Virgo': ['8 Pentacles', '9 Pentacles', '10 Pentacles'],
+        'Libra': ['2 Swords', '3 Swords', '4 Swords'],
+        'Escorpio': ['5 Cups', '6 Cups', '7 Cups'],
+        'Sagitario': ['8 Wands', '9 Wands', '10 Wands'],
+        'Capricornio': ['2 Pentacles', '3 Pentacles', '4 Pentacles'],
+        'Acuario': ['5 Swords', '6 Swords', '7 Swords'],
+        'Piscis': ['8 Cups', '9 Cups', '10 Cups']
+    };
+    
+    const signMajorCard = dominantArcana.signArcana;
+    const planetMajorCard = planetMajorArcana[traditionalRuler] || dominantArcana.planetArcana;
+    const minorCard = decanMinorArcana[currentSign] ? decanMinorArcana[currentSign][decan] : 'Carta no definida';
+    const courtCard = dominantArcana.courtCard;
+    const decanNumber = decan + 1;
+    const decanDisplay = `${decanNumber}D`;
+    
+    return {
+        signMajor: signMajorCard,
+        planetMajor: planetMajorCard,
+        minor: minorCard,
+        minorWithDecan: `${minorCard}`,
+        decandisplay: `<b>${decanDisplay}</b>`,
+        courtCard: courtCard,
+        ruler: traditionalRuler,
+        element: dominantArcana.element,
+        decan: decanDisplay,
+        description: dominantArcana.description
+    };
+}
 
-        function getTraditionalRuler(sign) {
-            const traditionalRulers = {
-                'Aries': 'Mars',
-                'Tauro': 'Venus', 
-                'Géminis': 'Mercury',
-                'Cáncer': 'Moon',
-                'Leo': 'Sun',
-                'Virgo': 'Mercury',
-                'Libra': 'Venus',
-                'Escorpio': 'Mars',
-                'Sagitario': 'Jupiter',
-                'Capricornio': 'Saturn',
-                'Acuario': 'Saturn',
-                'Piscis': 'Jupiter'
-            };
-            
-            return traditionalRulers[sign];
-        }
+function getTraditionalRuler(sign) {
+    const traditionalRulers = {
+        'Aries': 'Mars',
+        'Tauro': 'Venus', 
+        'Géminis': 'Mercury',
+        'Cáncer': 'Moon',
+        'Leo': 'Sun',
+        'Virgo': 'Mercury',
+        'Libra': 'Venus',
+        'Escorpio': 'Mars',
+        'Sagitario': 'Jupiter',
+        'Capricornio': 'Saturn',
+        'Acuario': 'Saturn',
+        'Piscis': 'Jupiter'
+    };
+    
+    return traditionalRulers[sign];
+}
 
 
 // Movimiento solar más preciso con variación estacional

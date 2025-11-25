@@ -1,8 +1,16 @@
+@font-face {
+    font-family: 'Astronomicon';
+    src: url('Astronomicon.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap; /* Para mejor rendimiento de carga */
+}
+
 .astrology-display {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin-bottom: 15px;
+    grid-template-columns: 45% 45%;
+    gap: 10px 10%;
+    margin: 5px;
 }
 
 .astro-card-header {
@@ -15,7 +23,7 @@
     text-align: center;
     font-family: 'Playdair Display';
     border-bottom: 1px solid var(--primary80);
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 
 }
 
@@ -44,7 +52,7 @@
     font-weight: normal;
     font-style: normal;
     display: inline-block;
-    font-size: 3rem;
+    font-size: 2rem;
     line-height: 1;
     text-align: left;
 }
@@ -52,7 +60,7 @@
 .astro-name {
     font-weight: bold;
     font-style: normal;
-    font-size: 2rem;
+    font-size: 1.5rem;
     line-height: 1;
     text-align: left;
     padding: 3px 0;
@@ -72,7 +80,6 @@
 .body-position {
     font-size: 1.3rem;
     font-weight: bold;
-    margin-bottom: 5px;
 }
 
 .astro-position {
@@ -113,7 +120,6 @@
     margin-top: 2px;
     font-size: 1em;
 }
-
 
 .body-position {
     margin: 10px 0;
@@ -215,8 +221,136 @@
     font-family: 'Inconsolata';
 }
 
-
-
 .moon-phase-item:last-child {
     border-bottom: none;
 }
+
+/* Estilos para el botón de información de fase lunar */
+.moon-phase-info-btn {
+    background: var(--primary-color);
+    color: var(--background-color);
+    border: 1px solid var(--primary-color);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 12px; 
+    transition: all 0.3s ease;
+}
+
+.moon-phase-info-btn:hover {
+    background: var(--background-color);
+    color: var(--primary-color);
+}
+
+/* Estilos para el modal de fases lunares */
+.moon-phases-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.moon-phases-modal-content {
+    background: var(--background-color);
+    border: 3px solid var(--primary-color);
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+
+.moon-phases-close-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--primary-color);
+    padding: 5px;
+}
+
+.moon-phases-close-btn:hover {
+    color: var(--primary80);
+}
+
+/* Estilos para los items del modal */
+.moon-phase-modal-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--primary80);
+}
+
+.moon-phase-modal-item:last-child {
+    border-bottom: none;
+}
+
+.moon-phase-modal-date {
+    flex: 1;
+    font-weight: bold;
+    font-family: 'Inconsolata', monospace;
+    font-size: 0.9rem;
+    color: var(--primary-color);
+}
+
+.moon-phase-modal-details {
+    flex: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.moon-phase-modal-aspect,
+.moon-phase-modal-sign {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.moon-phase-modal-type {
+    font-weight: bold;
+    color: var(--primary-color);
+    font-family: 'Inconsolata', monospace;
+    font-size: 0.9rem;
+    width: 115px;
+}
+
+.no-moon-phases {
+    text-align: center;
+    padding: 20px;
+    color: var(--primary80);
+    font-style: italic;
+}
+
+/* En tu CSS */
+
+
+.moon-phase-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+    height: 1.6rem;
+}
+
+.moon-phase-header, .moon-label, .moon-label-right {
+    height: 1.6rem;
+    height: 44px;
+    display: flex;
+    align-items: center;
+}
+
+

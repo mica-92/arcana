@@ -1,28 +1,90 @@
-// ===== INICIALIZACIÓN DE FORMULARIOS SEPARADOS =====
-function initializeDailyForm() {
-    const now = new Date();
-    document.getElementById('daily-date').valueAsDate = now;
+// ===== FUNCIONES DE MODALES =====
+function showDailyCardModal() {
+    const modalHTML = `
+        <div class="modal-overlay" id="daily-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">Carta del Día</div>
+                    <button class="close-modal" style="font-size: 1rem; font-weight: 600;">&times;</button>
+                </div>
+                
+                <div class="daily-form">
+                    <div class="form-group">
+                        <label class="form-label">Fecha</label>
+                        <input type="date" class="form-input" id="daily-date" value="${new Date().toISOString().split('T')[0]}">
+                    </div>
+                    
+
+                    
+                    <div class="form-group">
+                        <label class="form-label">Seleccionar Carta</label>
+                        <select class="form-select" id="daily-tarot-card-select">
+                            <option value="">Seleccionar carta...</option>
+                            ${typeof tarotCards !== 'undefined' ? 
+                                Object.values(tarotCards).map(card => 
+                                    `<option value="${card.ID}">${card.Name}</option>`
+                                ).join('') : ''}
+                        </select>
+                    </div>
+
+                    <div id="selected-daily-tarot-card" class="selected-card-display"></div>
+
+                    
+                    <div class="form-group">
+                        <label class="form-label">Orientación</label>
+                        <select class="form-select" id="daily-tarot-orientation">
+                            <option value="upright">Derecha</option>
+                            <option value="reversed">Reversa</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Notas</label>
+                        <textarea class="form-textarea" id="daily-notes" placeholder="Escribe tus reflexiones sobre esta carta..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Mazo</label>
+                        <select class="form-select" id="daily-deck-select">
+                            <option value="default">Mazo Predeterminado</option>
+                            ${decks.map(deck => 
+                                `<option value="${deck.id}" ${deck.is_default ? 'selected' : ''}>${deck.name}</option>`
+                            ).join('')}
+                        </select>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button class="btn-secondary" id="clear-daily">Limpiar</button>
+                        <button class="btn-primary" id="save-daily">Guardar Carta del Día</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
     
-    // Inicializar selector de cartas para formulario diario
-    const tarotSelect = document.getElementById('daily-tarot-card-select');
-    tarotSelect.innerHTML = '<option value="">Seleccionar carta...</option>';
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    setupDailyModalEvents();
+    initializeDailyForm();
+}
+
+function setupDailyModalEvents() {
+    // Cerrar modal
+    document.querySelector('#daily-modal .close-modal').addEventListener('click', closeDailyModal);
+    document.getElementById('daily-modal').addEventListener('click', function(e) {
+        if (e.target === this) closeDailyModal();
+    });
     
-    if (typeof tarotCards !== 'undefined') {
-        Object.values(tarotCards).forEach(card => {
-            const option = document.createElement('option');
-            option.value = card.ID;
-            option.textContent = `${card.Name} (${card.Suit})`;
-            tarotSelect.appendChild(option);
-        });
-    }
+    // Botones de acción
+    document.getElementById('save-daily').addEventListener('click', saveDailyEntry);
+    document.getElementById('clear-daily').addEventListener('click', clearDailyForm);
     
-    // Event listeners para formulario diario
+    // Eventos de formulario
     document.getElementById('daily-tarot-orientation').addEventListener('change', function() {
         currentDailyEntry.tarotOrientation = this.value;
         updateDailyTarotCardDisplay();
     });
     
-    tarotSelect.addEventListener('change', function() {
+    document.getElementById('daily-tarot-card-select').addEventListener('change', function() {
         const cardId = this.value;
         if (cardId && typeof tarotCards !== 'undefined') {
             currentDailyEntry.tarotCard = tarotCards[cardId];
@@ -32,22 +94,35 @@ function initializeDailyForm() {
             document.getElementById('selected-daily-tarot-card').innerHTML = '';
         }
     });
+}
+
+function closeDailyModal() {
+    const modal = document.getElementById('daily-modal');
+    if (modal) modal.remove();
+}
+
+
+function initializeDailyForm() {
+    // Inicializar valores por defecto
+    document.getElementById('daily-date').valueAsDate = new Date();
+    document.getElementById('daily-notes').value = '';
+    document.getElementById('daily-tarot-card-select').value = '';
+    document.getElementById('daily-tarot-orientation').value = 'upright';
+    document.getElementById('daily-deck-select').value = currentDailyEntry.deckId;
+    document.getElementById('selected-daily-tarot-card').innerHTML = '';
     
-    // Botones del formulario diario
-    document.getElementById('save-daily-btn').addEventListener('click', saveDailyEntry);
-    document.getElementById('clear-daily-btn').addEventListener('click', clearDailyForm);
-    document.getElementById('close-daily-btn').addEventListener('click', function() {
-        document.getElementById('daily-card-form').classList.remove('show');
-        removeFormOverlay();
-    });
-    
-    // Aplicar overlay cuando se abre el formulario
-    applyFormOverlay('daily-card-form');
+    // Reiniciar la entrada actual
+    currentDailyEntry = {
+        date: new Date(),
+        notes: "",
+        tarotCard: null,
+        tarotOrientation: 'upright',
+        deckId: document.getElementById('daily-deck-select').value
+    };
     
     console.log('✅ Formulario diario inicializado correctamente');
 }
 
-// ===== FUNCIONES PARA FORMULARIO DIARIO =====
 function clearDailyForm() {
     currentDailyEntry = {
         date: new Date(),
@@ -61,8 +136,8 @@ function clearDailyForm() {
     document.getElementById('daily-notes').value = '';
     document.getElementById('daily-tarot-card-select').value = '';
     document.getElementById('daily-tarot-orientation').value = 'upright';
-    document.getElementById('selected-daily-tarot-card').innerHTML = '';
     document.getElementById('daily-deck-select').value = currentDailyEntry.deckId;
+    document.getElementById('selected-daily-tarot-card').innerHTML = '';
     
     console.log('🗑️ Formulario diario limpiado');
 }
@@ -75,17 +150,73 @@ function updateDailyTarotCardDisplay() {
         const orientation = currentDailyEntry.tarotOrientation;
         const orientationText = orientation === 'upright' ? 'Derecha' : 'Reversa';
         
+        // Mapeo de símbolos
+        const symbolMap = {
+            // Elementos
+            'Fuego': '±',
+            'Agua': '³', 
+            'Aire': '²',
+            'Tierra': '´',
+            'Fire': '±',
+            'Water': '³', 
+            'Air': '²',
+            'Earth': '´',
+            
+            // Planetas
+            'Sol': 'Q',
+            'Luna': 'R',
+            'Mercurio': 'S',
+            'Venus': 'T',
+            'Marte': 'U',
+            'Júpiter': 'V',
+            'Saturno': 'W',
+            'Sun': 'Q',
+            'Moon': 'R',
+            'Mercury': 'S',
+            'Mars': 'U',
+            'Jupiter': 'V',
+            'Saturn': 'W',
+            'Uranus': 'X',
+            'Neptune': 'Y',
+            'Pluto': 'Z',
+            
+            // Signos zodiacales
+            'Aries': 'A',
+            'Tauro': 'B',
+            'Géminis': 'C',
+            'Cáncer': 'D',
+            'Leo': 'E',
+            'Virgo': 'F',
+            'Libra': 'G',
+            'Escorpio': 'H',
+            'Sagitario': 'I',
+            'Capricornio': 'J',
+            'Acuario': 'K',
+            'Piscis': 'L',
+            'Taurus': 'B',
+            'Gemini': 'C',
+            'Cancer': 'D',
+            'Scorpio': 'H',
+            'Sagittarius': 'I',
+            'Capricorn': 'J',
+            'Aquarius': 'K',
+            'Pisces': 'L'
+        };
+        
+        // Obtener símbolos
+        const elementSymbol = card.Element ? symbolMap[card.Element] || card.Element : '';
+        const planetSymbol = card.Planet ? symbolMap[card.Planet] || card.Planet : '';
+        const signSymbol = card.Sign ? symbolMap[card.Sign] || card.Sign : '';
+        
         displayElement.innerHTML = `
             <div class="selected-tarot-card">
                 <div class="tarot-card-display">
-                    <div class="tarot-card-name">${card.Name}</div>
-
+                    <div class="form-label" style="color: var(--secondary-color)">${card.Name}</div>
                     <div class="tarot-card-details">
                         <div class="tarot-card-detail">${card.Suit}</div>
-                        <div class="tarot-card-detail">${orientationText}</div>
-                        ${card.Element ? `<div class="tarot-card-detail">${card.Element}</div>` : ''}
-                        ${card.Planet ? `<div class="tarot-card-detail">${card.Planet}</div>` : ''}
-                        ${card.Sign ? `<div class="tarot-card-detail">${card.Sign}</div>` : ''}
+                        ${elementSymbol ? `<div class="tarot-card-symbol" title="${card.Element}">${elementSymbol}</div>` : ''}
+                        ${planetSymbol ? `<div class="tarot-card-symbol" title="${card.Planet}">${planetSymbol}</div>` : ''}
+                        ${signSymbol ? `<div class="tarot-card-symbol" title="${card.Sign}">${signSymbol}</div>` : ''}
                     </div>
                     <button type="button" class="remove-tarot-card">×</button>
                 </div>
@@ -100,7 +231,6 @@ function updateDailyTarotCardDisplay() {
         });
     }
 }
-
 async function saveDailyEntry() {
     const dateInput = document.getElementById('daily-date').value;
     let entryDate;
@@ -141,10 +271,9 @@ async function saveDailyEntry() {
 
         await loadLogHistory();
         clearDailyForm();
+        closeDailyModal();
 
         alert('Carta del día guardada correctamente');
-        document.getElementById('daily-card-form').classList.remove('show');
-        removeFormOverlay();
 
     } catch (error) {
         console.error('Error al guardar carta del día:', error);
@@ -152,59 +281,7 @@ async function saveDailyEntry() {
     }
 }
 
-// ===== FUNCIONES DE OVERLAY PARA FORMULARIOS =====
-function applyFormOverlay(formId) {
-    // Crear overlay si no existe
-    let overlay = document.getElementById('form-overlay');
-    if (!overlay) {
-        overlay = document.createElement('div');
-        overlay.id = 'form-overlay';
-        overlay.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
-            z-index: 998;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        `;
-        document.body.appendChild(overlay);
-        
-        // Cerrar formulario al hacer clic en el overlay
-        overlay.addEventListener('click', function() {
-            document.getElementById(formId).classList.remove('show');
-            removeFormOverlay();
-        });
-        
-        // Animar la aparición del overlay
-        setTimeout(() => {
-            overlay.style.opacity = '1';
-        }, 10);
-    }
-    
-    // Asegurar que el formulario esté por encima del overlay
-    const form = document.getElementById(formId);
-    if (form) {
-        form.style.zIndex = '999';
-    }
-}
-
-function removeFormOverlay() {
-    const overlay = document.getElementById('form-overlay');
-    if (overlay) {
-        overlay.style.opacity = '0';
-        setTimeout(() => {
-            if (overlay.parentNode) {
-                overlay.parentNode.removeChild(overlay);
-            }
-        }, 300);
-    }
-}
-
-// ===== MODIFICAR EL setupFooterMenu PARA INCLUIR OVERLAY =====
+// ===== MODIFICAR EL setupFooterMenu PARA USAR EL NUEVO MODAL =====
 function setupFooterMenu() {
     const burgerBtn = document.getElementById('burger-menu-btn');
     const menuOptions = document.getElementById('footer-menu-options');
@@ -213,18 +290,11 @@ function setupFooterMenu() {
     const manageDecks = document.getElementById('manage-decks');
     const manageSpreads = document.getElementById('manage-spreads');
     
-    const dailyForm = document.getElementById('daily-card-form');
-    const spreadForm = document.getElementById('spread-form');
-    
     // Alternar menú al hacer clic en el botón hamburguesa
     if (burgerBtn) {
         burgerBtn.addEventListener('click', function(e) {
             e.stopPropagation();
             menuOptions.classList.toggle('show');
-            // Cerrar formularios si están abiertos
-            dailyForm.classList.remove('show');
-            spreadForm.classList.remove('show');
-            removeFormOverlay();
         });
     }
     
@@ -243,21 +313,20 @@ function setupFooterMenu() {
     // Funcionalidad para las opciones del menú
     if (newDailyCard) {
         newDailyCard.addEventListener('click', function() {
-            // Mostrar formulario para carta del día
-            dailyForm.classList.add('show');
-            spreadForm.classList.remove('show');
+            // Mostrar modal para carta del día
+            showDailyCardModal();
             menuOptions.classList.remove('show');
-            initializeDailyForm();
         });
     }
             
     if (newSpread) {
         newSpread.addEventListener('click', function() {
-            // Mostrar formulario para tirada
-            spreadForm.classList.add('show');
-            dailyForm.classList.remove('show');
+            // Mostrar formulario/modal para tirada (mantener el existente por ahora)
+            // spreadForm.classList.add('show');
+            // dailyForm.classList.remove('show');
             menuOptions.classList.remove('show');
-            initializeSpreadForm();
+            // initializeSpreadForm();
+            alert('Funcionalidad de tiradas en desarrollo');
         });
     }
     
@@ -272,77 +341,65 @@ function setupFooterMenu() {
     if (manageSpreads) {
         manageSpreads.addEventListener('click', function() {
             // Mostrar modal de gestión de tiradas
-            showManageSpreadsModal();
+            // showManageSpreadsModal();
             menuOptions.classList.remove('show');
+            alert('Gestión de tiradas en desarrollo');
         });
     }
-    
-    // Cerrar formularios - Asegurar que los event listeners estén configurados
-    const closeDailyBtn = document.getElementById('close-daily-btn');
-    const closeSpreadBtn = document.getElementById('close-spread-btn');
-    
-    if (closeDailyBtn) {
-        // Remover event listener existente para evitar duplicados
-        closeDailyBtn.replaceWith(closeDailyBtn.cloneNode(true));
-        // Agregar nuevo event listener
-        document.getElementById('close-daily-btn').addEventListener('click', function() {
-            console.log('❌ Cerrando formulario diario...');
-            dailyForm.classList.remove('show');
-            removeFormOverlay();
-        });
-    }
-    
-    if (closeSpreadBtn) {
-        // Remover event listener existente para evitar duplicados
-        closeSpreadBtn.replaceWith(closeSpreadBtn.cloneNode(true));
-        // Agregar nuevo event listener
-        document.getElementById('close-spread-btn').addEventListener('click', function() {
-            console.log('❌ Cerrando formulario de tirada...');
-            spreadForm.classList.remove('show');
-            removeFormOverlay();
-        });
-    }
-    
-    // Cerrar formularios al hacer clic fuera
-    document.addEventListener('click', function(e) {
-        if (!dailyForm.contains(e.target) && !burgerBtn.contains(e.target) && !menuOptions.contains(e.target)) {
-            dailyForm.classList.remove('show');
-            removeFormOverlay();
-        }
-        if (!spreadForm.contains(e.target) && !burgerBtn.contains(e.target) && !menuOptions.contains(e.target)) {
-            spreadForm.classList.remove('show');
-            removeFormOverlay();
-        }
-    });
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    const loadingScreen = document.getElementById('loading-screen');
-    const loadingLogo = document.getElementById('loading-logo');
-    let pulseCount = 0;
-    
-    function pulseAnimation() {
-        if (pulseCount < 2) {
-            // Aumentar
-            loadingLogo.style.transform = 'scale(1.3)';
-            setTimeout(() => {
-                // Disminuir
-                loadingLogo.style.transform = 'scale(1)';
-                pulseCount++;
-                setTimeout(pulseAnimation, 500);
-            }, 200);
-        } else {
-            // Ir a la página después de las pulsaciones
-            setTimeout(() => {
-                loadingScreen.style.transition = 'opacity 0.3s ease';
-                loadingScreen.style.opacity = '0';
-                setTimeout(() => {
-                    loadingScreen.style.display = 'none';
-                }, 200);
-            }, 200);
-        }
-    }
-    
-    // Iniciar la animación
-    setTimeout(pulseAnimation, 20);
-});
+// ===== ESTILOS CSS RECOMENDADOS PARA LOS NUEVOS MODALES =====
+/*
+.selected-card-display {
+    margin: 1rem 0;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.tarot-card-display {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: white;
+    border-radius: 6px;
+    border-left: 4px solid #b56576;
+}
+
+.tarot-card-name {
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.tarot-card-details {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.tarot-card-detail {
+    padding: 0.25rem 0.5rem;
+    background: #e9ecef;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    color: #495057;
+}
+
+.remove-tarot-card {
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.remove-tarot-card:hover {
+    background: #c82333;
+}
+*/

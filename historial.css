@@ -1,9 +1,17 @@
+@font-face {
+    font-family: 'Astronomicon';
+    src: url('Astronomicon.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap; /* Para mejor rendimiento de carga */
+}
 /* Tabs del historial */
 .history-borde {
     margin: 15px;
     padding-left: 10px;
     padding-right: 10px;
     border-radius: 5px;
+    margin-bottom: 70px;
 }
 
 .history-headline {
@@ -136,8 +144,7 @@
 }
 
 .spread-card-position {
-    background: rgba(109, 89, 122, 0.05);
-    padding: 15px;
+    padding-left: 15px;
     border-radius: 8px;
     border-left: 4px solid var(--secondary-color);
 }
@@ -148,7 +155,6 @@
     align-items: center;
     margin-bottom: 10px;
     padding-bottom: 8px;
-    border-bottom: 1px solid #ddd;
 }
 
 .position-name {
@@ -171,10 +177,9 @@
     font-weight: bold;
     margin: 5px;  
     padding: 5px;
-    background-color: var(--secondary-color);
     border-radius: 3px;  
     flex: 1;
-    color: white;
+    color: var(--primary-color);
     font-family: 'Inconsolata';
 }
 
@@ -350,11 +355,9 @@
 }
 
 .spread-form, .deck-form {
-    padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    background-color: rgba(101, 124, 181, 0.1);
 }
 
 .form-group {
@@ -380,18 +383,35 @@
     justify-content: flex-end;
 }
 
-.selected-tarot-card, .decks-list {
-    padding: 20px;
+.selected-tarot-card {
+    padding: 8px;
     background-color: #b5657610;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 2px solid var(--primary-color);
+    border-radius: 4px;
+}
+
+.selected-tarot-card {
+    padding: 8px;
+    background-color: #b5657610;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border: 2px solid var(--secondary-color);
+    border-radius: 4px;
 }
 
 .deck-item {
-    background: var(--background-color);
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 3px;
-    border: 1px solid var(--primary-color);
-    border-left: 4px solid var(--primary-color);
+    margin-bottom: 5px;
+    padding-left: 8px;
+    padding-bottom: 8px;
+    padding-top: 8px;
+    background: white;
+    border-radius: 4px;
+    border: 1px solid #b5657680;
+    border-left: 4px solid var(--secondary-color);
+
+
 }
 
 .deck-item-header {
@@ -460,38 +480,43 @@
 .position-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 8px;
-    padding: 10px;
-    background: transparent;
-    border: 1px solid var(--primary-color);
-}
-
-
-.position-input {
-    flex: 1;
+    width: 100%;
     padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 3px;
+    border: 2px solid var(--secondary-color);
+    border-radius: 4px;
+    background: #b5657630;
+    color: var(--secondary-color);
+    font-size: 0.9rem;
+    font-family: 'Inconsolata';
+    margin-bottom: 5px;
 }
+
 
 .add-position-btn {
-    background: var(--secondary-color);
-    color: white;
+    background: #fff;
+    color: var(--secondary-color);
     border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
+    padding: 8px;
+    border-radius: 4px;
     cursor: pointer;
     font-family: 'Inconsolata';
+    border: 3px solid var(--secondary-color);
+    margin-top: 3px;
+    transition: all 0.3s ease-in-out;
+}
+
+.add-position-btn:hover {
+    background: var(--secondary-color);
+    color: #fff;
 }
 
 .remove-position {
-    background: var(--accent-color);
+    background: var(--secondary-color);
     color: white;
     border: none;
     border-radius: 50%;
-    width: 25px;
-    height: 25px;
+    width: 15px;
+    height: 15px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -518,26 +543,15 @@
 
 .position-input {
     flex: 1;
-    padding: 8px;
     border-radius: 3px;
     background-color: transparent;
     font-family: 'Inconsolata';
-    color: var(--primary-color);
+    color: var(--secondary-color);
     border: 0;
 }
 
-.remove-position {
-    background: var(--accent-color);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 25px;
-    height: 25px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+
+
 
 
 /* Estilos para entradas del historial en una línea */
@@ -592,4 +606,71 @@
     border-radius: 50%;
     /* Box sizing para incluir padding en las dimensiones */
     box-sizing: border-box;
+}
+
+
+/* Contenedor principal del historial */
+.log-history {
+    height: 50dvh; /* Altura específica - ajusta según necesites */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Contenedor del contenido del historial */
+.history-borde {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Oculta el overflow del contenedor padre */
+}
+
+/* Contenedor del contenido scrollable */
+.history-content {
+    flex: 1;
+    overflow-y: auto; /* Scroll vertical interno */
+    overflow-x: hidden; /* Evita scroll horizontal */
+    min-height: 0; /* Permite que flexbox funcione correctamente */
+}
+
+/* Contenedor de las entradas del historial */
+#log-history {
+    min-height: min-content; /* Asegura que ocupe al menos el contenido */
+}
+
+/* Personalizar la scrollbar para mejor apariencia */
+.history-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.history-content::-webkit-scrollbar-track {
+    background: rgba(109, 89, 122, 0.1);
+    border-radius: 3px;
+}
+
+.history-content::-webkit-scrollbar-thumb {
+    background: var(--primary80);
+    border-radius: 3px;
+}
+
+.history-content::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color);
+}
+
+/* Para Firefox */
+.history-content {
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary80) rgba(109, 89, 122, 0.1);
+}
+
+/* Asegurar que las entradas se muestren correctamente */
+.log-entry {
+    flex-shrink: 0; /* Evita que las entradas se compriman */
+}
+
+/* Mensaje cuando no hay entradas */
+.empty-history {
+    text-align: center;
+    padding: 20px;
+    color: var(--primary80);
+    font-style: italic;
 }

@@ -2,66 +2,107 @@
 let charts = {
     orientation: null,
     suits: null,
+    types: null,
     elements: null,
     planets: null,
-    signs: null
+    signs: null,
+    septenary: null,
+    vertical: null,
+    numerology: null,
+    courtTypes: null
 };
 
-
-// Colores para los gráficos - versión con valores hexadecimales
+// Colores para los gráficos
 const statChartColors = {
-    orientation: ['#1742ab', 
-        '#1742ab80'], // Emerald, Raspberry Red
-    
+    orientation: ['#1742ab', '#1742ab80'],
     suits: [
-        '#00296b',    // Imperial Blue - Major Arcana
-        '#ea7317',    // Harvest Orange - Wands
-        '#006ba6',    // Bright Marine - Cups
-        '#3da5d9',    // Fresh Sky - Swords
-        '#fdc500',    // School Bus Yellow - Pentacles
-        '#8f2d56'     // Vintage Berry - Court Cards
+        '#ea7317', '#ea731780', '#1742ab', '#1742ab80'
     ],
-    
+    types: [
+        '#00296b', '#8f2d56', '#ff6b6b'
+    ],
     elements: [
-        '#ea7317',    // Harvest Orange - Fuego
-        '#0496ff',    // Dodger Blue - Agua
-        '#2364aa',    // Ocean Deep - Aire
-        '#ffbc42'     // Sunflower Gold - Tierra
+        '#ea7317', '#ea731780', '#1742ab', '#1742ab80'
     ],
-    
     planets: [
-        '#ffd500',    // Gold - Sol
-        '#b5e48c',    // Light Green - Luna
-        '#34a0a4',    // Tropical Teal - Mercurio
-        '#d81159',    // Raspberry Red - Venus
-        '#ea7317',    // Harvest Orange - Marte
-        '#184e77',    // Yale Blue - Júpiter
-        '#1e6091'     // Baltic Blue - Saturno
+        '#ea7317', '#ea731780', '#1742ab', '#1742ab80',
+        '#ffd500', '#ffd50080', '#34a0a4', '#34a0a480',
+        '#1e6091', '#1e609180', '#1e6091'
     ],
-    
     signs: [
-        '#d81159',    // Raspberry Red - Aries
-        '#1742ab',    // School Bus Yellow - Tauro
-        '#1742ab80',    // Sunflower Gold - Géminis
-        '#b5e48c',    // Light Green - Cáncer
-        '#ea731750',    // Gold - Leo
-        '#ea7317',    // Emerald - Virgo
-        '#52b69a',    // Ocean Mist - Libra
-        '#8f2d56',    // Vintage Berry - Escorpio
-        '#00509d',    // Steel Azure - Sagitario
-        '#1e6091',    // Baltic Blue - Capricornio
-        '#1a759f',    // Cerulean - Acuario
-        '#168aad'     // Bondi Blue - Piscis
+        '#ea7317', '#ea731780', '#1742ab', '#1742ab80',
+        '#ffd500', '#ffd50080', '#34a0a4', '#34a0a480',
+        '#1e6091', '#1e609180', '#1e6091', '#d81159',
+        '#d8115980', '#52b69a', '#52b69a80', '#8f2d56',
+        '#b5e48c'
+    ],
+    septenary: [
+        '#ea7317', '#ea731780', '#1742ab', '#1742ab80',
+        '#ffd500', '#ffd50080', '#34a0a4', '#34a0a480'
+    ],
+    vertical: [
+        '#ea7317', '#ea731780', '#1742ab', '#1742ab80',
+        '#ffd500', '#ffd50080', '#34a0a4', '#34a0a480'
+    ],
+    numerology: [
+        '#ea7317', '#ea731780', '#1742ab', '#1742ab80',
+        '#ffd500', '#ffd50080', '#34a0a4', '#34a0a480',
+        '#52b69a', '#52b69a80', '#8f2d56', '#b5e48c'
+    ],
+    courtTypes: [
+        '#ff6b6b', '#4ecdc4', '#45b7d1', '#feca57'
     ]
 };
 
-function initializeCharts() {
-    console.log('Inicializando gráficos...');
-    // Destruir gráficos existentes
-    destroyAllCharts();
-    // Crear nuevos gráficos
-    createCharts();
-}
+// Plugin para texto central fijo
+const centerTextPlugin = {
+    id: 'centerText',
+    afterDraw: function(chart) {
+        if (chart.config.options.plugins.centerText && chart.config.options.plugins.centerText.enabled !== false) {
+            const ctx = chart.ctx;
+            const centerTextConfig = chart.config.options.plugins.centerText;
+            const text = centerTextConfig.text || '';
+            const color = centerTextConfig.color || '#000';
+            
+            if (!text) return;
+            
+            ctx.save();
+            
+            // Posición central del área del gráfico
+            const centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
+            const centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
+            
+            // Configurar estilo de texto
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = color;
+            
+            // Dividir texto en líneas
+            const lines = text.split('\n');
+            const lineHeight = 30;
+            const totalHeight = (lines.length - 1) * lineHeight;
+            const startY = centerY - totalHeight / 2;
+            
+            // Dibujar cada línea
+            lines.forEach((line, index) => {
+                if (index === 0) {
+                    // Primera línea - símbolo
+                    ctx.font = `bold 32px 'Astronomicon', sans-serif`;
+                    ctx.fillText(line, centerX, startY + index * lineHeight);
+                } else {
+                    // Segunda línea - porcentaje
+                    ctx.font = `bold 20px 'Inconsolata', monospace`;
+                    ctx.fillText(line, centerX, startY + index * lineHeight);
+                }
+            });
+            
+            ctx.restore();
+        }
+    }
+};
+
+// Registrar el plugin
+Chart.register(centerTextPlugin);
 
 function destroyAllCharts() {
     Object.values(charts).forEach(chart => {
@@ -72,50 +113,51 @@ function destroyAllCharts() {
     charts = {
         orientation: null,
         suits: null,
+        types: null,
         elements: null,
         planets: null,
-        signs: null
+        signs: null,
+        septenary: null,
+        vertical: null,
+        numerology: null,
+        courtTypes: null
     };
 }
 
 function createCharts() {
     console.log('Creando gráficos con datos:', statisticsData);
     
-    // Verificar que statisticsData esté disponible
     if (!statisticsData) {
         console.error('statisticsData no está definido');
         return;
     }
     
     createOrientationChart();
+    createTypesChart();
     createSuitsChart();
     createElementsChart();
     createPlanetsChart();
     createSignsChart();
+    createSeptenaryChart();
+    createVerticalChart();
+    createNumerologyChart();
+    createCourtTypesChart();
 }
 
 function createOrientationChart() {
     const ctx = document.getElementById('orientation-chart');
-    if (!ctx) {
-        console.error('Canvas orientation-chart no encontrado');
-        return;
-    }
+    if (!ctx) return;
     
     const canvasCtx = ctx.getContext('2d');
-    const total = statisticsData.orientations.upright + statisticsData.orientations.reversed;
     
     if (charts.orientation) {
         charts.orientation.destroy();
     }
     
-    if (total === 0) {
-        createEmptyChart(canvasCtx, 'orientation-legend', 'No hay datos de orientación');
-        return;
-    }
-    
     const labels = ['Derecha', 'Reversa'];
     const data = [statisticsData.orientations.upright, statisticsData.orientations.reversed];
     const colors = statChartColors.orientation;
+    const total = data.reduce((sum, value) => sum + value, 0);
     
     const chartData = {
         labels: labels,
@@ -130,41 +172,83 @@ function createOrientationChart() {
     charts.orientation = new Chart(canvasCtx, {
         type: 'pie',
         data: chartData,
-        options: getChartOptions('Orientación')
+        options: getChartOptions('Orientación', statisticsData)
     });
     
-    createLegend('orientation-legend', labels, data, colors, total);
+    createInlineLegend('orientation-legend', labels, data, colors, total);
+}
+
+function createTypesChart() {
+    const ctx = document.getElementById('types-chart');
+    if (!ctx) return;
+    
+    const canvasCtx = ctx.getContext('2d');
+    
+    if (charts.types) {
+        charts.types.destroy();
+    }
+    
+    const majorsCount = statisticsData.suits['Major Arcana'] || 0;
+    const courtsCount = statisticsData.suits['Court Cards'] || 0;
+    const minorsCount = statisticsData.totalEntries - majorsCount - courtsCount;
+    
+    const labels = ['Majors', 'Minors', 'Courts'];
+    const data = [majorsCount, minorsCount, courtsCount];
+    const total = statisticsData.totalEntries;
+    
+    if (total === 0 || data.every(val => val === 0)) {
+        createInfoChart(canvasCtx, 'types-legend', 'Todas las cartas');
+        return;
+    }
+    
+    const colors = statChartColors.types;
+    
+    const chartData = {
+        labels: labels,
+        datasets: [{
+            data: data,
+            backgroundColor: colors,
+            borderColor: '#fff',
+            borderWidth: 2
+        }]
+    };
+    
+    charts.types = new Chart(canvasCtx, {
+        type: 'pie',
+        data: chartData,
+        options: getChartOptions('Tipos de Cartas', statisticsData)
+    });
+    
+    createInlineLegend('types-legend', labels, data, colors, total);
 }
 
 function createSuitsChart() {
     const ctx = document.getElementById('suits-chart');
-    if (!ctx) {
-        console.error('Canvas suits-chart no encontrado');
-        return;
-    }
+    if (!ctx) return;
     
     const canvasCtx = ctx.getContext('2d');
-    const suitsData = statisticsData.suits;
-    
-    if (!suitsData) {
-        createEmptyChart(canvasCtx, 'suits-legend', 'Datos no disponibles');
-        return;
-    }
-    
-    const labels = Object.keys(suitsData).filter(key => suitsData[key] > 0);
-    const data = labels.map(key => suitsData[key]);
-    const total = data.reduce((sum, value) => sum + value, 0);
     
     if (charts.suits) {
         charts.suits.destroy();
     }
     
+    const suitsData = {
+        'Wands': statisticsData.suits['Wands'] || 0,
+        'Cups': statisticsData.suits['Cups'] || 0,
+        'Swords': statisticsData.suits['Swords'] || 0,
+        'Pentacles': statisticsData.suits['Pentacles'] || 0
+    };
+    
+    const labels = Object.keys(suitsData).filter(key => suitsData[key] > 0);
+    const data = labels.map(key => suitsData[key]);
+    const total = data.reduce((sum, value) => sum + value, 0);
+    const minorsTotal = statisticsData.totalEntries - (statisticsData.suits['Major Arcana'] || 0) - (statisticsData.suits['Court Cards'] || 0);
+    
     if (total === 0 || data.length === 0) {
-        createEmptyChart(canvasCtx, 'suits-legend', 'No hay datos de palos');
+        createInfoChart(canvasCtx, 'suits-legend', `Analizando ${minorsTotal} cartas\n(Solo Arcanos Menores)`);
         return;
     }
     
-    // Usar solo los colores necesarios
     const colors = labels.map((_, index) => {
         return statChartColors.suits[index % statChartColors.suits.length] || '#CCCCCC';
     });
@@ -182,24 +266,21 @@ function createSuitsChart() {
     charts.suits = new Chart(canvasCtx, {
         type: 'pie',
         data: chartData,
-        options: getChartOptions('Palos')
+        options: getChartOptions('Palos (Minors)', statisticsData)
     });
     
-    createLegend('suits-legend', labels, data, colors, total);
+    createInlineLegend('suits-legend', labels, data, colors, total);
 }
 
 function createElementsChart() {
     const ctx = document.getElementById('elements-chart');
-    if (!ctx) {
-        console.error('Canvas elements-chart no encontrado');
-        return;
-    }
+    if (!ctx) return;
     
     const canvasCtx = ctx.getContext('2d');
     const elementsData = statisticsData.elements;
     
     if (!elementsData) {
-        createEmptyChart(canvasCtx, 'elements-legend', 'Datos no disponibles');
+        createInfoChart(canvasCtx, 'elements-legend', 'Datos no disponibles');
         return;
     }
     
@@ -212,11 +293,10 @@ function createElementsChart() {
     }
     
     if (totalForElements === 0 || data.length === 0) {
-        createEmptyChart(canvasCtx, 'elements-legend', 'No hay datos de elementos');
+        createInfoChart(canvasCtx, 'elements-legend', `Analizando ${totalForElements} cartas\n(Excluyendo Court Cards)`);
         return;
     }
     
-    // Usar solo los colores necesarios
     const colors = labels.map((_, index) => {
         return statChartColors.elements[index % statChartColors.elements.length] || '#CCCCCC';
     });
@@ -234,26 +314,18 @@ function createElementsChart() {
     charts.elements = new Chart(canvasCtx, {
         type: 'pie',
         data: chartData,
-        options: getChartOptions('Elementos')
+        options: getChartOptions('Elementos', statisticsData)
     });
     
-    createLegend('elements-legend', labels, data, colors, totalForElements);
+    createInlineLegend('elements-legend', labels, data, colors, totalForElements);
 }
 
 function createPlanetsChart() {
     const ctx = document.getElementById('planets-chart');
-    if (!ctx) {
-        console.error('Canvas planets-chart no encontrado');
-        return;
-    }
+    if (!ctx) return;
     
     const canvasCtx = ctx.getContext('2d');
     const planetsData = statisticsData.planets;
-    
-    if (!planetsData) {
-        createEmptyChart(canvasCtx, 'planets-legend', 'Datos no disponibles');
-        return;
-    }
     
     const labels = Object.keys(planetsData).filter(key => planetsData[key] > 0);
     const data = labels.map(key => planetsData[key]);
@@ -264,11 +336,10 @@ function createPlanetsChart() {
     }
     
     if (totalForPlanets === 0 || data.length === 0) {
-        createEmptyChart(canvasCtx, 'planets-legend', 'No hay datos de planetas');
+        createInfoChart(canvasCtx, 'planets-legend', `Analizando ${totalForPlanets} cartas\n(Solo Arcanos Mayores y Menores)`);
         return;
     }
     
-    // Usar solo los colores necesarios
     const colors = labels.map((_, index) => {
         return statChartColors.planets[index % statChartColors.planets.length] || '#CCCCCC';
     });
@@ -286,24 +357,21 @@ function createPlanetsChart() {
     charts.planets = new Chart(canvasCtx, {
         type: 'pie',
         data: chartData,
-        options: getChartOptions('Planetas')
+        options: getChartOptions('Planetas', statisticsData)
     });
     
-    createLegend('planets-legend', labels, data, colors, totalForPlanets);
+    createInlineLegend('planets-legend', labels, data, colors, totalForPlanets);
 }
 
 function createSignsChart() {
     const ctx = document.getElementById('signs-chart');
-    if (!ctx) {
-        console.error('Canvas signs-chart no encontrado');
-        return;
-    }
+    if (!ctx) return;
     
     const canvasCtx = ctx.getContext('2d');
     const signsData = statisticsData.signs;
     
     if (!signsData) {
-        createEmptyChart(canvasCtx, 'signs-legend', 'Datos no disponibles');
+        createInfoChart(canvasCtx, 'signs-legend', 'Datos no disponibles');
         return;
     }
     
@@ -316,11 +384,10 @@ function createSignsChart() {
     }
     
     if (totalForSigns === 0 || data.length === 0) {
-        createEmptyChart(canvasCtx, 'signs-legend', 'No hay datos de signos');
+        createInfoChart(canvasCtx, 'signs-legend', `Analizando ${totalForSigns} cartas\n(Solo Arcanos Mayores y Menores)`);
         return;
     }
     
-    // Usar solo los colores necesarios
     const colors = labels.map((_, index) => {
         return statChartColors.signs[index % statChartColors.signs.length] || '#CCCCCC';
     });
@@ -338,83 +405,257 @@ function createSignsChart() {
     charts.signs = new Chart(canvasCtx, {
         type: 'pie',
         data: chartData,
-        options: getChartOptions('Signos Zodiacales')
+        options: getChartOptions('Signos Zodiacales', statisticsData)
     });
     
-    createLegend('signs-legend', labels, data, colors, totalForSigns);
+    createInlineLegend('signs-legend', labels, data, colors, totalForSigns);
 }
 
-function getChartOptions(title) {
+function createSeptenaryChart() {
+    const ctx = document.getElementById('septenary-chart');
+    if (!ctx) return;
+    
+    const canvasCtx = ctx.getContext('2d');
+    const septenaryData = statisticsData.septenary;
+    
+    if (!septenaryData) {
+        createInfoChart(canvasCtx, 'septenary-legend', 'Datos no disponibles');
+        return;
+    }
+    
+    if (charts.septenary) {
+        charts.septenary.destroy();
+    }
+    
+    const labels = Object.keys(septenaryData).filter(key => septenaryData[key] > 0);
+    const data = labels.map(key => septenaryData[key]);
+    const total = data.reduce((sum, value) => sum + value, 0);
+    const majorsTotal = statisticsData.suits['Major Arcana'] || 0;
+    
+    if (total === 0 || data.length === 0) {
+        createInfoChart(canvasCtx, 'septenary-legend', `Analizando ${majorsTotal} cartas\n(Solo Arcanos Mayores)`);
+        return;
+    }
+    
+    const colors = labels.map((_, index) => {
+        return statChartColors.septenary[index % statChartColors.septenary.length] || '#CCCCCC';
+    });
+    
+    const chartData = {
+        labels: labels,
+        datasets: [{
+            data: data,
+            backgroundColor: colors,
+            borderColor: '#fff',
+            borderWidth: 2
+        }]
+    };
+    
+    charts.septenary = new Chart(canvasCtx, {
+        type: 'pie',
+        data: chartData,
+        options: getChartOptions('Septenary', statisticsData)
+    });
+    
+    createInlineLegend('septenary-legend', labels, data, colors, total);
+}
+
+function createVerticalChart() {
+    const ctx = document.getElementById('vertical-chart');
+    if (!ctx) return;
+    
+    const canvasCtx = ctx.getContext('2d');
+    const verticalData = statisticsData.vertical;
+    
+    if (!verticalData) {
+        createInfoChart(canvasCtx, 'vertical-legend', 'Datos no disponibles');
+        return;
+    }
+    
+    if (charts.vertical) {
+        charts.vertical.destroy();
+    }
+    
+    const labels = Object.keys(verticalData).filter(key => verticalData[key] > 0);
+    const data = labels.map(key => verticalData[key]);
+    const total = data.reduce((sum, value) => sum + value, 0);
+    const majorsTotal = statisticsData.suits['Major Arcana'] || 0;
+    
+    if (total === 0 || data.length === 0) {
+        createInfoChart(canvasCtx, 'vertical-legend', `Analizando ${majorsTotal} cartas\n(Solo Arcanos Mayores)`);
+        return;
+    }
+    
+    const colors = labels.map((_, index) => {
+        return statChartColors.vertical[index % statChartColors.vertical.length] || '#CCCCCC';
+    });
+    
+    const chartData = {
+        labels: labels,
+        datasets: [{
+            data: data,
+            backgroundColor: colors,
+            borderColor: '#fff',
+            borderWidth: 2
+        }]
+    };
+    
+    charts.vertical = new Chart(canvasCtx, {
+        type: 'pie',
+        data: chartData,
+        options: getChartOptions('Vertical', statisticsData)
+    });
+    
+    createInlineLegend('vertical-legend', labels, data, colors, total);
+}
+
+function createNumerologyChart() {
+    const ctx = document.getElementById('numerology-chart');
+    if (!ctx) return;
+    
+    const canvasCtx = ctx.getContext('2d');
+    const numerologyData = statisticsData.numerology;
+    
+    if (!numerologyData) {
+        createInfoChart(canvasCtx, 'numerology-legend', 'Datos no disponibles');
+        return;
+    }
+    
+    if (charts.numerology) {
+        charts.numerology.destroy();
+    }
+    
+    const labels = Object.keys(numerologyData).filter(key => numerologyData[key] > 0);
+    const data = labels.map(key => numerologyData[key]);
+    const total = data.reduce((sum, value) => sum + value, 0);
+    
+    if (total === 0 || data.length === 0) {
+        createInfoChart(canvasCtx, 'numerology-legend', `Analizando ${statisticsData.totalEntries} cartas\n(Todas las cartas)`);
+        return;
+    }
+    
+    const colors = labels.map((_, index) => {
+        return statChartColors.numerology[index % statChartColors.numerology.length] || '#CCCCCC';
+    });
+    
+    const chartData = {
+        labels: labels,
+        datasets: [{
+            data: data,
+            backgroundColor: colors,
+            borderColor: '#fff',
+            borderWidth: 2
+        }]
+    };
+    
+    charts.numerology = new Chart(canvasCtx, {
+        type: 'pie',
+        data: chartData,
+        options: getChartOptions('Numerología', statisticsData)
+    });
+    
+    createInlineLegend('numerology-legend', labels, data, colors, total);
+}
+
+function createCourtTypesChart() {
+    const ctx = document.getElementById('court-types-chart');
+    if (!ctx) return;
+    
+    const canvasCtx = ctx.getContext('2d');
+    const courtTypesData = statisticsData.courtTypes;
+    
+    if (!courtTypesData) {
+        createInfoChart(canvasCtx, 'court-types-legend', 'Datos no disponibles');
+        return;
+    }
+    
+    if (charts.courtTypes) {
+        charts.courtTypes.destroy();
+    }
+    
+    const labels = Object.keys(courtTypesData).filter(key => courtTypesData[key] > 0);
+    const data = labels.map(key => courtTypesData[key]);
+    const total = data.reduce((sum, value) => sum + value, 0);
+    const courtsTotal = statisticsData.suits['Court Cards'] || 0;
+    
+    if (total === 0 || data.length === 0) {
+        createInfoChart(canvasCtx, 'court-types-legend', `Analizando ${courtsTotal} cartas\n(Solo Court Cards)`);
+        return;
+    }
+    
+    const colors = labels.map((_, index) => {
+        return statChartColors.courtTypes[index % statChartColors.courtTypes.length] || '#CCCCCC';
+    });
+    
+    const chartData = {
+        labels: labels,
+        datasets: [{
+            data: data,
+            backgroundColor: colors,
+            borderColor: '#fff',
+            borderWidth: 2
+        }]
+    };
+    
+    charts.courtTypes = new Chart(canvasCtx, {
+        type: 'pie',
+        data: chartData,
+        options: getChartOptions('Tipos de Court Cards', statisticsData)
+    });
+    
+    createInlineLegend('court-types-legend', labels, data, colors, total);
+}
+
+function getChartOptions(title, data) {
     return {
         responsive: false,
         maintainAspectRatio: false,
         plugins: {
             legend: {
-                display: false // Usamos nuestra propia leyenda
+                display: false // Desactivamos la leyenda nativa de Chart.js
             },
             tooltip: {
-                callbacks: {
-                    label: function(context) {
-                        const label = context.label || '';
-                        const value = context.raw || 0;
-                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                        const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
-                        return `${label}: ${value} (${percentage}%)`;
-                    }
-                }
-            }
+                enabled: false,
+                external: customTooltip
+            },
         },
         elements: {
             arc: {
-                borderWidth: 3, // Borde más grueso
-                borderColor: '#ffffff', // Color del borde
-                hoverBorderWidth: 4, // Borde más grueso en hover
-                hoverOffset: 12 // Aumenta la separación al hacer hover (efecto de porción agrandada)
+                borderWidth: 3,
+                borderColor: '#ffffff',
+                hoverBorderWidth: 4,
+                hoverOffset: 8
             }
         },
         animation: {
             animateScale: true,
-            animateRotate: true
+            animateRotate: true,
+            duration: 800
         },
-        // Configuración específica para hover
         interaction: {
             mode: 'nearest',
             intersect: true
         },
-        // Efectos de hover
-        onHover: function(event, elements) {
-            if (elements.length > 0) {
-                event.native.target.style.cursor = 'pointer';
-            } else {
-                event.native.target.style.cursor = 'default';
+        layout: {
+            padding: {
+                top: 10,
+                right: 10,
+                bottom: 10,
+                left: 10
             }
         }
     };
 }
 
-function createLegend(containerId, labels, data, colors, total) {
+// NUEVA FUNCIÓN: Crear leyenda inline debajo del pie chart
+function createInlineLegend(containerId, labels, data, colors, total) {
     const container = document.getElementById(containerId);
     if (!container) {
         console.error(`Contenedor de leyenda ${containerId} no encontrado`);
         return;
     }
     
-    let html = '';
-    
-    // Verificar que todos los arrays tengan la misma longitud
-    if (labels.length !== data.length || labels.length !== colors.length) {
-        console.error('Arrays de leyenda no coinciden:', {
-            labels: labels.length,
-            data: data.length,
-            colors: colors.length
-        });
-        html = `<div class="legend-item">
-            <i class="fas fa-exclamation-triangle legend-icon" style="color: #ff6b6b;"></i>
-            <span class="legend-name">Error en datos</span>
-        </div>`;
-        container.innerHTML = html;
-        return;
-    }
+    let html = '<div class="inline-legend">';
     
     // Mapeo de iconos para cada categoría
     const iconMap = {
@@ -427,18 +668,18 @@ function createLegend(containerId, labels, data, colors, total) {
         'Wands': '±',
         'Cups': '³',
         'Swords': '²',
-        'Pentacles': ' ´',
+        'Pentacles': '´',
         'Court Cards': 'u',
         
         // Elementos
         'Fuego': '±',
         'Agua': '³', 
         'Aire': '²',
-        'Tierra': ' ´',
+        'Tierra': '´',
         'Fire': '±',
         'Water': '³', 
         'Air': '²',
-        'Earth': ' ´',
+        'Earth': '´',
         
         // Planetas
         'Sol': 'Q',
@@ -475,113 +716,184 @@ function createLegend(containerId, labels, data, colors, total) {
         'Sagittarius': 'I',
         'Capricorn': 'J',
         'Aquarius': 'K',
-        'Pisces': 'L'
+        'Pisces': 'L',
+        
+        // Tipos
+        'Majors': 'y',
+        'Minors': 't', 
+        'Courts': 'u',
+        
+        // Septenary
+        'First': '1',
+        'Second': '2',
+        'Third': '3',
+        'Fourth': '4', 
+        'Fifth': '5',
+        'Sixth': '6',
+        'Seventh': '7',
+        
+        // Numerology  
+        'One': '1',
+        'Two': '2',
+        'Three': '3',
+        'Four': '4',
+        'Five': '5', 
+        'Six': '6',
+        'Seven': '7',
+        'Eight': '8',
+        'Nine': '9',
+        'Ten': '10',
+        
+        // Court Types
+        'Pages': '§',
+        'Knights': '£',
+        'Queens': '¢', 
+        'Kings': '¦'
     };
     
     labels.forEach((label, index) => {
         const value = data[index];
         const color = colors[index];
         
-        // Verificar que los valores sean válidos
         if (value > 0 && color) {
             const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
-            const iconClass = iconMap[label] || 'X';
+            const iconClass = iconMap[label] || '●';
             
             html += `
-                <div class="legend-item">
-                    <div class="legend-color" style="background-color: ${color}"></div>
-                    <span class="legend-icon">${iconClass}</span>
-                    <div class="legend-label">
-                        <span class="legend-name">${label}</span>
-                        <span class="legend-value">${percentage}%</span>
-                    </div>
+                <div class="legend-item-inline">
+                    <div class="legend-color-inline" style="background-color: ${color}"></div>
+                    <span class="legend-icon-inline astronomicon">${iconClass}</span>
+                    <span class="legend-name-inline">${label}</span>
+                    <span class="legend-value-inline">${value} (${percentage}%)</span>
                 </div>
             `;
         }
     });
     
+    html += '</div>';
+    
     // Si no hay elementos válidos, mostrar mensaje
-    if (!html) {
-        html = `<div class="legend-item">
-            <i class="fas fa-chart-pie legend-icon" style="color: #666;"></i>
-            <span class="legend-name">No hay datos</span>
+    if (html === '<div class="inline-legend"></div>') {
+        html = `<div class="inline-legend">
+            <div class="legend-item-inline">
+                <span class="legend-name-inline">No hay datos</span>
+            </div>
         </div>`;
     }
     
     container.innerHTML = html;
 }
 
-function createEmptyChart(ctx, legendId, message) {
-    // Limpiar canvas
+function createInfoChart(ctx, legendId, message) {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     
-    // Dibujar mensaje
+    ctx.fillStyle = '#f5f5f5';
+    ctx.beginPath();
+    ctx.arc(ctx.canvas.width / 2, ctx.canvas.height / 2, ctx.canvas.width / 3, 0, 2 * Math.PI);
+    ctx.fill();
+    
+    ctx.strokeStyle = '#ddd';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    
     ctx.fillStyle = '#666';
-    ctx.font = '14px Inconsolata';
+    ctx.font = 'bold 24px Astronomicon';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(message, ctx.canvas.width / 2, ctx.canvas.height / 2);
+    ctx.fillText('●', ctx.canvas.width / 2, ctx.canvas.height / 2 - 15);
     
-    // Limpiar leyenda
+    ctx.font = 'bold 14px Inconsolata';
+    const lines = message.split('\n');
+    const lineHeight = 18;
+    const startY = ctx.canvas.height / 2 + 10;
+    
+    lines.forEach((line, index) => {
+        ctx.fillText(line, ctx.canvas.width / 2, startY + index * lineHeight);
+    });
+    
     const legendContainer = document.getElementById(legendId);
     if (legendContainer) {
-        legendContainer.innerHTML = `<div class="legend-item"><span class="legend-name">${message}</span></div>`;
+        legendContainer.innerHTML = `<div class="inline-legend">
+            <div class="legend-item-inline">
+                <span class="legend-name-inline">${message.replace(/\n/g, ' - ')}</span>
+            </div>
+        </div>`;
     }
 }
 
-function updateCharts() {
-    console.log('Actualizando gráficos...');
+function customTooltip(context) {
+    let tooltipEl = document.getElementById('chartjs-tooltip');
     
-    // Verificar que statisticsData esté disponible
-    if (!statisticsData) {
-        console.error('No se pueden actualizar gráficos: statisticsData no disponible');
+    if (!tooltipEl) {
+        tooltipEl = document.createElement('div');
+        tooltipEl.id = 'chartjs-tooltip';
+        tooltipEl.innerHTML = '<div class="tooltip-content"></div>';
+        document.body.appendChild(tooltipEl);
+    }
+    
+    const tooltipModel = context.tooltip;
+    if (tooltipModel.opacity === 0) {
+        tooltipEl.style.opacity = '0';
         return;
     }
     
+    const symbolMap = {
+        'Derecha': '`', 'Reversa': 'b',
+        'Major Arcana': 'y', 'Wands': '±', 'Cups': '³', 'Swords': '²', 'Pentacles': '´', 'Court Cards': 'u',
+        'Fuego': '±', 'Agua': '³', 'Aire': '²', 'Tierra': '´',
+        'Fire': '±', 'Water': '³', 'Air': '²', 'Earth': '´',
+        'Sol': 'Q', 'Luna': 'R', 'Mercurio': 'S', 'Venus': 'T', 'Marte': 'U', 'Júpiter': 'V', 'Saturno': 'W',
+        'Sun': 'Q', 'Moon': 'R', 'Mercury': 'S', 'Mars': 'U', 'Jupiter': 'V', 'Saturn': 'W',
+        'Aries': 'A', 'Tauro': 'B', 'Géminis': 'C', 'Cáncer': 'D', 'Leo': 'E', 'Virgo': 'F', 'Libra': 'G',
+        'Escorpio': 'H', 'Sagitario': 'I', 'Capricornio': 'J', 'Acuario': 'K', 'Piscis': 'L',
+        'Taurus': 'B', 'Gemini': 'C', 'Cancer': 'D', 'Scorpio': 'H', 'Sagittarius': 'I', 'Capricorn': 'J',
+        'Aquarius': 'K', 'Pisces': 'L',
+        'Majors': 'y', 'Minors': 't', 'Courts': 'u',
+        'First': '1', 'Second': '2', 'Third': '3', 'Fourth': '4', 'Fifth': '5', 'Sixth': '6', 'Seventh': '7',
+        'One': '1', 'Two': '2', 'Three': '3', 'Four': '4', 'Five': '5', 'Six': '6', 'Seven': '7', 'Eight': '8', 'Nine': '9', 'Ten': '10',
+        'Pages': '§', 'Knights': '£', 'Queens': '¢', 'Kings': '¦'
+    };
+    
+    const label = tooltipModel.dataPoints[0].label;
+    const value = tooltipModel.dataPoints[0].raw;
+    const total = tooltipModel.dataPoints[0].dataset.data.reduce((a, b) => a + b, 0);
+    const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+    const symbol = symbolMap[label] || '●';
+    const color = tooltipModel.labelColors[0].borderColor;
+    
+    const content = `
+        <div class="tooltip-header" style="border-left-color: ${color}">
+            <span class="tooltip-symbol astronomicon">${symbol}</span>
+            <span class="tooltip-label">${label}</span>
+        </div>
+        <div class="tooltip-body">
+            <span class="tooltip-value">${value} carta${value !== 1 ? 's' : ''}</span><br>
+            <span class="tooltip-percentage">${percentage}%</span>
+        </div>
+    `;
+    
+    tooltipEl.querySelector('.tooltip-content').innerHTML = content;
+    
+    const position = context.chart.canvas.getBoundingClientRect();
+    tooltipEl.style.opacity = '1';
+    tooltipEl.style.position = 'absolute';
+    tooltipEl.style.left = position.left + window.pageXOffset + tooltipModel.caretX + 'px';
+    tooltipEl.style.top = position.top + window.pageYOffset + tooltipModel.caretY + 'px';
+    tooltipEl.style.pointerEvents = 'none';
+}
+
+function updateCharts() {
+    if (!statisticsData) return;
     initializeCharts();
 }
 
-// Verificar si los elementos del DOM están listos
-function checkChartsReady() {
-    const requiredElements = [
-        'orientation-chart',
-        'suits-chart', 
-        'elements-chart',
-        'planets-chart',
-        'signs-chart'
-    ];
-    
-    const missingElements = requiredElements.filter(id => !document.getElementById(id));
-    
-    if (missingElements.length > 0) {
-        console.warn('Elementos de gráficos no encontrados:', missingElements);
-        return false;
-    }
-    
-    return true;
+function initializeCharts() {
+    destroyAllCharts();
+    createCharts();
+    setTimeout(initializeCarousel, 100);
 }
 
-// Inicializar gráficos cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM cargado, verificando gráficos...');
-    
-    // Esperar un poco para asegurar que todos los elementos estén cargados
-    setTimeout(() => {
-        if (checkChartsReady()) {
-            console.log('Todos los elementos de gráficos están listos');
-            // Los gráficos se inicializarán cuando se calculen las estadísticas
-        } else {
-            console.error('Algunos elementos de gráficos no están disponibles');
-        }
-    }, 500);
-});
-
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    initializeCarousel();
-});
-
+// Función para inicializar el carrusel (si existe)
 function initializeCarousel() {
     const track = document.querySelector('.charts-track');
     const categories = document.querySelectorAll('.chart-category');
@@ -589,79 +901,54 @@ function initializeCarousel() {
     const nextBtn = document.querySelector('.next-btn');
     const indicators = document.querySelectorAll('.carousel-indicator');
     
+    if (!track || categories.length === 0) return;
+    
     let currentIndex = 0;
     const totalCategories = categories.length;
     
-    // Actualizar la posición del carrusel
     function updateCarousel() {
         track.style.transform = `translateX(-${currentIndex * 100}%)`;
         
-        // Actualizar indicadores
         indicators.forEach((indicator, index) => {
             indicator.classList.toggle('active', index === currentIndex);
         });
         
-        // Actualizar estado de los botones
-        prevBtn.disabled = currentIndex === 0;
-        nextBtn.disabled = currentIndex === totalCategories - 1;
+        if (prevBtn) prevBtn.disabled = currentIndex === 0;
+        if (nextBtn) nextBtn.disabled = currentIndex === totalCategories - 1;
     }
     
-    // Navegar al gráfico anterior
-    function prevChart() {
+    if (prevBtn) prevBtn.addEventListener('click', () => {
         if (currentIndex > 0) {
             currentIndex--;
             updateCarousel();
         }
-    }
+    });
     
-    // Navegar al siguiente gráfico
-    function nextChart() {
+    if (nextBtn) nextBtn.addEventListener('click', () => {
         if (currentIndex < totalCategories - 1) {
             currentIndex++;
             updateCarousel();
         }
-    }
+    });
     
-    // Navegar a un gráfico específico
-    function goToChart(index) {
-        if (index >= 0 && index < totalCategories) {
-            currentIndex = index;
-            updateCarousel();
-        }
-    }
-    
-    // Event listeners para los botones
-    prevBtn.addEventListener('click', prevChart);
-    nextBtn.addEventListener('click', nextChart);
-    
-    // Event listeners para los indicadores
     indicators.forEach(indicator => {
         indicator.addEventListener('click', function() {
             const index = parseInt(this.getAttribute('data-index'));
-            goToChart(index);
+            if (index >= 0 && index < totalCategories) {
+                currentIndex = index;
+                updateCarousel();
+            }
         });
     });
     
-    // Navegación con teclado
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'ArrowLeft') {
-            prevChart();
-        } else if (e.key === 'ArrowRight') {
-            nextChart();
-        }
-    });
-    
-    // Inicializar el carrusel
     updateCarousel();
 }
 
-// ===== ACTUALIZACIÓN DE LA FUNCIÓN DE INICIALIZACIÓN DE GRÁFICOS =====
-function initializeCharts() {
-    console.log('Inicializando gráficos...');
-    // Destruir gráficos existentes
-    destroyAllCharts();
-    // Crear nuevos gráficos
-    createCharts();
-    // Inicializar el carrusel después de crear los gráficos
-    setTimeout(initializeCarousel, 100);
-}
+// Inicializar cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        if (document.getElementById('orientation-chart')) {
+            console.log('Elementos de gráficos listos');
+        }
+    }, 500);
+});

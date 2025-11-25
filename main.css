@@ -6,11 +6,6 @@
     margin: auto;
 }
 
-.daily-card-section,
-.astrology-section {
-    padding: 10px;
-}
-
 .today-card {
     display: flex;
     align-items: center;
@@ -24,9 +19,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 80px; /* o la altura que prefieras */
+    min-height: 40px; /* o la altura que prefieras */
     gap: 15px;
-    padding-top: 15px;
     font-family: 'Inconsolata';
 }
 
@@ -45,6 +39,18 @@
     font-weight: 700;
     font-style: italic;
     line-height: 36px;
+    margin-top: 20px;
+}
+
+.card-header {
+    font-family: 'Playfair Display', serif;
+    font-size: 30px;
+    text-align: center;
+    font-weight: 700;
+    font-style: italic;
+    line-height: 26px;
+    margin: 20px;
+    color: var(--primary80);
 }
 
 .today-card-name {
@@ -108,10 +114,17 @@
     text-align: center; /* opcional - para centrar el texto */
 }
 
+.date-time-display {
+    font-size: 0.8em;
+    color: #666;
+    margin-bottom: 10px;
+    text-transform: none;
+    letter-spacing: 0.5px;
+}
 
 
 .mono-text-upper {
-    font-size: 1rem;
+    font-size: 0.9rem;
     opacity: 0.8;
     margin-top: 5px;
     margin-bottom: 5px;
@@ -130,7 +143,6 @@
 
 .arcana-grid.single-item {
     grid-template-columns: 1fr;
-    justify-items: center;
     max-width: 200px;
     margin-left: auto;
     margin-right: auto;
@@ -162,3 +174,4 @@
         max-width: 100%;
     }
 }
+
