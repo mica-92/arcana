@@ -899,7 +899,7 @@ header {
     }
     
     .floating-controls {
-        bottom: 30px;
+        bottom: -60px;
         right: 10px;
     }
     
