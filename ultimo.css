@@ -775,7 +775,7 @@
     box-sizing: border-box;
 }
 
-/* LIMITAR ALTURA DEL BODY */
+/* LIMITAR ALTURA DEL BODY - REDUCIDA PARA MÓVILES */
 body {
     background-color: white;
     color: var(--primary-color);
@@ -784,16 +784,16 @@ body {
     max-width: 800px;
     margin: 0 auto;
     font-family: 'DM Sans';
-    height: 830px; /* Altura fija en lugar de 80dvh */
-    overflow: hidden; /* Prevenir scroll del body */
-    max-height: 830px; /* Máxima altura */
+    height: 780px; /* Reducido de 830px a 780px */
+    overflow: hidden;
+    max-height: 780px; /* Reducido de 830px a 780px */
 }
 
 .outer-border {
-    position: relative; /* Cambiado de fixed a relative */
+    position: relative;
     width: 100%;
     max-width: 800px;
-    height: 810px; /* 830px - padding del body (20px) */
+    height: 760px; /* 780px - padding del body (20px) */
     border-radius: 5px;
     border: 5px solid var(--primary-color);
     background-color: var(--background-color);
@@ -802,124 +802,167 @@ body {
     flex-direction: column;
 }
 
-/* HEADER - mantener fijo en la parte superior */
+/* HEADER - mantener fijo pero más compacto */
 header {
     background-color: var(--primary-color);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 15px;
-    padding: 10px;
+    gap: 10px; /* Reducido gap */
+    padding: 8px 10px; /* Padding reducido */
     position: sticky;
     top: 0;
     z-index: 100;
     flex-shrink: 0;
+    min-height: 50px; /* Altura mínima fija */
 }
 
-/* CONTENIDO PRINCIPAL - debe ocupar el espacio disponible */
+/* CONTENIDO PRINCIPAL - espacio ajustado */
 .charts-section {
     flex: 1;
     display: flex;
     flex-direction: column;
-    overflow-y: auto; /* Scroll interno si es necesario */
-    max-height: calc(810px - 120px); /* Altura total menos header y footer */
+    overflow-y: auto;
+    max-height: calc(760px - 110px); /* Ajustado por nueva altura */
 }
 
-/* FOOTER - en la parte inferior dentro del contenedor */
+/* FOOTER - más compacto */
 .app-footer {
     background-color: var(--primary-color);
     border-top: 2px solid var(--primary-color);
     color: var(--background-color);
-    padding: 8px 15px;
+    padding: 6px 12px; /* Padding reducido */
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 100;
     flex-shrink: 0;
-    position: relative; /* Cambiado de fixed a relative */
+    position: relative;
     width: 100%;
+    min-height: 40px; /* Altura mínima fija */
 }
 
-/* AJUSTAR LAS SECCIONES DE CONTENIDO */
-.chart-category {
-    padding: 15px;
-    min-height: auto; /* Remover altura mínima fija */
-}
-
-/* CONTROLES FLOTANTES - ajustar posición */
+/* CONTROLES FLOTANTES - ajustados para móvil */
 .floating-controls {
     position: fixed;
-    bottom: 40px; /* Ajustar para que esté por encima del footer */
-    right: 20px;
+    bottom: 35px; /* Más cerca del borde inferior */
+    right: 15px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px; /* Espacio reducido */
     z-index: 500;
 }
 
-/* FORMULARIOS MODALES - ajustar posición */
+/* FORMULARIOS MODALES - altura reducida */
 #daily-card-form,
 #spread-form {
     position: fixed;
-    bottom: 80px; /* Por encima del footer */
+    bottom: 70px; /* Ajustado por nueva altura */
     left: 50%;
     transform: translateX(-50%);
     width: 90%;
     max-width: 500px;
-    max-height: 600px; /* Limitar altura máxima */
+    max-height: 500px; /* Reducido de 600px */
     overflow-y: auto;
     z-index: 1000;
 }
 
-/* SCROLL INTERNO */
-.charts-section::-webkit-scrollbar {
-    width: 6px;
-}
-
-.charts-section::-webkit-scrollbar-track {
-    background: var(--background-color);
-}
-
-.charts-section::-webkit-scrollbar-thumb {
-    background: var(--primary80);
-    border-radius: 3px;
-}
-
-/* RESPONSIVE */
+/* RESPONSIVE MEJORADO PARA MÓVILES */
 @media (max-width: 768px) {
     body {
-        height: 830px;
-        max-height: 830px;
+        height: 750px; /* Más reducido en móviles */
+        max-height: 750px;
         padding: 5px;
     }
     
     .outer-border {
-        height: 820px; /* 830px - 10px de padding */
+        height: 740px; /* 750px - 10px de padding */
         width: calc(100% - 10px);
     }
     
     .charts-section {
-        max-height: calc(820px - 120px);
+        max-height: calc(740px - 100px); /* Ajustado para móvil */
+    }
+    
+    /* Header más compacto en móviles */
+    header {
+        padding: 6px 8px;
+        gap: 8px;
+        min-height: 45px;
+    }
+    
+    /* Footer más compacto en móviles */
+    .app-footer {
+        padding: 5px 10px;
+        min-height: 35px;
+        font-size: 0.9em; /* Texto ligeramente más pequeño */
     }
     
     .floating-controls {
-        bottom: 45px;
-        right: 15px;
+        bottom: 30px;
+        right: 10px;
     }
     
     .brutalist-btn {
-        width: 50px;
-        height: 50px;
-        font-size: 20px;
+        width: 45px; /* Botones más pequeños */
+        height: 45px;
+        font-size: 18px;
+    }
+    
+    /* Formularios más compactos en móviles */
+    #daily-card-form,
+    #spread-form {
+        max-height: 450px;
+        bottom: 60px;
     }
 }
 
-/* Asegurar que no haya overflow en elementos internos */
+/* Para pantallas muy pequeñas (ej: iPhone SE) */
+@media (max-width: 375px) {
+    body {
+        height: 720px;
+        max-height: 720px;
+    }
+    
+    .outer-border {
+        height: 710px;
+    }
+    
+    .charts-section {
+        max-height: calc(710px - 95px);
+    }
+    
+    header {
+        min-height: 40px;
+        padding: 5px 8px;
+    }
+    
+    .app-footer {
+        min-height: 30px;
+        padding: 4px 8px;
+        font-size: 0.85em;
+    }
+}
+
+/* Optimizar elementos internos para menos espacio */
+.chart-category {
+    padding: 12px; /* Padding reducido */
+    margin-bottom: 8px; /* Menos espacio entre categorías */
+}
+
 .statistics-section,
 .tarot-card-display,
 .spread-cards-input {
     max-height: 100%;
     overflow-y: auto;
+    padding: 8px; /* Padding interno reducido */
+}
+
+/* Asegurar que las imágenes/tarjetas sean responsivas */
+.tarot-card-image, .chart-image {
+    max-width: 100%;
+    height: auto;
+    max-height: 200px; /* Limitar altura máxima de imágenes */
 }
 
 /* Ocultar cualquier elemento que pueda causar overflow */
