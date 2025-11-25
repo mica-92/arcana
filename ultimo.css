@@ -759,3 +759,170 @@
         min-width: auto;
     }
 }
+
+
+:root {
+    /* Tus variables CSS existentes se mantienen igual */
+    --primary-color: #1742ab;
+    --primary80: #1742ab80;
+    --secondary-color: #b56576;
+    /* ... resto de tus variables ... */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* LIMITAR ALTURA DEL BODY */
+body {
+    background-color: white;
+    color: var(--primary-color);
+    line-height: 1.6;
+    padding: 10px;
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: 'DM Sans';
+    height: 830px; /* Altura fija en lugar de 80dvh */
+    overflow: hidden; /* Prevenir scroll del body */
+    max-height: 830px; /* Máxima altura */
+}
+
+.outer-border {
+    position: relative; /* Cambiado de fixed a relative */
+    width: 100%;
+    max-width: 800px;
+    height: 810px; /* 830px - padding del body (20px) */
+    border-radius: 5px;
+    border: 5px solid var(--primary-color);
+    background-color: var(--background-color);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* HEADER - mantener fijo en la parte superior */
+header {
+    background-color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    flex-shrink: 0;
+}
+
+/* CONTENIDO PRINCIPAL - debe ocupar el espacio disponible */
+.charts-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; /* Scroll interno si es necesario */
+    max-height: calc(810px - 120px); /* Altura total menos header y footer */
+}
+
+/* FOOTER - en la parte inferior dentro del contenedor */
+.app-footer {
+    background-color: var(--primary-color);
+    border-top: 2px solid var(--primary-color);
+    color: var(--background-color);
+    padding: 8px 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    flex-shrink: 0;
+    position: relative; /* Cambiado de fixed a relative */
+    width: 100%;
+}
+
+/* AJUSTAR LAS SECCIONES DE CONTENIDO */
+.chart-category {
+    padding: 15px;
+    min-height: auto; /* Remover altura mínima fija */
+}
+
+/* CONTROLES FLOTANTES - ajustar posición */
+.floating-controls {
+    position: fixed;
+    bottom: 40px; /* Ajustar para que esté por encima del footer */
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 500;
+}
+
+/* FORMULARIOS MODALES - ajustar posición */
+#daily-card-form,
+#spread-form {
+    position: fixed;
+    bottom: 80px; /* Por encima del footer */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 500px;
+    max-height: 600px; /* Limitar altura máxima */
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+/* SCROLL INTERNO */
+.charts-section::-webkit-scrollbar {
+    width: 6px;
+}
+
+.charts-section::-webkit-scrollbar-track {
+    background: var(--background-color);
+}
+
+.charts-section::-webkit-scrollbar-thumb {
+    background: var(--primary80);
+    border-radius: 3px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    body {
+        height: 830px;
+        max-height: 830px;
+        padding: 5px;
+    }
+    
+    .outer-border {
+        height: 820px; /* 830px - 10px de padding */
+        width: calc(100% - 10px);
+    }
+    
+    .charts-section {
+        max-height: calc(820px - 120px);
+    }
+    
+    .floating-controls {
+        bottom: 45px;
+        right: 15px;
+    }
+    
+    .brutalist-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+}
+
+/* Asegurar que no haya overflow en elementos internos */
+.statistics-section,
+.tarot-card-display,
+.spread-cards-input {
+    max-height: 100%;
+    overflow-y: auto;
+}
+
+/* Ocultar cualquier elemento que pueda causar overflow */
+.hidden {
+    display: none;
+}

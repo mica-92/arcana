@@ -62,6 +62,7 @@ body {
     font-family: 'DM Sans';
     height: 80dvh; /* Asegurar que body ocupe toda la altura */
     overflow: hidden; /* Prevenir scroll del body */
+    max-height: 830px;
 }
 
 @font-face {
