@@ -139,111 +139,117 @@
                         </div>
                     </div>
 
+                    <div class="chart-category">
+                        <div class="history-title">Arcane Analysis</div>
+                        <div class="history-headline">estadísticas de las cartas del día</div>
+
+                        <div class="stats-periods">
+                            <button class="period-btn active" data-period="all"><i class="fa-solid fa-infinity"></i> Siempre</button>
+                            <button class="period-btn" data-period="month"><i class="fa-solid fa-fish"></i> Este Mes</button>
+                            <button class="period-btn" data-period="week"><i class="fa-solid fa-fish-fins"></i> Esta Semana</button>
+                            <button class="period-btn" id="custom-period-btn" data-period="custom">
+                                <i class="fa-solid fa-frog"></i> Otro Período
+                            </button>
+                        </div>
+
+                        <!-- NUEVO: Contenedor con scroll para gráficos -->
+                        <div class="container-graphs">
+                                <div class="history-title">TODOS LOS ARCANOS</div>
 
 
-<!-- REEMPLAZAR todo el contenido de chart-category con esto: -->
-<div class="chart-category">
-    <div class="history-title">Arcane Analysis</div>
-    <div class="history-headline">estadísticas de las cartas del día</div>
+                            <div class="chart-title">por Orientación</div>
+                            <div class="charts-row">
+                                <div class="chart-container">
+                                    <canvas id="orientation-chart" width="300" height="300"></canvas>
+                                </div>
+                                <div class="chart-legend" id="orientation-legend"></div>
+                            </div>
 
-    <div class="stats-periods">
-        <button class="period-btn active" data-period="all"><i class="fa-solid fa-infinity"></i> Siempre</button>
-        <button class="period-btn" data-period="month"><i class="fa-solid fa-fish"></i> Este Mes</button>
-        <button class="period-btn" data-period="week"><i class="fa-solid fa-fish-fins"></i> Esta Semana</button>
-        <button class="period-btn" id="custom-period-btn" data-period="custom">
-            <i class="fa-solid fa-frog"></i> Otro Período
-        </button>
-    </div>
+                            <div class="chart-title">por Tipos</div>
+                            <div class="charts-row">
+                                <div class="chart-container">
+                                    <canvas id="types-chart" width="300" height="300"></canvas>
+                                </div>
+                                <div class="chart-legend" id="types-legend"></div>
+                            </div>
 
-    <!-- NUEVO: Contenedor con scroll para gráficos -->
-    <div class="container-graphs">
-            <div class="history-title">TODOS LOS ARCANOS</div>
+                            <div class="chart-title">por Elementos</div>
+                            <div class="charts-row">
+                                <div class="chart-container">
+                                    <canvas id="elements-chart" width="300" height="300"></canvas>
+                                </div>
+                                <div class="chart-legend" id="elements-legend"></div>
+                            </div>
 
+                            <div class="chart-title">por Planetas</div>
+                            <div class="charts-row">
+                                <div class="chart-container">
+                                    <canvas id="planets-chart" width="300" height="300"></canvas>
+                                </div>
+                                <div class="chart-legend" id="planets-legend"></div>
+                            </div>
 
-        <div class="chart-title">por Orientación</div>
-        <div class="charts-row">
-            <div class="chart-container">
-                <canvas id="orientation-chart" width="300" height="300"></canvas>
-            </div>
-            <div class="chart-legend" id="orientation-legend"></div>
-        </div>
+                            <div class="chart-title">por Signos</div>
+                            <div class="charts-row">
+                                <div class="chart-container">
+                                    <canvas id="signs-chart" width="300" height="300"></canvas>
+                                </div>
+                                <div class="chart-legend" id="signs-legend"></div>
+                            </div>
 
-        <div class="chart-title">por Tipos</div>
-        <div class="charts-row">
-            <div class="chart-container">
-                <canvas id="types-chart" width="300" height="300"></canvas>
-            </div>
-            <div class="chart-legend" id="types-legend"></div>
-        </div>
+                            <div class="chart-title">por Numerología</div>
+                            <div class="charts-row">
+                                <div class="chart-container">
+                                    <canvas id="numerology-chart" width="300" height="300"></canvas>
+                                </div>
+                                <div class="chart-legend" id="numerology-legend"></div>
+                            </div>
 
-        <div class="chart-title">por Elementos</div>
-        <div class="charts-row">
-            <div class="chart-container">
-                <canvas id="elements-chart" width="300" height="300"></canvas>
-            </div>
-            <div class="chart-legend" id="elements-legend"></div>
-        </div>
+                            <div class="history-title">Arcanos Mayores</div>
+                            <div class="chart-title">por Septenary</div>
+                            <div class="charts-row">
+                                <div class="chart-container">
+                                    <canvas id="septenary-chart" width="300" height="300"></canvas>
+                                </div>
+                                <div class="chart-legend" id="septenary-legend"></div>
+                            </div>
 
-        <div class="chart-title">por Planetas</div>
-        <div class="charts-row">
-            <div class="chart-container">
-                <canvas id="planets-chart" width="300" height="300"></canvas>
-            </div>
-            <div class="chart-legend" id="planets-legend"></div>
-        </div>
+                            <div class="chart-title">por Vertical</div>
+                            <div class="charts-row">
+                                <div class="chart-container">
+                                    <canvas id="vertical-chart" width="300" height="300"></canvas>
+                                </div>
+                                <div class="chart-legend" id="vertical-legend"></div>
+                            </div>
 
-        <div class="chart-title">por Signos</div>
-        <div class="charts-row">
-            <div class="chart-container">
-                <canvas id="signs-chart" width="300" height="300"></canvas>
-            </div>
-            <div class="chart-legend" id="signs-legend"></div>
-        </div>
+                            <div class="history-title">Arcanos Menores</div>
+                            <div class="chart-title">por Palos</div>
+                            <div class="charts-row">
+                                <div class="chart-container">
+                                    <canvas id="suits-chart" width="300" height="300"></canvas>
+                                </div>
+                                <div class="chart-legend" id="suits-legend"></div>
+                            </div>
 
-        <div class="chart-title">por Numerología</div>
-        <div class="charts-row">
-            <div class="chart-container">
-                <canvas id="numerology-chart" width="300" height="300"></canvas>
-            </div>
-            <div class="chart-legend" id="numerology-legend"></div>
-        </div>
+                            <div class="history-title">Arcanos de la Corte</div>
+                            <div class="chart-title">por Rango</div>
+                            <div class="charts-row">
+                                <div class="chart-container">
+                                    <canvas id="court-types-chart" width="300" height="300"></canvas>
+                                </div>
+                                <div class="chart-legend" id="court-types-legend"></div>
+                            </div>
+                        </div>
+                    </div>
 
-        <div class="history-title">Arcanos Mayores</div>
-        <div class="chart-title">por Septenary</div>
-        <div class="charts-row">
-            <div class="chart-container">
-                <canvas id="septenary-chart" width="300" height="300"></canvas>
-            </div>
-            <div class="chart-legend" id="septenary-legend"></div>
-        </div>
-
-        <div class="chart-title">por Vertical</div>
-        <div class="charts-row">
-            <div class="chart-container">
-                <canvas id="vertical-chart" width="300" height="300"></canvas>
-            </div>
-            <div class="chart-legend" id="vertical-legend"></div>
-        </div>
-
-        <div class="history-title">Arcanos Menores</div>
-        <div class="chart-title">por Palos</div>
-        <div class="charts-row">
-            <div class="chart-container">
-                <canvas id="suits-chart" width="300" height="300"></canvas>
-            </div>
-            <div class="chart-legend" id="suits-legend"></div>
-        </div>
-
-        <div class="history-title">Arcanos de la Corte</div>
-        <div class="chart-title">por Rango</div>
-        <div class="charts-row">
-            <div class="chart-container">
-                <canvas id="court-types-chart" width="300" height="300"></canvas>
-            </div>
-            <div class="chart-legend" id="court-types-legend"></div>
-        </div>
-    </div>
-</div>
+                    <div class="chart-category">
+                        <div class="history-title">GUÍA DE TAROT</div>
+                        <div class="history-headline">información completa de todas las cartas</div>
+                        
+                        <div class="tarot-guide-container" id="tarot-guide-container">
+                            <!-- Las cartas se cargarán dinámicamente aquí -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -456,11 +462,6 @@
             </div>
         </div>
 
-
-    <div class="history-section" style="max-width:400px;  margin: auto">
-
-    </div>
-
     <!-- Footer fijo con formularios separados -->
     <footer class="app-footer">
         <div class="footer-credit">
@@ -595,6 +596,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- FINALMENTE footer.js que usa ambos -->
 <script src="footer.js"></script>
+<!-- Agregar después de los otros scripts -->
+<script src="tarotguide.js"></script>
 
 <script src="stats.js"></script>
 <script src="historylog.js"></script>

@@ -60,7 +60,7 @@ body {
     max-width: 800px;
     margin: 0 auto;
     font-family: 'DM Sans';
-    height: 100dvh; /* Asegurar que body ocupe toda la altura */
+    height: 80dvh; /* Asegurar que body ocupe toda la altura */
     overflow: hidden; /* Prevenir scroll del body */
 }
 
@@ -79,7 +79,7 @@ body {
     transform: translateX(-50%);
     width: calc(100% - 20px); /* Ancho responsive */
     max-width: 800px; /* Mismo max-width que el body */
-    height: calc(100vh - 20px); /* Altura completa menos márgenes */
+    height: calc(100dvh - 50px); /* Altura completa menos márgenes */
     border-radius: 5px;
     border: 5px solid var(--primary-color);
     background-color: var(--background-color);

@@ -46,4 +46,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     checkTodayCard();
     loadAstrologyData();
+
+
+        // Inicializar guía de tarot después de cargar el historial
+    loadLogHistory().then(() => {
+        initializeTarotGuide();
+    });
 });

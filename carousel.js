@@ -6,6 +6,28 @@ class CarouselManager {
         this.initCallbacks = [];
     }
     
+    // NUEVO MÉTODO: Guardar posición actual del carrusel
+    saveCurrentPosition(carouselId) {
+        const carousel = this.carousels.get(carouselId);
+        if (carousel) {
+            return {
+                currentSlide: carousel.currentSlide,
+                carouselId: carouselId
+            };
+        }
+        return null;
+    }
+    
+    // NUEVO MÉTODO: Restaurar posición del carrusel
+    restorePosition(position) {
+        if (position && this.carousels.has(position.carouselId)) {
+            const carousel = this.carousels.get(position.carouselId);
+            carousel.currentSlide = position.currentSlide;
+            carousel.updateCarousel();
+            console.log(`🔁 Carrusel ${position.carouselId} restaurado a slide ${position.currentSlide}`);
+        }
+    }
+    
     initializeCarousels() {
         if (this.isInitialized) return;
         

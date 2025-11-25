@@ -52,9 +52,11 @@ function initializeStatistics() {
     }
 }
 
-// Y modifica calculateStatistics para que no llame a initializeCharts duplicadamente:
 function calculateStatistics() {
     console.log('Calculando estadísticas para período:', currentPeriod, customPeriodData);
+    
+    // GUARDAR posición actual del carrusel ANTES de actualizar
+    const carouselPosition = window.carouselManager?.saveCurrentPosition('stats-carousel');
     
     const filteredEntries = filterEntriesByPeriod(logHistory, currentPeriod, customPeriodData);
     console.log('Entradas filtradas:', filteredEntries.length);
@@ -66,6 +68,14 @@ function calculateStatistics() {
     // Actualizar gráficos si la función existe
     if (typeof updateCharts === 'function') {
         updateCharts();
+    }
+    
+    // RESTAURAR posición del carrusel DESPUÉS de actualizar
+    if (carouselPosition && window.carouselManager) {
+        // Usar setTimeout para asegurar que los gráficos se hayan renderizado
+        setTimeout(() => {
+            window.carouselManager.restorePosition(carouselPosition);
+        }, 100);
     }
     
     // Mostrar información del período actual
@@ -83,8 +93,6 @@ function calculateStatistics() {
     console.log('Estadísticas calculadas:', statisticsData);
 }
 
-
-// MODIFICAR la función setupStatisticsEvents para mantener la categoría
 function setupStatisticsEvents() {
     console.log('Configurando eventos de estadísticas');
     
@@ -102,19 +110,7 @@ function setupStatisticsEvents() {
             } else {
                 currentPeriod = period;
                 customPeriodData = null;
-                calculateStatistics();
-                
-                // NUEVO: Mantener scroll position en el contenedor de gráficos
-                const containerGraphs = document.querySelector('.container-graphs');
-                if (containerGraphs) {
-                    // Guardar posición actual del scroll
-                    const scrollPosition = containerGraphs.scrollTop;
-                    
-                    // Recalcular estadísticas y luego restaurar posición
-                    setTimeout(() => {
-                        containerGraphs.scrollTop = scrollPosition;
-                    }, 100);
-                }
+                calculateStatistics(); // Ahora preserva la posición del carrusel
             }
         });
     });
@@ -136,7 +132,6 @@ function setupStatisticsEvents() {
     });
 }
 
-// MODIFICAR la función applyCustomPeriod para mantener la categoría
 function applyCustomPeriod() {
     const periodType = document.getElementById('custom-period-type').value;
     const year = parseInt(document.getElementById('custom-year').value);
@@ -166,15 +161,7 @@ function applyCustomPeriod() {
     });
     
     hidePeriodSelector();
-    calculateStatistics();
-    
-    // NUEVO: Mantener scroll position
-    const containerGraphs = document.querySelector('.container-graphs');
-    if (containerGraphs) {
-        setTimeout(() => {
-            containerGraphs.scrollTop = 0; // O mantener posición específica si se prefiere
-        }, 100);
-    }
+    calculateStatistics(); // Ahora preserva la posición del carrusel
     
     console.log('Período personalizado aplicado:', customPeriodData);
 }
