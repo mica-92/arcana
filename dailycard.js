@@ -231,6 +231,7 @@ function updateDailyTarotCardDisplay() {
         });
     }
 }
+
 async function saveDailyEntry() {
     const dateInput = document.getElementById('daily-date').value;
     let entryDate;

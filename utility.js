@@ -620,7 +620,74 @@ function updatePositionIndicator() {
     }
 }
 
+// ===== FUNCIÓN PARA CARGAR TIPOS DE TIRADA =====
+async function loadSpreadTypes() {
+    try {
+        console.log('Cargando tipos de tirada desde Supabase...');
+        
+        const { data, error } = await supabase
+            .from('spread_types')
+            .select('*')
+            .order('name');
 
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+            spreadTypes = data;
+            console.log('✅ Tipos de tirada cargados:', spreadTypes.length);
+            
+            // Asegurarse de que las posiciones estén en el formato correcto
+            spreadTypes.forEach(spread => {
+                if (typeof spread.positions === 'string') {
+                    try {
+                        spread.positions = JSON.parse(spread.positions);
+                    } catch (e) {
+                        console.warn(`Error parseando posiciones para ${spread.name}:`, e);
+                        spread.positions = Array.from({length: spread.card_count}, (_, i) => `Posición ${i + 1}`);
+                    }
+                }
+                
+                if (!spread.positions || spread.positions.length === 0) {
+                    spread.positions = Array.from({length: spread.card_count}, (_, i) => `Posición ${i + 1}`);
+                }
+            });
+        } else {
+            console.log('No se encontraron tiradas en Supabase, usando datos por defecto');
+            spreadTypes = getDefaultSpreadTypes();
+        }
+        
+        return spreadTypes;
+        
+    } catch (error) {
+        console.error('❌ Error al cargar tipos de tiradas:', error);
+        spreadTypes = getDefaultSpreadTypes();
+        return spreadTypes;
+    }
+}
+
+// Función para obtener tiradas por defecto
+function getDefaultSpreadTypes() {
+    return [
+        {
+            id: 'default-3card',
+            name: 'Pasado-Presente-Futuro',
+            card_count: 3,
+            positions: ['Pasado', 'Presente', 'Futuro'],
+            description: 'Tirada clásica de 3 cartas',
+            tags: 'Básica,Clásica',
+            deck_id: 'default'
+        },
+        {
+            id: 'default-luna',
+            name: 'Luna',
+            card_count: 3,
+            positions: ['Lo consciente', 'Lo subconsciente', 'La síntesis'],
+            description: 'Tirada de influencia lunar',
+            tags: 'Astrología,Lunar',
+            deck_id: 'default'
+        }
+    ];
+}
 // Inicializar carrusel cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
     setupFloatingControls();
