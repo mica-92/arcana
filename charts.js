@@ -847,28 +847,7 @@ function createInlineLegend(containerId, labels, data, colors, total) {
         'Majors': 'y',
         'Minors': 't', 
         'Courts': 'u',
-        
-        // Septenary
-        'First': '1',
-        'Second': '2',
-        'Third': '3',
-        'Fourth': '4', 
-        'Fifth': '5',
-        'Sixth': '6',
-        'Seventh': '7',
-        
-        // Numerology  
-        'One': '1',
-        'Two': '2',
-        'Three': '3',
-        'Four': '4',
-        'Five': '5', 
-        'Six': '6',
-        'Seven': '7',
-        'Eight': '8',
-        'Nine': '9',
-        'Ten': '10',
-        
+
         // Court Types
         'Pages': '§',
         'Knights': '£',
@@ -1015,4 +994,5 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Elementos de gráficos listos');
         }
     }, 500);
+
 });
