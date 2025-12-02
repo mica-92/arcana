@@ -3,7 +3,7 @@
     overflow-y: auto;
     max-height: 60dvh;
     padding: 10px;
-    margin-bottom: 20px;
+    padding-bottom: 100px;
     border-radius: 12px;
     background: rgba(255, 255, 255, 0.05);
     scrollbar-width: thin;
@@ -995,3 +995,4 @@ header {
     padding: 0 5px;
     margin-bottom: 5px;
 }
+

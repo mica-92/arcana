@@ -398,14 +398,6 @@
     border-radius: 4px;
 }
 
-.selected-tarot-card {
-    padding: 8px;
-    background-color: #b5657610;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    border: 2px solid var(--secondary-color);
-    border-radius: 4px;
-}
 
 .deck-item {
     margin-bottom: 5px;

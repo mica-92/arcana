@@ -405,6 +405,9 @@ function createDailyDetailsHTML(entry) {
             'Mars': 'U',
             'Jupiter': 'V',
             'Saturn': 'W',
+                    'Neptune': 'X',
+        'Uranus': 'Y',
+        'Pluto': 'Z',
             
             // Signos zodiacales
             'Aries': 'A',

@@ -773,6 +773,7 @@ function getChartOptions(title, data) {
 }
 
 // NUEVA FUNCIÓN: Crear leyenda inline debajo del pie chart
+// NUEVA FUNCIÓN: Crear leyenda inline debajo del pie chart - MODIFICADA
 function createInlineLegend(containerId, labels, data, colors, total) {
     const container = document.getElementById(containerId);
     if (!container) {
@@ -780,9 +781,10 @@ function createInlineLegend(containerId, labels, data, colors, total) {
         return;
     }
     
-    let html = '<div class="inline-legend">';
+    // Crear array de elementos con todos los datos necesarios
+    let items = [];
     
-    // Mapeo de iconos para cada categoría
+    // Mapeo de iconos para cada categoría (el mismo que tenías)
     const iconMap = {
         // Orientación
         'Derecha': '`',
@@ -820,6 +822,9 @@ function createInlineLegend(containerId, labels, data, colors, total) {
         'Mars': 'U',
         'Jupiter': 'V',
         'Saturn': 'W',
+        'Neptune': 'X',
+        'Uranus': 'Y',
+        'Pluto': 'Z',
         
         // Signos zodiacales
         'Aries': 'A',
@@ -847,7 +852,7 @@ function createInlineLegend(containerId, labels, data, colors, total) {
         'Majors': 'y',
         'Minors': 't', 
         'Courts': 'u',
-
+        
         // Court Types
         'Pages': '§',
         'Knights': '£',
@@ -855,6 +860,7 @@ function createInlineLegend(containerId, labels, data, colors, total) {
         'Kings': '¦'
     };
     
+    // Crear array de items con porcentaje calculado
     labels.forEach((label, index) => {
         const value = data[index];
         const color = colors[index];
@@ -863,27 +869,40 @@ function createInlineLegend(containerId, labels, data, colors, total) {
             const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
             const iconClass = iconMap[label] || '●';
             
-            html += `
-                <div class="legend-item-inline">
-                    <div class="legend-color-inline" style="background-color: ${color}"></div>
-                    <span class="legend-icon-inline astronomicon">${iconClass}</span>
-                    <span class="legend-name-inline">${label}</span>
-                    <span class="legend-value-inline">${value} (${percentage}%)</span>
-                </div>
-            `;
+            items.push({
+                label,
+                value,
+                percentage,
+                color,
+                icon: iconClass,
+                sortKey: percentage // Para ordenar por porcentaje
+            });
         }
     });
     
-    html += '</div>';
+    // Ordenar por porcentaje (de mayor a menor)
+    items.sort((a, b) => b.sortKey - a.sortKey);
     
-    // Si no hay elementos válidos, mostrar mensaje
-    if (html === '<div class="inline-legend"></div>') {
-        html = `<div class="inline-legend">
-            <div class="legend-item-inline">
-                <span class="legend-name-inline">No hay datos</span>
-            </div>
+    // Generar HTML ordenado
+    let html = '<div class="inline-legend">';
+    
+    if (items.length === 0) {
+        html += `<div class="legend-item-inline">
+            <span class="legend-name-inline">No hay datos</span>
         </div>`;
+    } else {
+        items.forEach(item => {
+            html += `
+                <div class="legend-item-inline">
+                    <span class="legend-icon-inline astronomicon">${item.icon}</span>
+                    <span class="legend-name-inline">${item.label}</span>
+                    <span class="legend-value-inline">${item.percentage}% - <i style="font-size: 0.8rem;color: var(--primary80);">${item.value} cartas</i></span>
+                </div>
+            `;
+        });
     }
+    
+    html += '</div>';
     
     container.innerHTML = html;
 }
@@ -994,5 +1013,4 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Elementos de gráficos listos');
         }
     }, 500);
-
 });

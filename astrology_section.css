@@ -36,7 +36,11 @@
 }
 
 .moon-phase-content {
-    font: 0.8rem;
+    font-size: 0.8rem;
+}
+
+.moon-phase i {
+    font-size: 0.8rem;
 }
 
 .today-headline {

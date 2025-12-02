@@ -10,7 +10,7 @@ let statisticsData = {
 };
 
         // Variables para estadísticas
-        let currentPeriod = 'all'; // 'all', 'month', 'week', 'custom'
+        let currentPeriod = 'month'; // 'all', 'month', 'week', 'custom'
         let customPeriodData = null;
 
         // Inicializar estadísticas cuando el DOM esté listo
@@ -110,11 +110,21 @@ function setupStatisticsEvents() {
             } else {
                 currentPeriod = period;
                 customPeriodData = null;
-                calculateStatistics(); // Ahora preserva la posición del carrusel
+                calculateStatistics();
             }
         });
     });
-
+    
+    // Activar el botón "month" por defecto
+    setTimeout(() => {
+        const monthBtn = document.querySelector('.period-btn[data-period="month"]');
+        if (monthBtn) {
+            monthBtn.classList.add('active');
+        } else {
+            console.error('Botón "month" no encontrado');
+        }
+    }, 100);
+    
     // Resto del código existente...
     const modal = document.getElementById('period-selector-modal');
     if (modal) {
@@ -554,15 +564,14 @@ function filterEntriesByPeriod(entries, period, customData) {
             const entryMonth = entryDate.getMonth() + 1;
             const entryWeek = getWeekNumber(entryDate);
             
-            if (type === 'year') {
-                return entryYear === year;
-            } else if (type === 'month') {
-                return entryYear === year && entryMonth === month;
-            } else if (type === 'week') {
-                return entryYear === year && entryWeek === week;
+            switch (period) {
+                case 'month':
+                    return entryYear === currentYear && entryMonth === currentMonth;
+                case 'week':
+                    return entryYear === currentYear && entryWeek === currentWeek;
+                default: // 'all'
+                    return true;
             }
-            
-            return true;
         });
     }
     

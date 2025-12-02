@@ -14,8 +14,6 @@ function showDailyCardModal() {
                         <input type="date" class="form-input" id="daily-date" value="${new Date().toISOString().split('T')[0]}">
                     </div>
                     
-
-                    
                     <div class="form-group">
                         <label class="form-label">Seleccionar Carta</label>
                         <select class="form-select" id="daily-tarot-card-select">
@@ -26,9 +24,6 @@ function showDailyCardModal() {
                                 ).join('') : ''}
                         </select>
                     </div>
-
-                    <div id="selected-daily-tarot-card" class="selected-card-display"></div>
-
                     
                     <div class="form-group">
                         <label class="form-label">Orientación</label>
@@ -65,6 +60,127 @@ function showDailyCardModal() {
     document.body.insertAdjacentHTML('beforeend', modalHTML);
     setupDailyModalEvents();
     initializeDailyForm();
+}
+
+function setupDailyModalEvents() {
+    // Cerrar modal
+    document.querySelector('#daily-modal .close-modal').addEventListener('click', closeDailyModal);
+    document.getElementById('daily-modal').addEventListener('click', function(e) {
+        if (e.target === this) closeDailyModal();
+    });
+    
+    // Botones de acción
+    document.getElementById('save-daily').addEventListener('click', saveDailyEntry);
+    document.getElementById('clear-daily').addEventListener('click', clearDailyForm);
+    
+    // Eventos de formulario
+    document.getElementById('daily-tarot-orientation').addEventListener('change', function() {
+        currentDailyEntry.tarotOrientation = this.value;
+    });
+    
+    document.getElementById('daily-tarot-card-select').addEventListener('change', function() {
+        const cardId = this.value;
+        if (cardId && typeof tarotCards !== 'undefined') {
+            currentDailyEntry.tarotCard = tarotCards[cardId];
+        } else {
+            currentDailyEntry.tarotCard = null;
+        }
+    });
+}
+
+function closeDailyModal() {
+    const modal = document.getElementById('daily-modal');
+    if (modal) modal.remove();
+}
+
+function initializeDailyForm() {
+    // Inicializar valores por defecto
+    document.getElementById('daily-date').valueAsDate = new Date();
+    document.getElementById('daily-notes').value = '';
+    document.getElementById('daily-tarot-card-select').value = '';
+    document.getElementById('daily-tarot-orientation').value = 'upright';
+    document.getElementById('daily-deck-select').value = currentDailyEntry.deckId;
+    
+    // Reiniciar la entrada actual
+    currentDailyEntry = {
+        date: new Date(),
+        notes: "",
+        tarotCard: null,
+        tarotOrientation: 'upright',
+        deckId: document.getElementById('daily-deck-select').value
+    };
+    
+    console.log('✅ Formulario diario inicializado correctamente');
+}
+
+function clearDailyForm() {
+    currentDailyEntry = {
+        date: new Date(),
+        notes: "",
+        tarotCard: null,
+        tarotOrientation: 'upright',
+        deckId: 'default'
+    };
+    
+    document.getElementById('daily-date').valueAsDate = new Date();
+    document.getElementById('daily-notes').value = '';
+    document.getElementById('daily-tarot-card-select').value = '';
+    document.getElementById('daily-tarot-orientation').value = 'upright';
+    document.getElementById('daily-deck-select').value = currentDailyEntry.deckId;
+    
+    console.log('🗑️ Formulario diario limpiado');
+}
+
+// Función updateDailyTarotCardDisplay eliminada ya que no se necesita más
+
+async function saveDailyEntry() {
+    const dateInput = document.getElementById('daily-date').value;
+    let entryDate;
+
+    if (dateInput) {
+        const [year, month, day] = dateInput.split('-');
+        entryDate = new Date(year, month - 1, day);
+    } else {
+        entryDate = new Date();
+    }
+
+    currentDailyEntry.date = entryDate;
+    currentDailyEntry.notes = document.getElementById('daily-notes').value;
+    currentDailyEntry.deckId = document.getElementById('daily-deck-select').value;
+
+    if (!currentDailyEntry.tarotCard) {
+        alert('Por favor, selecciona una carta de tarot');
+        return;
+    }
+
+    const entryData = {
+        date: currentDailyEntry.date.toISOString(),
+        notes: currentDailyEntry.notes,
+        deck_id: currentDailyEntry.deckId,
+        entry_type: 'daily',
+        tarot_card: currentDailyEntry.tarotCard,
+        tarot_orientation: currentDailyEntry.tarotOrientation
+    };
+
+    try {
+        const { data, error } = await supabase
+            .from('log_entries')
+            .upsert([entryData]);
+
+        if (error) throw error;
+
+        console.log('Entrada diaria guardada en Supabase:', data);
+
+        await loadLogHistory();
+        clearDailyForm();
+        closeDailyModal();
+
+        alert('Carta del día guardada correctamente');
+
+    } catch (error) {
+        console.error('Error al guardar carta del día:', error);
+        alert('Error al guardar: ' + error.message);
+    }
 }
 
 function setupDailyModalEvents() {
@@ -282,7 +398,6 @@ async function saveDailyEntry() {
     }
 }
 
-// ===== MODIFICAR EL setupFooterMenu PARA USAR EL NUEVO MODAL =====
 function setupFooterMenu() {
     const burgerBtn = document.getElementById('burger-menu-btn');
     const menuOptions = document.getElementById('footer-menu-options');
@@ -323,10 +438,7 @@ function setupFooterMenu() {
     if (newSpread) {
         newSpread.addEventListener('click', function() {
             // Mostrar formulario/modal para tirada (mantener el existente por ahora)
-            // spreadForm.classList.add('show');
-            // dailyForm.classList.remove('show');
             menuOptions.classList.remove('show');
-            // initializeSpreadForm();
             alert('Funcionalidad de tiradas en desarrollo');
         });
     }
@@ -341,8 +453,6 @@ function setupFooterMenu() {
     
     if (manageSpreads) {
         manageSpreads.addEventListener('click', function() {
-            // Mostrar modal de gestión de tiradas
-            // showManageSpreadsModal();
             menuOptions.classList.remove('show');
             alert('Gestión de tiradas en desarrollo');
         });

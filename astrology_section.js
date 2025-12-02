@@ -350,7 +350,7 @@ function displayAstrologyInfo() {
             <div class="moon-phase-header" style="justify-content: right;">
 
             <div class="moon-label" style="margin-right:50px;"><b>ASPECTO:</b></div> </div>
-            <div class="moon-phase-content" style="text-align: right; margin-right:50px;">${aspectData.type} ${aspectData.type === 'APOSTROPHE' ? `(${Math.round(aspectData.exactDifference)}°)` : ''}${aspectData.emoji}</div>
+            <div class="moon-phase-content" style="text-align: right; margin-right:50px;"><div style="font-size: 1rem; line-height: 0.8rem; margin-right: 5px;"${aspectData.emoji}</div> ${aspectData.type} ${aspectData.type === 'APOSTROPHE' ? `(${Math.round(aspectData.exactDifference)}°)` : ''}</div>
         </div>
     ` : ''}
     </div>
