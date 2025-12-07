@@ -79,7 +79,7 @@
 /* ===== ESTILOS PARA TÍTULOS Y ENCABEZADOS ===== */
 .history-title {
     font-weight: 600;
-    font-size: 1.7rem;
+    font-size: 1.5rem;
     line-height: 1.4rem;
     text-transform: uppercase;
     text-align: center;
@@ -90,14 +90,14 @@
 
 .history-headline {
     font-weight: 400;
-    font-size: 1rem;
+    font-size: 0.7rem;
     text-align: center;
     font-style: italic;
     color: var(--primary80);
     font-family: 'Inconsolata', sans-serif;
     max-width: 400px;
     margin: auto;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 

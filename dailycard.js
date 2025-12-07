@@ -25,6 +25,9 @@ function showDailyCardModal() {
                         </select>
                     </div>
                     
+                    <!-- Añade este contenedor para mostrar la carta seleccionada -->
+                    <div id="selected-daily-tarot-card" style="margin: 1rem 0;"></div>
+                    
                     <div class="form-group">
                         <label class="form-label">Orientación</label>
                         <select class="form-select" id="daily-tarot-orientation">

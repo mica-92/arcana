@@ -263,7 +263,6 @@ function displayAstrologyInfo() {
     
     const sunData = astrologyData.Sun || {};
     const moonData = astrologyData.Moon || {};
-    const moonPhaseData = astrologyData.MoonPhase || {};
     const aspectData = astrologyData.Aspect || {};
     
     const sunIsValid = sunData.positionString && sunData.sign;
@@ -273,21 +272,6 @@ function displayAstrologyInfo() {
     const moonSignSymbol = getZodiacSymbol(moonData.sign);
     const moonPlanetSymbol = getPlanetSymbol(moonData.tarotCards?.ruler);
     
-    // En tu JavaScript
-    const moonPhaseInfo = moonPhaseData ? `
-        <div class="moon-phase-detailed">
-            <div class="moon-phase-header">
-                <div class="moon-label"><b>FASE LUNAR:</b></div> 
-                <button class="moon-phase-info-btn" id="moon-phase-info-btn" title="Ver próximas fases">
-                    <i class="fa-solid fa-info"></i>
-                </button>
-            </div>
-            <div class="moon-phase-content">
-                ${moonPhaseData.emoji} ${moonPhaseData.name} (${moonPhaseData.percentage}%)
-            </div>
-        </div>
-    ` : '';
-
     container.innerHTML = `
     <div class="astro-card-header">Pronóstico Astrológico</div>
 
@@ -318,7 +302,13 @@ function displayAstrologyInfo() {
         </div>
         
         <div class="celestial-body">
-            <div class="astro-body" style="display: block; text-align: right;">R</div>
+            <!-- Sección Luna con botón de información -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                <button class="moon-phase-info-btn" id="moon-phase-info-btn" title="Ver fases lunares y aspectos">
+                    <i class="fa-solid fa-info"></i>
+                </button>
+                <div class="astro-body" style="text-align: right;">R</div>
+            </div>
             <div class="astro-name" style="text-align: right;">SELENE</div>
             <div class="body-name" style="text-align: right;">en ${moonData.sign || 'Calculando...'}</div>
             ${moonIsValid ? 
@@ -340,22 +330,7 @@ function displayAstrologyInfo() {
                 </div>
             </div>
         </div>
-            <div class="celestial-body">
-
-    ${moonPhaseInfo}</div>
-
-    
-    ${aspectData ? `
-        <div class="moon-phase">
-            <div class="moon-phase-header" style="justify-content: right;">
-
-            <div class="moon-label" style="margin-right:50px;"><b>ASPECTO:</b></div> </div>
-            <div class="moon-phase-content" style="text-align: right; margin-right:50px;"><div style="font-size: 1rem; line-height: 0.8rem; margin-right: 5px;"${aspectData.emoji}</div> ${aspectData.type} ${aspectData.type === 'APOSTROPHE' ? `(${Math.round(aspectData.exactDifference)}°)` : ''}</div>
-        </div>
-    ` : ''}
-    </div>
-    
-    `;
+    </div>`;
     
     // Agregar event listener para el botón de información
     const infoBtn = document.getElementById('moon-phase-info-btn');
@@ -364,7 +339,7 @@ function displayAstrologyInfo() {
     }
 }
 
-// ===== MODAL DE FASES LUNARES FUTURAS =====
+// ===== MODAL DE FASES LUNARES Y ASPECTOS =====
 function showMoonPhasesModal() {
     // Crear el modal si no existe
     let modal = document.getElementById('moon-phases-modal');
@@ -376,16 +351,50 @@ function showMoonPhasesModal() {
         modal.innerHTML = `
             <div class="moon-phases-modal-content">
                 <div class="modal-header">
-                    <div class="modal-title">PRÓXIMAS FASES LUNARES</div>
+                    <div class="modal-title">INFORMACIÓN LUNAR Y ASPECTOS</div>
                     <button class="close-modal" id="moon-phases-close-btn">
                         <i class="fa-solid fa-times"></i>
                     </button>
                 </div>
                 <div class="moon-phases-modal-body" id="moon-phases-modal-body">
-                    <!-- Las fases lunares futuras se cargarán aquí -->
+                    <div class="current-moon-info">
+                        <div class="moon-phase-section">
+                            <h3>FASE LUNAR ACTUAL</h3>
+                            <div class="moon-phase-details">
+                                ${astrologyData?.MoonPhase ? `
+                                    <div class="moon-phase-main">
+                                        ${astrologyData.MoonPhase.emoji} 
+                                        <strong>${astrologyData.MoonPhase.name}</strong>
+                                        (${astrologyData.MoonPhase.percentage}%)
+                                    </div>
+                                ` : 'Cargando información lunar...'}
+                            </div>
+                        </div>
+                        
+                        <div class="aspect-section">
+                            <h3>ASPECTO ACTUAL</h3>
+                            <div class="aspect-details">
+                                ${astrologyData?.Aspect ? `
+                                    <div class="aspect-main">
+                                        <div style="font-size: 1rem; margin-right: 10px;">${astrologyData.Aspect.emoji}</div>
+                                        <div style="font-size: 0.9rem;"><strong>${astrologyData.Aspect.type}</strong></div>
+                                        ${astrologyData.Aspect.type === 'APOSTROPHE' ? 
+                                            `(${Math.round(astrologyData.Aspect.exactDifference)}°)` : 
+                                            (astrologyData.Aspect.orb !== null ? `(${astrologyData.Aspect.orb.toFixed(1)}°)` : '')}
+                                    </div>
+                                ` : 'Cargando aspecto...'}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="future-phases-section">
+                        <h3>PRÓXIMAS FASES LUNARES</h3>
+                        <div id="future-moon-phases-list">
+                            <!-- Las fases lunares futuras se cargarán aquí -->
+                        </div>
+                    </div>
                 </div>
             </div>
-            
         `;
         document.body.appendChild(modal);
         
@@ -402,27 +411,26 @@ function showMoonPhasesModal() {
         });
     }
     
-    // Cargar las fases lunares en el modal
-    loadMoonPhasesModalContent();
+    // Cargar las fases lunares futuras en el modal
+    loadFutureMoonPhases();
     
     // Mostrar el modal
     modal.style.display = 'flex';
 }
 
-function loadMoonPhasesModalContent() {
-    const container = document.getElementById('moon-phases-modal-body');
+function loadFutureMoonPhases() {
+    const container = document.getElementById('future-moon-phases-list');
     if (!container) return;
     
     const aspects = calculateFutureMoonAspects();
     let html = '';
     
     if (aspects.length === 0) {
-        html = '<div class="no-moon-phases">No hay próximas fases lunares para mostrar.</div>';
+        html = '<div class="no-phases">No hay próximas fases lunares para mostrar.</div>';
     } else {
         aspects.forEach(aspect => {
             const dateStr = formatDate(aspect.date);
             const moonSignSymbol = getZodiacSymbol(aspect.moonSign);
-            const moonSignName = translateSignToSpanish(aspect.moonSign);
             
             let phaseHTML = '';
             if (aspect.showPhase) {
@@ -431,29 +439,29 @@ function loadMoonPhasesModalContent() {
                     '<i class="fa-regular fa-circle"></i>' : 
                     '<i class="fa-solid fa-circle"></i>';
                 phaseHTML = `
-                    <div class="moon-phase-modal-type">
-                        ${phaseIcon} ${phaseType}
+                    <div class="future-phase-type">
+                        ${phaseIcon} <strong>${phaseType}</strong>
                     </div>
                 `;
             } else {
-                phaseHTML = `<div class="moon-phase-modal-type">${aspect.type}</div>`;
+                phaseHTML = `<div class="future-phase-type">${aspect.type}</div>`;
             }
             
             html += `
-                <div class="moon-phase-modal-item">
-                    <div class="moon-phase-modal-date">
+                <div class="future-phase-item">
+                    <div class="future-phase-date">
                         <strong>${dateStr}</strong>
                     </div>
-                    <div class="moon-phase-modal-details">
-                        <div class="moon-phase-modal-aspect">
-                            <span class="moon-aspect-symbol">${aspect.emoji}</span>
-                           
+                    <div class="future-phase-details">
+                        <div class="future-phase-aspect">
+                            <span class="aspect-symbol">${aspect.emoji}</span>
                         </div>
-                        <div class="moon-phase-modal-sign">
-                            <span class="moon-sign-symbol">${moonSignSymbol}</span>
+                        <div class="future-phase-sign">
+                            <span class="sign-symbol">${moonSignSymbol}</span>
                         </div>
-                        <div class="moon-phase-modal-sign">
-                         ${phaseHTML}</div>
+                        <div class="future-phase-info">
+                            <small>Orb: ${aspect.orb.toFixed(1)}°</small>
+                        </div>
                     </div>
                 </div>
             `;
@@ -462,7 +470,6 @@ function loadMoonPhasesModalContent() {
     
     container.innerHTML = html;
 }
-
 
 // Agregar el CSS adicional al documento
 const style = document.createElement('style');

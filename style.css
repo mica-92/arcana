@@ -175,8 +175,7 @@ header {
     font-family: "Roboto Serif", system-ui;
     color: var(--text-light);
     border-bottom: 2px solid #1742ab80;
-    margin-bottom: 5px;
-    
+    border-radius: 5px;
 }
 
 h1 {

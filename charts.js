@@ -371,7 +371,7 @@ function createSuitsChart() {
     const minorsTotal = statisticsData.totalEntries - (statisticsData.suits['Major Arcana'] || 0) - (statisticsData.suits['Court Cards'] || 0);
     
     if (total === 0 || data.length === 0) {
-        createInfoChart(canvasCtx, 'suits-legend', `Analizando ${minorsTotal} cartas\n(Solo Arcanos Menores)`);
+        createInfoChart(canvasCtx, 'suits-legend', `Analizando ${minorsTotal} cartas`);
         return;
     }
     
@@ -462,7 +462,7 @@ function createPlanetsChart() {
     }
     
     if (totalForPlanets === 0 || data.length === 0) {
-        createInfoChart(canvasCtx, 'planets-legend', `Analizando ${totalForPlanets} cartas\n(Solo Arcanos Mayores y Menores)`);
+        createInfoChart(canvasCtx, 'planets-legend', `Analizando ${totalForPlanets} cartas`);
         return;
     }
     
@@ -510,7 +510,7 @@ function createSignsChart() {
     }
     
     if (totalForSigns === 0 || data.length === 0) {
-        createInfoChart(canvasCtx, 'signs-legend', `Analizando ${totalForSigns} cartas\n(Solo Arcanos Mayores y Menores)`);
+        createInfoChart(canvasCtx, 'signs-legend', `Analizando ${totalForSigns} cartas`);
         return;
     }
     
@@ -559,7 +559,7 @@ function createSeptenaryChart() {
     const majorsTotal = statisticsData.suits['Major Arcana'] || 0;
     
     if (total === 0 || data.length === 0) {
-        createInfoChart(canvasCtx, 'septenary-legend', `Analizando ${majorsTotal} cartas\n(Solo Arcanos Mayores)`);
+        createInfoChart(canvasCtx, 'septenary-legend', `Analizando ${majorsTotal} cartas`);
         return;
     }
     
@@ -608,7 +608,7 @@ function createVerticalChart() {
     const majorsTotal = statisticsData.suits['Major Arcana'] || 0;
     
     if (total === 0 || data.length === 0) {
-        createInfoChart(canvasCtx, 'vertical-legend', `Analizando ${majorsTotal} cartas\n(Solo Arcanos Mayores)`);
+        createInfoChart(canvasCtx, 'vertical-legend', `Analizando ${majorsTotal} cartas`);
         return;
     }
     
@@ -656,7 +656,7 @@ function createNumerologyChart() {
     const total = data.reduce((sum, value) => sum + value, 0);
     
     if (total === 0 || data.length === 0) {
-        createInfoChart(canvasCtx, 'numerology-legend', `Analizando ${statisticsData.totalEntries} cartas\n(Todas las cartas)`);
+        createInfoChart(canvasCtx, 'numerology-legend', `Analizando ${statisticsData.totalEntries} cartas`);
         return;
     }
     
@@ -705,7 +705,7 @@ function createCourtTypesChart() {
     const courtsTotal = statisticsData.suits['Court Cards'] || 0;
     
     if (total === 0 || data.length === 0) {
-        createInfoChart(canvasCtx, 'court-types-legend', `Analizando ${courtsTotal} cartas\n(Solo Court Cards)`);
+        createInfoChart(canvasCtx, 'court-types-legend', `Analizando ${courtsTotal} cartas`);
         return;
     }
     

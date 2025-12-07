@@ -135,6 +135,9 @@
 }
 
 
+
+
+
 .arcana-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -174,4 +177,3 @@
         max-width: 100%;
     }
 }
-

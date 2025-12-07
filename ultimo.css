@@ -3,6 +3,8 @@
     overflow-y: auto;
     max-height: 60dvh;
     padding: 10px;
+    max-width: 320px;
+    margin: auto;
     padding-bottom: 100px;
     border-radius: 12px;
     background: rgba(255, 255, 255, 0.05);
@@ -783,13 +785,13 @@ body {
     position: relative;
     width: 100%;
     max-width: 800px;
-    height: 760px; /* 780px - padding del body (20px) */
     border-radius: 5px;
     border: 5px solid var(--primary-color);
     background-color: var(--background-color);
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    margin-bottom: 5px;
 }
 
 /* HEADER - mantener fijo pero más compacto */
@@ -800,6 +802,7 @@ header {
     justify-content: center;
     gap: 10px; /* Reducido gap */
     padding: 8px 10px; /* Padding reducido */
+    border-radius: 5px;
     position: sticky;
     top: 0;
     z-index: 100;
@@ -864,11 +867,7 @@ header {
         max-height: 750px;
         padding: 5px;
     }
-    
-    .outer-border {
-        height: 740px; /* 750px - 10px de padding */
-        width: calc(100% - 10px);
-    }
+
     
     .charts-section {
         max-height: calc(740px - 100px); /* Ajustado para móvil */
@@ -914,10 +913,6 @@ header {
         max-height: 720px;
     }
     
-    .outer-border {
-        height: 710px;
-    }
-    
     .charts-section {
         max-height: calc(710px - 95px);
     }
@@ -932,11 +927,16 @@ header {
         padding: 4px 8px;
         font-size: 0.85em;
     }
+
+    .outer-border {
+        max-height: 630px;
+    }
 }
 
 /* Optimizar elementos internos para menos espacio */
 .chart-category {
-    padding: 12px; /* Padding reducido */
+    margin-top: 5px;
+    padding: 5px 12px ; /* Padding reducido */
     margin-bottom: 8px; /* Menos espacio entre categorías */
 }
 

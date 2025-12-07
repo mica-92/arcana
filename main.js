@@ -101,9 +101,9 @@ function displayTodayCard() {
         container.innerHTML = `
             <div class="mono-text-upper date-time-display">
             ${dateTimeStr}</div>
-        <div class="mono-text-upper" style="margin-bottom: 15px; font-size: 1.2rem;">
+        <div class="mono-text-upper" style="margin-bottom: 15px; font-size: 0.9rem !important;">
             bienvenida a tu reporte arcánico</div>
-             <div class="history-title" style="margin-bottom: 15px;">
+             <div class="history-title" style="margin-bottom: 5px;">
                 Tu carta del día es:
             </div>
                         
@@ -148,7 +148,7 @@ function displayNoCardToday() {
         <div class="no-card-container">
             <div class="mono-text-upper date-time-display">
             ${dateTimeStr}</div>
-        <div class="mono-text-upper" style="margin-bottom: 15px;">
+        <div class="mono-text-upper" style="margin-bottom: 15px; font-size: 0.9rem !important;">
             bienvenida a tu reporte arcánico</div>
              <div class="history-title" style="margin-bottom: 15px;">
                 Aún no has sacado tu carta del día:
