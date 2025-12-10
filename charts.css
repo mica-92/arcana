@@ -23,7 +23,6 @@
     font-size: 1.3rem;
     font-weight: 600;
     color: var(--primary-color);
-    text-align: center;
     font-family: 'Roboto Serif', serif;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -346,7 +345,5 @@
 .inline-legend {
     display: inline-flex;
     flex-wrap: wrap;
-    justify-content: center;
     gap: 8px;
-    max-width: 600px;
 }

@@ -896,7 +896,7 @@ function createInlineLegend(containerId, labels, data, colors, total) {
                 <div class="legend-item-inline">
                     <span class="legend-icon-inline astronomicon">${item.icon}</span>
                     <span class="legend-name-inline">${item.label}</span>
-                    <span class="legend-value-inline">${item.percentage}% - <i style="font-size: 0.8rem;color: var(--primary80);">${item.value} cartas</i></span>
+                    <span class="legend-value-inline">${item.percentage}<i style="color: var(--primary80);"> (${item.value}) </i></span>
                 </div>
             `;
         });

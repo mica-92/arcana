@@ -109,7 +109,7 @@
 .no-card-container {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
     align-items: center; /* opcional - para centrar horizontalmente */
     text-align: center; /* opcional - para centrar el texto */
 }

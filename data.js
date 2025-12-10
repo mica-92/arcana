@@ -8,8 +8,8 @@ const tarotCards = {
         "Planet": "Uranus",
         "Sign": "",
         "Element": "Air",
-        "Septenary": "The Fool",
-        "Vertical": "The Fool"
+        "Septenary": "Zero",
+        "Vertical": "Zero"
     },
     "1": {
         "ID": "1",
@@ -978,8 +978,8 @@ const categoryOrders = {
     "sign": ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
             "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"],
     "type": ["Majors", "Minors", "Court"],
-    "septenary": ["The Fool", "First", "Second", "Third"],
-    "vertical": ["The Fool", "First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh"]
+    "septenary": ["Zero", "First", "Second", "Third"],
+    "vertical": ["Zero", "First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh"]
 };
 
 const chartColors = [
